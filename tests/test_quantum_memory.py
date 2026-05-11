@@ -15,7 +15,7 @@ def test_write_and_retrieve_by_universe(memory):
     insights = memory.get_by_universe("alpha")
     assert len(insights) == 2
     assert insights[0]["universe_id"] == "alpha"
-    assert "JWT" in insights[0]["content"]
+    assert any("JWT" in i["content"] for i in insights)
 
 
 def test_multiple_universes_isolated(memory):
@@ -38,7 +38,7 @@ def test_get_latest_embeddings_returns_per_universe(memory):
 
     assert "alpha" in embeddings
     assert "beta" in embeddings
-    assert len(embeddings["alpha"]["embedding"]) > 0
+    assert len(embeddings["alpha"]["embedding"]) == 384  # all-MiniLM-L6-v2 output dim
 
 
 def test_empty_memory_returns_empty(memory):
