@@ -1,7 +1,7 @@
 # cosmos:observe
 
-Show the current superposition snapshot: all universe insights and detected
-entanglements. Uses Claude's semantic judgment rather than cosine similarity.
+Show the current superposition snapshot: all cosmos insights, resonance signals,
+and uncertainty map. Uses Claude's semantic judgment — no vector database needed.
 
 ## Trigger
 
@@ -23,67 +23,69 @@ Store as `<repo_root>`.
 
 Read every file matching `<repo_root>/.quantum/*/insights.jsonl`.
 
-For each file that exists, parse each line as JSON:
-`{"content": "<text>", "ts": "<timestamp>"}`
+Parse each line as JSON: `{"content": "<text>", "ts": "<timestamp>"}`
 
-Build a map: `universe_id → [insights sorted by ts]`
+Build a map: `cosmos_id → [insights sorted by ts]`
 
 If `.quantum/` is empty or missing, output:
 ```
-(no universes active — run /cosmos spawn first)
+(no cosmos active — run /cosmos spawn first)
 ```
 
 ### Step 3 — Output superposition snapshot
 
-For each universe (sorted alphabetically), output:
+For each cosmos (sorted alphabetically), output:
 
 ```
-🌌 Universe <name>  (<N> insights)
-   └ <most recent insight, truncated to 100 chars>
-   └ <second most recent insight, truncated to 100 chars>
+🌌 cosmos:<name>  (<N> insights)  — <strategy>
+   └ <most recent insight, truncated to 120 chars>
+   └ <second most recent insight, truncated to 120 chars>
 ```
 
-Example:
-```
-🌌 Universe alpha  (12 insights)
-   └ JWT sliding window expiry: access 15m, refresh 7d with rotation
-   └ Chose RS256 over HS256 for key rotation support
+### Step 4 — Detect Resonance and Uncertainty
 
-🌌 Universe beta  (9 insights)
-   └ Redis hash TTL 24h, no sliding window — simpler but less flexible
-   └ Session store key: sess:<user_id>:<device_id>
+Using all insights from Step 2, perform two analyses:
 
-🌌 Universe gamma  (14 insights)
-   └ OAuth2 refresh token rotation + sliding expiry on access token
-   └ Convergence with alpha detected: both using sliding expiry
-```
+**Resonance** — decisions where 2+ cosmos independently reached the same conclusion.
+These are answers you can trust regardless of which strategy you pick.
+- List each resonant decision as one line
+- Note how many cosmos converged on it
 
-### Step 4 — Detect entanglements
+**Uncertainty** — decisions where cosmos reached genuinely different conclusions.
+These are real tradeoffs with no universal answer. The developer must choose.
+- List each uncertain decision as one line
+- Briefly name what each cosmos chose
 
-Using the full dataset read in Step 2 (not just the 2 displayed insights),
-analyze all insights semantically. Identify pairs of universes where the
-same pattern, strategy, or conclusion is emerging independently.
+**Decoherence** — if a cosmos appears to have abandoned its core strategy and
+simply copied another cosmos, flag it. Healthy entanglement is influence, not
+wholesale adoption.
 
-For each detected entanglement pair:
-- Name the pair (e.g., `alpha ↔ gamma`)
-- Explain WHY they are entangled in one sentence (what pattern is converging)
-
-Also identify strong divergences that are interesting:
-- Pairs exploring fundamentally different approaches to the same sub-problem
-
-### Step 5 — Output entanglement map
+### Step 5 — Output quantum map
 
 ```
-⚛️  Entanglements:
-   alpha ↔ gamma  — both converging on sliding window token expiry strategy
-   beta  ↔ gamma  — both handling refresh token rotation, different TTL values
+⚡ Resonance — trust these (all strategies converged):
+   "<decision>" — N cosmos independently concluded this
+   "<decision>" — N cosmos independently concluded this
 
-🔀 Notable divergences:
-   alpha vs beta  — stateless JWT (alpha) vs stateful Redis session (beta): fundamentally different trust models
+🌀 Uncertainty — your call (strategies diverged):
+   "<decision>" — alpha: <choice A>  |  beta: <choice B>  |  gamma: <choice C>
+   "<decision>" — alpha: <choice A>  |  beta/gamma: <choice B>
+
+⚠️  Decoherence detected: (only if applicable)
+   cosmos:<name> appears to have lost its <strategy> identity — review its insights
 ```
 
-If no entanglements:
+If no resonance detected:
 ```
-⚛️  Entanglements:
-   (none detected yet — agents may still be in early stages)
+⚡ Resonance:
+   (none yet — cosmos may still be in early stages)
 ```
+
+### Output philosophy
+
+- Resonance = the quantum signal that this answer is robust. Multiple independent
+  paths found it. Ship with confidence.
+- Uncertainty = the Heisenberg limit of this problem. You cannot optimize all
+  dimensions simultaneously. Make a conscious choice.
+- Decoherence = a cosmos that lost coherence. Its insights may still be valuable
+  but its strategy is no longer a true independent sample.

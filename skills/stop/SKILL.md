@@ -1,6 +1,6 @@
 # cosmos:stop
 
-Remove all universe worktrees and branches. Optionally clean quantum memory.
+Remove all cosmos worktrees and branches. Optionally clean quantum memory.
 
 ## Trigger
 
@@ -22,33 +22,32 @@ Store as `<repo_root>`.
 git worktree list
 ```
 
-From the `git worktree list` output, identify worktrees whose branch column
-(the `[branch-name]` in square brackets) starts with `universe/`.
-Extract the universe name as the part after `universe/`
-(e.g., `[universe/alpha]` → name is `alpha`).
+From the output, identify worktrees whose branch column starts with `cosmos/`.
+Extract the cosmos name as the part after `cosmos/`
+(e.g., `[cosmos/alpha]` → name is `alpha`).
 
-If no universe worktrees are found:
+If no cosmos worktrees are found:
 ```
-(no active universes)
+(no active cosmos)
 ```
 Then skip to Step 5.
 
 ### Step 3 — Remove each worktree
 
-For each universe worktree `<name>`:
+For each cosmos worktree `<name>`:
 
 ```bash
-git worktree remove <repo_root>/universes/<name> --force
+git worktree remove <repo_root>/cosmos/<name> --force
 ```
 
-If the command fails (worktree already removed), continue to the next.
+If the command fails (worktree already removed), continue.
 
-### Step 4 — Delete universe branches
+### Step 4 — Delete cosmos branches
 
-For each universe that had a worktree:
+For each cosmos that had a worktree:
 
 ```bash
-git branch -D universe/<name>
+git branch -D cosmos/<name>
 ```
 
 Ignore errors for branches that don't exist.
@@ -75,9 +74,9 @@ Insights preserved at `.quantum/`.
 Output:
 
 ```
-🛑 All universes stopped.
+🛑 All cosmos stopped.
 
    Worktrees removed: alpha, beta, gamma
-   Branches deleted:  universe/alpha, universe/beta, universe/gamma
+   Branches deleted:  cosmos/alpha, cosmos/beta, cosmos/gamma
    Quantum memory: <deleted | preserved at .quantum/>
 ```
