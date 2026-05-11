@@ -96,6 +96,295 @@ Notable divergences:
 
 ---
 
+## 활용 사례
+
+여러 가지 유효한 접근법이 존재하고 처음부터 정답이 명확하지 않은 모든 상황에
+적합합니다. 전략들이 서로에게서 배울 수 있을수록 얽힘의 가치는 커집니다.
+
+### 인증 & 인가
+
+```
+/cosmos spawn \
+  --goal "사용자 인증 구현" \
+  --strategies "jwt-stateless,session-redis,oauth2-pkce"
+```
+
+*얻을 수 있는 인사이트:* JWT의 무상태 확장성 vs. 세션의 즉각적 만료 처리
+vs. OAuth2의 자격증명 미보관. alpha가 슬라이딩 윈도우 만료를 발견하면
+gamma가 채택하는 경우가 많습니다 — 전송 방식은 달라도 만료 패턴은 수렴합니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "역할 기반 접근 제어(RBAC) 구현" \
+  --strategies "rbac-flat,rbac-hierarchical,abac"
+```
+
+*얻을 수 있는 인사이트:* 플랫 RBAC은 쿼리가 단순하고, 계층형 RBAC은 조직 트리를
+자연스럽게 처리하며, ABAC은 동적 정책으로 확장 가능한 유일한 방식입니다.
+얽힘을 통해 계층형과 ABAC이 동일한 권한 검사 인터페이스로 수렴하는 경우가 많습니다.
+
+---
+
+### API 설계
+
+```
+/cosmos spawn \
+  --goal "태스크 관리 서비스의 공개 API 설계" \
+  --strategies "rest-resource,graphql,grpc"
+```
+
+*얻을 수 있는 인사이트:* REST는 캐시 친화적이고 범용적이며, GraphQL은 복잡한
+클라이언트의 오버페칭을 제거하고, gRPC는 내부 서비스 처리량에서 우수합니다.
+얽힘은 페이지네이션 설계를 드러내는 경우가 많습니다 — 세 전략 모두 커서 기반으로
+수렴합니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "API 버저닝 전략 수립" \
+  --strategies "url-path,header,query-param"
+```
+
+*얻을 수 있는 인사이트:* URL 경로는 가장 가시적이고 캐시 친화적이며, 헤더 버저닝은
+URL을 깔끔하게 유지하지만 리버스 프록시에서 놀라운 동작을 유발할 수 있고,
+쿼리 파라미터는 테스트가 가장 용이합니다. 세 방식은 명확한 승자 없이 diverge하는 경우가 많습니다.
+
+---
+
+### 데이터베이스 & 스토리지
+
+```
+/cosmos spawn \
+  --goal "소셜 피드 스키마 설계" \
+  --strategies "relational-normalized,document-denormalized,graph"
+```
+
+*얻을 수 있는 인사이트:* 정규화 스키마는 쓰기 일관성에 강하고, 문서 모델은
+읽기 중심 피드 렌더링을 빠르게 하며, 그래프는 팔로워 순회를 쉽게 만듭니다.
+얽힘을 통해 관계형과 문서 모두 별도의 activity 테이블이 필요하다는 결론에
+독립적으로 도달하는 경우가 많습니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "전문 검색(Full-text search) 구현" \
+  --strategies "postgresql-fts,elasticsearch,meilisearch"
+```
+
+*얻을 수 있는 인사이트:* PostgreSQL FTS는 인프라 오버헤드가 없지만 랭킹이 제한적이며,
+Elasticsearch는 풍부한 스코어링을 가진 업계 표준이고, Meilisearch는 오타 허용이
+내장된 빠른 설정을 제공합니다. alpha의 인덱싱 전략(부분 업데이트 vs. 전체 재인덱싱)이
+세 전략 모두에 채택되는 경우가 많습니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "상품 목록 캐싱 레이어 설계" \
+  --strategies "redis-cache-aside,redis-write-through,cdn-edge"
+```
+
+*얻을 수 있는 인사이트:* Cache-aside는 단순하고 명시적이며, write-through는 캐시를
+항상 최신 상태로 유지하지만 쓰기와 결합되고, CDN 엣지 캐싱은 공개 콘텐츠에서 가장
+빠릅니다. TTL 전략이 반복되는 얽힘 포인트입니다 — 세 전략 모두 "stale"의 정의에
+동의해야 합니다.
+
+---
+
+### 성능 최적화
+
+```
+/cosmos spawn \
+  --goal "주문 API p99 레이턴시를 800ms에서 200ms 이하로 개선" \
+  --strategies "db-indexing,query-rewrite,response-caching"
+```
+
+*얻을 수 있는 인사이트:* 인덱싱은 근본 원인을 영구적으로 해결하고, 쿼리 재작성은
+스키마 변경 없이 N+1을 제거하며, 캐싱은 레이턴시를 마스킹하지만 무효화 복잡성을
+추가합니다. alpha의 인덱스 선택이 beta의 쿼리 재작성에 영향을 주는 경우가 많습니다
+— 중요한 컬럼이 어디인지 수렴합니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "이미지 전달 파이프라인 최적화" \
+  --strategies "cdn-offload,webp-conversion,lazy-loading"
+```
+
+*얻을 수 있는 인사이트:* CDN은 오리진 부하를 가장 극적으로 줄이고, WebP는 페이로드를
+30~50% 절감하며, 지연 로딩은 페이로드 크기 없이 체감 성능을 향상시킵니다.
+세 전략은 흔히 깔끔하게 결합됩니다 — 얽힘은 순서를 표면화합니다
+(먼저 변환, 그 다음 캐시, 마지막으로 클라이언트에서 지연 로딩).
+
+---
+
+### 리팩터링 & 아키텍처
+
+```
+/cosmos spawn \
+  --goal "거대한 UserService(2000줄) 분리" \
+  --strategies "extract-class,strangler-fig,event-driven"
+```
+
+*얻을 수 있는 인사이트:* Extract-class는 가장 안전하고 기계적이며, Strangler Fig은
+대규모 재작성 없이 점진적 마이그레이션을 가능하게 하고, 이벤트 기반은 미래 성장을
+분리하지만 비동기 복잡성을 추가합니다. Strangler Fig과 이벤트 기반은 실행 방식이
+달라도 같은 경계선으로 수렴하는 경우가 많습니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "콜백에서 async/await으로 마이그레이션" \
+  --strategies "incremental-per-module,codemods,full-rewrite"
+```
+
+*얻을 수 있는 인사이트:* 점진적 방식은 리스크가 낮지만 혼합 코드가 수개월간 유지되며,
+코드모드는 기계적 부분을 자동화하지만 엣지 케이스를 놓치고, 전체 재작성은 빠르지만
+기능 동결이 필요합니다. 에러 전파와 취소 처리가 공통 얽힘 포인트로 등장합니다.
+
+---
+
+### 보안
+
+```
+/cosmos spawn \
+  --goal "크리덴셜 스터핑 공격으로부터 로그인 엔드포인트 강화" \
+  --strategies "rate-limiting,captcha,device-fingerprinting"
+```
+
+*얻을 수 있는 인사이트:* 속도 제한은 기본이지만 분산 IP로 우회 가능하며, CAPTCHA는
+실제 사용자 UX를 저하시키고, 기기 핑거프린팅은 보이지 않지만 스토리지가 필요합니다.
+세 전략 모두 점진적 마찰 — N회 실패 후 차단, 그 이전엔 허용 — 로 수렴하는 경우가
+많습니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "사용자 DB의 PII 저장 보호" \
+  --strategies "column-encryption,field-level-encryption,tokenization"
+```
+
+*얻을 수 있는 인사이트:* 컬럼 암호화는 구현이 가장 단순하며, 필드 레벨은 컴플라이언스를
+위한 세분화된 제어를 제공하고, 토큰화는 데이터를 민감하지 않은 토큰으로 대체하여
+시스템 간 동작합니다. 키 교체 전략이 반복되는 얽힘 포인트입니다.
+
+---
+
+### 테스트 전략
+
+```
+/cosmos spawn \
+  --goal "CI 속도 저하 없이 결제 플로우 신뢰도 향상" \
+  --strategies "unit-mocks,integration-real-db,contract-pact"
+```
+
+*얻을 수 있는 인사이트:* 모킹 단위 테스트는 빠르지만 목/프로덕션 불일치로 무음 장애가
+발생하고, 실제 DB 통합 테스트는 진짜 버그를 잡지만 느리며, Pact 계약 테스트는 전체
+통합 없이 경계를 검증합니다. 단위 테스트와 계약 테스트가 서로를 보완한다는 사실이
+얽힘을 통해 드러납니다.
+
+---
+
+### 인프라 & 배포
+
+```
+/cosmos spawn \
+  --goal "API 서버 무중단 배포 구현" \
+  --strategies "blue-green,canary,rolling"
+```
+
+*얻을 수 있는 인사이트:* 블루-그린은 즉각적 롤백이 가능한 가장 단순한 모델이고,
+카나리는 트래픽 비율 라우팅으로 폭발 반경을 줄이며, 롤링은 리소스 효율적이지만
+롤백이 어렵습니다. 헬스 체크 설계가 공통 얽힘 포인트입니다 — 세 전략 모두
+"healthy"의 정의에 동의해야 합니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "관찰 가능성(Observability) 스택 설계" \
+  --strategies "prometheus-grafana,datadog,opentelemetry"
+```
+
+*얻을 수 있는 인사이트:* Prometheus+Grafana는 오픈소스로 고도로 커스터마이즈 가능하고,
+Datadog은 최고의 즉시 사용 UX를 제공하며, OpenTelemetry는 벤더 중립적으로
+미래를 대비합니다. 높은 카디널리티 레이블 관리가 공통 얽힘 포인트로 등장합니다.
+
+---
+
+### AI & LLM 기능
+
+```
+/cosmos spawn \
+  --goal "앱에 문서 Q&A 기능 추가" \
+  --strategies "rag-vector,rag-bm25,fine-tuning"
+```
+
+*얻을 수 있는 인사이트:* 벡터 RAG는 의미적 유사성에 강하고, BM25는 정확한 키워드
+매칭에서 더 빠르며, 파인튜닝은 지식을 모델에 내재화하지만 업데이트 비용이 높습니다.
+청킹 전략이 얽힘의 핫스팟입니다 — alpha의 청킹 실험이 beta에 채택되어 중복 작업을
+방지합니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "LLM API 비용 60% 절감" \
+  --strategies "prompt-caching,model-routing,response-caching"
+```
+
+*얻을 수 있는 인사이트:* 프롬프트 캐싱(Anthropic 프리픽스 캐시)은 반복 시스템
+프롬프트 비용을 줄이고, 모델 라우팅은 단순한 요청을 저렴한 모델로 전송하며,
+응답 캐싱은 결정론적 쿼리에서 무료입니다. 세 전략은 누적 가능하며, 얽힘을 통해
+절감 효과를 최대화하는 적용 순서가 드러납니다.
+
+---
+
+### 프론트엔드 & UX
+
+```
+/cosmos spawn \
+  --goal "활동 피드 무한 스크롤 구현" \
+  --strategies "intersection-observer,scroll-event-throttled,virtualized-list"
+```
+
+*얻을 수 있는 인사이트:* Intersection Observer는 CPU 비용이 낮은 현대 표준이고,
+스크롤 이벤트 스로틀링은 구형 브라우저에서 호환되며, 가상화는 10만 개 이상 항목을
+처리하지만 렌더링 복잡성을 추가합니다. 세 전략 모두 API와의 커서 기반 페이지네이션
+계약으로 수렴합니다.
+
+---
+
+```
+/cosmos spawn \
+  --goal "다단계 폼의 클라이언트 상태 관리" \
+  --strategies "react-hook-form,zustand,url-state"
+```
+
+*얻을 수 있는 인사이트:* React Hook Form은 리렌더링을 최소화하고 유효성 검사를
+처리하며, Zustand는 네비게이션 간 상태를 유지하고, URL 상태는 폼을 공유 가능하고
+브라우저 뒤로가기 친화적으로 만듭니다. 유효성 검사 타이밍이 공통 얽힘 포인트로
+등장합니다 — 언제 검사할지(onChange vs. onBlur vs. onSubmit).
+
+---
+
+### Cosmos Vibe를 쓰지 말아야 할 때
+
+- 구현이 결정론적인 경우 — 올바른 접근법이 하나뿐일 때
+- 작업이 매우 작은 경우 (1시간 이하) — 에이전트 오버헤드가 이점을 초과할 때
+- 이미 구현 중간인 경우 — 실행 도중이 아닌 결정 시점에 spawn할 것
+- 비용 예산이 빡빡한 경우 — N개 Universe = N × API 비용; 대규모 코드베이스에서
+  Universe 3개는 비용이 빠르게 늘어남
+
+---
+
 ## 커맨드
 
 ### `/cosmos spawn`
