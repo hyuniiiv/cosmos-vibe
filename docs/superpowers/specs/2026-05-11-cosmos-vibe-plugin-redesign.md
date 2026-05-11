@@ -19,7 +19,7 @@
 | | 기존 | 새 설계 |
 |---|---|---|
 | 인터페이스 | Python CLI (`cosmos spawn`) | Claude Code 스킬 (`/cosmos spawn`) |
-| 에이전트 실행 | `subprocess.Popen("claude ...")` | Claude `Agent` 툴 (내장) |
+| 에이전트 실행 | `subprocess.Popen("claude ...")` | Claude `Agent` 툴 (내장, superpowers 방식) |
 | Quantum Memory | ChromaDB + sentence-transformers | `.quantum/*.jsonl` 파일 |
 | Resonance | 코사인 유사도 수치 | Claude의 의미적 판단 + 설명 |
 | 설치 | `pip install cosmos-vibe` | `claude plugins install` |
@@ -40,6 +40,8 @@ cosmos-vibe/
       SKILL.md               ← /cosmos observe 스킬
     crystallize/
       SKILL.md               ← /cosmos crystallize 스킬
+    stop/
+      SKILL.md               ← /cosmos stop 스킬
   CLAUDE.md                  ← 플러그인 설치 시 자동 로드 컨텍스트
   README.md
 ```
@@ -63,13 +65,17 @@ cosmos-vibe/
    ```
 3. 각 worktree에 `CLAUDE.md` 작성 (목표, 전략, Quantum Memory 규칙 포함)
 4. `.quantum/<name>/` 디렉토리 생성
-5. `dispatching-parallel-agents` 패턴으로 N개 서브에이전트 병렬 디스패치
+5. `Agent` 툴로 N개 서브에이전트를 병렬 디스패치 (superpowers `dispatching-parallel-agents` 패턴):
+   - 단일 응답에서 여러 `Agent` 툴 호출 → 진짜 병렬 실행
+   - 각 에이전트는 독립된 컨텍스트에서 실행
 6. 각 에이전트 프롬프트에 포함:
    - 목표 + 전략
-   - worktree 경로 (`cwd: universes/<name>`)
-   - 인사이트 기록 규칙 (`insights.jsonl` append)
-   - 다른 universe 인사이트 읽기 규칙
+   - worktree 경로에서 작업 (`cwd: universes/<name>`)
+   - 인사이트 기록 규칙 (`.quantum/<name>/insights.jsonl` append)
+   - **실시간 얽힘 규칙**: 매 주요 구현 단계 완료 후(파일 생성, 설계 결정, 테스트 통과 등) `.quantum/*/insights.jsonl`을 다시 읽어 다른 Universe의 최신 인사이트를 확인하고, 유의미한 수렴/발산이 있으면 자신의 전략에 반영
 7. 모든 에이전트 완료 후 자동으로 `cosmos:observe` 실행
+
+> **실시간 얽힘 메커니즘**: `Agent` 툴로 실행되는 서브에이전트는 단일 컨텍스트에서 완료까지 실행되므로 외부에서 hook을 주입할 수 없다. 대신, 각 서브에이전트 프롬프트에 **"각 구현 단계 완료 시마다 `.quantum/*/insights.jsonl`을 Read 툴로 직접 읽어라"** 고 명시한다. 이를 통해 alpha가 sliding window 인사이트를 기록하면, beta는 다음 단계에서 그 내용을 읽고 자신의 접근법을 조정할 수 있다.
 
 ### 4.2 `cosmos:observe`
 
@@ -103,6 +109,16 @@ cosmos-vibe/
 2. worktree 브랜치 상태 요약
 3. 핵심 결정사항 + 구현 결과 추출하여 출력
 4. (선택) 해당 브랜치를 main에 머지할지 사용자에게 확인
+
+### 4.4 `cosmos:stop`
+
+**트리거:** `/cosmos stop`
+
+**동작:**
+
+1. `git worktree remove universes/<name> --force` 로 모든 worktree 제거
+2. `universes/` 디렉토리 및 `universe/*` 브랜치 정리
+3. `.quantum/` 디렉토리 정리 (선택)
 
 ---
 
