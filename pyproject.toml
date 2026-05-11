@@ -1,0 +1,35 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "cosmos-vibe"
+version = "0.1.0"
+description = "Multidimensional multiverse AI harness — parallel agents that entangle"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "mcp>=1.0.0",
+    "chromadb>=0.5.0",
+    "sentence-transformers>=3.0.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "websockets>=12.0",
+    "typer>=0.12.0",
+    "gitpython>=3.1.40",
+    "jinja2>=3.1.3",
+    "numpy>=1.26.0",
+    "httpx>=0.27.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0", "pytest-asyncio>=0.23.0", "pytest-mock>=3.12.0"]
+
+[project.scripts]
+cosmos = "cosmos_vibe.cli.commands:app"
+cosmos-hook-extract = "cosmos_vibe.adapters.claude_code.hooks:main_extract"
+cosmos-hook-inject = "cosmos_vibe.adapters.claude_code.hooks:main_inject"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
