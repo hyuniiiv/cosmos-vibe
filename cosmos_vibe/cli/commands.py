@@ -1,8 +1,13 @@
 import json
 import os
+import sys
 from pathlib import Path
 import typer
 import uvicorn
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
 app = typer.Typer(help="Cosmos Vibe: 다차원 멀티유니버스 AI 하네스")
 
