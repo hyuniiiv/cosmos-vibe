@@ -29,6 +29,14 @@ as actual working implementations that discover real issues.
 
 Cosmos Vibe maps six quantum physics concepts to concrete development signals:
 
+**Wave-Particle Duality** (파동-입자 이중성) — Your goal, before implementation,
+is pure wave: a probability distribution of all possible solutions, with no
+definite form. Each cosmos is a measurement at a different angle — it collapses
+the wave into a concrete particle (working code). Different strategies are
+different measurement angles on the same wave. This is why the same goal produces
+genuinely different implementations across cosmos: not because any of them is
+wrong, but because each reveals a different facet of the underlying solution space.
+
 **Superposition** (중첩) — N cosmos run simultaneously, each with a different
 strategy. The solution space exists in superposition — no winner is forced until
 you deliberately collapse it. You get N explorations in the time it would take to
