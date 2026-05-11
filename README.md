@@ -9,8 +9,10 @@ each other in real time), and **crystallization** (selective collapse).
 ## Install
 
 ```bash
-claude plugins install <repo-url>
+claude plugins install <your-repo-url>
 ```
+
+Replace `<your-repo-url>` with the URL of this repository (e.g., the GitHub clone URL).
 
 ## Usage
 
