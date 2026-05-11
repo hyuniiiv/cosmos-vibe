@@ -57,6 +57,9 @@ below has a direct operational meaning — none are decorative metaphors.
 | **Observation** | Reading state without collapsing it (in non-destructive measurement) | `/cosmos observe` runs freely while cosmos work — superposition unaffected |
 | **Crystallization** | Wave function collapse — one eigenstate selected | One cosmos chosen, result merged; superposition ends |
 | **Decoherence** | Loss of quantum coherence from environmental interaction | Cosmos that copies another loses strategic independence — no longer a valid sample |
+| **Reference Frame** *(Special Relativity)* | Observer's frame determines which quantities are relative and which are invariant | Resonance = frame-invariant answer (true regardless of constraint set); Uncertainty = frame-dependent answer (shifts with constraints — e.g., "stateless scalability" frame vs. "instant revocability" frame) |
+| **Geodesics + Spacetime Curvature** *(General Relativity)* | Mass curves spacetime; free particles follow locally straightest paths (geodesics) | Strong problem constraints curve the solution space; each strategy follows its natural geodesic — when constraints are extreme, all geodesics converge → BEC |
+| **Equivalence Principle** *(General Relativity)* | Locally, gravitational acceleration and inertial acceleration are indistinguishable | Locally, a workaround and a proper solution behave identically; only the wider architectural view reveals the difference — `/cosmos observe` provides that view |
 
 ---
 
@@ -122,6 +125,38 @@ equivalent at the ground state. If all decisions resonate across all cosmos,
 you've reached a Bose-Einstein Condensate: the goal was deterministic, any cosmos
 would have found the same answer. High resonance = high confidence. Full
 condensate = the problem had one correct answer all along.
+
+**Reference Frame (Special Relativity)**
+
+In special relativity, some measurements are relative to the observer's frame;
+others are invariant across all frames. The same logic applies to decisions.
+Resonance identifies **frame-invariant** conclusions — answers that hold true
+regardless of which constraints you're optimizing for. Uncertainty marks
+**frame-dependent** decisions: the right answer changes depending on whether
+your frame is "stateless scalability" or "instant revocability." The strategies
+*are* the frames. What survives across all of them is your invariant truth.
+
+**Geodesics + Spacetime Curvature (General Relativity)**
+
+In general relativity, mass curves spacetime and free particles follow geodesics
+— locally straightest paths through curved space. Problem constraints curve the
+solution space the same way: each strategy follows its natural geodesic through
+that landscape. When constraints are mild, geodesics diverge widely (high
+Uncertainty). When constraints are extreme — a hard performance ceiling, a strict
+compliance requirement — all geodesics curve toward the same region. At the limit,
+every strategy arrives at the same point: Bose-Einstein Condensate. The
+constraints, not the strategies, determine the curvature. BEC signals a strongly
+constrained problem; Uncertainty signals a weakly constrained one.
+
+**Equivalence Principle (General Relativity)**
+
+Einstein's equivalence principle: locally, you cannot distinguish between
+gravitational and inertial acceleration. In development: locally, a clever
+workaround and a properly designed solution look identical — same behavior, same
+tests passing. Only broader context reveals the difference. `/cosmos observe`
+provides that wider view: when strategies diverge in their *reasoning* for the
+same conclusion, that's your signal that one path may be a local workaround
+dressed as a proper design.
 
 ---
 
