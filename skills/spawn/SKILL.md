@@ -60,7 +60,7 @@ git worktree list
 For each universe `<name>` with strategy `<strategy>`, write the following to
 `<repo_root>/universes/<name>/CLAUDE.md`:
 
-```markdown
+~~~markdown
 # Universe <name> — Cosmos Vibe
 
 ## Goal
@@ -81,7 +81,7 @@ Your insights file (absolute path):
 Format — one JSON object per line, no trailing comma:
 {"content": "<insight text>", "ts": "<ISO 8601 timestamp e.g. 2026-05-12T12:00:00Z>"}
 
-Use the Write tool to append, or Bash:
+Do NOT use the Write tool (it overwrites the whole file). Use Bash append only:
 ```bash
 echo '{"content": "...", "ts": "2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
 ```
@@ -90,15 +90,16 @@ echo '{"content": "...", "ts": "2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/
 After EACH major implementation step, read all universe insight files to see
 what other universes have discovered:
 
-  <repo_root>/.quantum/alpha/insights.jsonl
-  <repo_root>/.quantum/beta/insights.jsonl
-  <repo_root>/.quantum/gamma/insights.jsonl
-  (read whichever exist — skip missing files)
+  <repo_root>/.quantum/alpha/insights.jsonl   (skip if missing)
+  <repo_root>/.quantum/beta/insights.jsonl    (skip if missing)
+  <repo_root>/.quantum/gamma/insights.jsonl   (skip if missing)
+  <repo_root>/.quantum/delta/insights.jsonl   (skip if missing)
+  <repo_root>/.quantum/epsilon/insights.jsonl (skip if missing)
 
 If another universe is converging on a similar pattern, note it in your next
 insight. If you see a genuinely better approach, you may adapt — but preserve
 your core strategy. Entanglement ≠ merging.
-```
+~~~
 
 ### Step 6 — Dispatch parallel agents
 
@@ -132,9 +133,11 @@ Your strategy: <strategy>
    echo '{"content": "...", "ts": "2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
 
 2. READ all universe insights after each major step:
-     <repo_root>/.quantum/alpha/insights.jsonl  (skip if missing)
-     <repo_root>/.quantum/beta/insights.jsonl   (skip if missing)
-     <repo_root>/.quantum/gamma/insights.jsonl  (skip if missing)
+     <repo_root>/.quantum/alpha/insights.jsonl   (skip if missing)
+     <repo_root>/.quantum/beta/insights.jsonl    (skip if missing)
+     <repo_root>/.quantum/gamma/insights.jsonl   (skip if missing)
+     <repo_root>/.quantum/delta/insights.jsonl   (skip if missing)
+     <repo_root>/.quantum/epsilon/insights.jsonl (skip if missing)
    
    If you see convergence with another universe, note it. Preserve your strategy.
 
@@ -143,7 +146,7 @@ Your strategy: <strategy>
 
 ### Step 7 — Report launch status
 
-Before dispatching agents, output:
+Immediately before dispatching agents (i.e., at the start of the response that makes the Agent calls), output:
 
 ```
 🌌 Spawning <N> universes...
