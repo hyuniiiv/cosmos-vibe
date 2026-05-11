@@ -1,5 +1,6 @@
 .quantum/
 universes/
+docs/
 __pycache__/
 *.pyc
 .env
