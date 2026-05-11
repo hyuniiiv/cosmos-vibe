@@ -62,6 +62,12 @@ conscious choice.
                           beta: 10 (NIST baseline, faster)
 ```
 
+**Observation** (관측) — In quantum mechanics, observing a system doesn't collapse
+it — it just reads the current state. `/cosmos observe` works the same way: you
+can run it as many times as you want while cosmos are still running. The
+superposition is unaffected. Each observation gives you a snapshot of where every
+cosmos is right now, without forcing a decision.
+
 **Crystallization** (결정화) — Wave function collapse. You've observed long enough.
 `/cosmos crystallize <id>` picks one reality, extracts the result, and optionally
 merges it into your main branch. The other cosmos remain in superposition until
