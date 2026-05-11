@@ -9,10 +9,8 @@ each other in real time), and **crystallization** (selective collapse).
 ## Install
 
 ```bash
-claude plugins install <your-repo-url>
+claude plugins install https://github.com/hyuniiiv/cosmos-vibe
 ```
-
-Replace `<your-repo-url>` with the URL of this repository (e.g., the GitHub clone URL).
 
 ## Usage
 
