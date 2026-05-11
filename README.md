@@ -27,7 +27,17 @@ as actual working implementations that discover real issues.
 
 ## Quantum mechanics → development
 
-Cosmos Vibe maps quantum physics concepts to concrete development signals:
+Cosmos Vibe maps six quantum physics concepts to concrete development signals:
+
+**Superposition** (중첩) — N cosmos run simultaneously, each with a different
+strategy. The solution space exists in superposition — no winner is forced until
+you deliberately collapse it. You get N explorations in the time it would take to
+build one.
+
+**Entanglement** (얽힘) — Agents read each other's insights between every
+implementation step. A discovery in one cosmos propagates to others in real time
+without merging their strategies. If alpha finds a race condition fix, beta and
+gamma read it and can apply it to their own implementations.
 
 **Resonance** (공명) — When multiple cosmos independently reach the same conclusion
 without copying each other, that decision is robust. Every strategy found it.
@@ -52,16 +62,14 @@ conscious choice.
                           beta: 10 (NIST baseline, faster)
 ```
 
-**Entanglement** (얽힘) — Agents read each other's insights between every
-implementation step. A discovery in one cosmos propagates to others in real time —
-without merging their strategies.
+**Crystallization** (결정화) — Wave function collapse. You've observed long enough.
+`/cosmos crystallize <id>` picks one reality, extracts the result, and optionally
+merges it into your main branch. The other cosmos remain in superposition until
+you stop them.
 
 **Decoherence** (결어긋남) — If a cosmos abandons its strategy and simply copies
-another, it loses value as an independent sample. The rules explicitly prevent
-this: entanglement means influence, not convergence.
-
-**Crystallization** (결정화) — Wave function collapse. You've observed long enough.
-You pick one reality and merge it.
+another, it loses value as an independent sample. The entanglement rules
+explicitly prevent this: influence is allowed, wholesale adoption is not.
 
 ---
 
