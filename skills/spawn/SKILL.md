@@ -108,6 +108,11 @@ Note it in your next insight. You may adopt it.
 If another cosmos found a bug or edge case → read it carefully. Apply the fix if
 it applies to your implementation too.
 
+**Final entanglement read (REQUIRED):** Before marking your implementation complete,
+perform one last read of all cosmos insight files. If new bug fixes or security
+findings have appeared since your previous read, apply them and write a final
+insight before stopping.
+
 ### Spin Preservation (pre-action principle)
 Your strategy is your spin — an immutable intrinsic property. It defines which
 direction you explore. You may adopt patterns from other cosmos via entanglement,
@@ -174,7 +179,14 @@ Your strategy: <strategy>
    [JUMP]   — prefix your insight when another cosmos's insight causes a discontinuous
               architectural shift (not gradual — a sudden leap to a different solution level)
 
-━━━ Now implement the goal using your strategy. Work autonomously until complete. ━━━
+━━━ Now implement the goal using your strategy. Work autonomously until complete.
+
+   BEFORE MARKING YOURSELF DONE — mandatory final entanglement read:
+   Read all cosmos insight files one last time (same paths as rule 2 above).
+   If any other cosmos recorded a bug fix, edge case, or security finding after
+   your last read, apply it to your implementation and write a final insight.
+   Only then stop.
+━━━
 ```
 
 ### Step 7 — Report launch status
