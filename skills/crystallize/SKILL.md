@@ -56,7 +56,9 @@ From the insights, identify and summarize:
 1. **Core decisions** — What architectural choices were made?
 2. **Trade-offs rejected** — What alternatives were considered and why?
 3. **Resonance adopted** — Which insights came from other cosmos via entanglement?
-4. **Final answer** — What is this cosmos's solution to the goal?
+4. **Quantum Tunneling** — Any `[TUNNEL]`-tagged insights? List each: what constraint was assumed, what bypass was found.
+5. **Quantum Jumps** — Any `[JUMP]`-tagged insights? List each: what single entanglement read caused the discontinuous shift, and what changed.
+6. **Final answer** — What is this cosmos's solution to the goal?
 
 Present as:
 
@@ -78,15 +80,39 @@ Trade-offs Rejected:
 Resonance Adopted (from other cosmos):
   - <insight adopted via entanglement, or "none">
 
+Quantum Tunneling:
+  - [TUNNEL] <bypassed constraint and how, or "none">
+
+Quantum Jumps:
+  - [JUMP] <what changed discontinuously and why, or "none">
+
 Final Answer:
   <summary of what was built and why>
 ```
 
-### Step 5 — Offer merge
+### Step 5 — Schrödinger check before merge
+
+Before offering to merge, prompt the user:
+
+```
+🐱 Schrödinger's Cat collapses on crystallization — quality is now definite, not potential.
+   Have you run your test suite against cosmos/<cosmos_id>?
+
+   - yes, tests pass — proceed to merge
+   - yes, tests failed — do not merge; fix in the cosmos branch, then re-crystallize
+   - no, not yet — run tests first; come back when ready
+```
+
+Wait for user response.
+- "yes, tests pass" → continue to Step 6
+- "yes, tests failed" → stop; output: `❌ Do not merge a failing cosmos. Fix the issues in cosmos/<cosmos_id>, then run /cosmos crystallize <cosmos_id> again.`
+- "no, not yet" → stop; output: `Run your tests first. Re-run /cosmos crystallize <cosmos_id> when ready.`
+
+### Step 6 — Offer merge
 
 Ask the user:
 
-> Crystallization complete. Merge `cosmos/<cosmos_id>` into main?
+> Merge `cosmos/<cosmos_id>` into main?
 >
 > - **yes** — `git merge cosmos/<cosmos_id> --no-ff`
 > - **no** — keep the branch for later
@@ -108,3 +134,8 @@ Output: `✅ Merged cosmos/<cosmos_id> into main.`
 
 **If no:**
 Output: `Branch cosmos/<cosmos_id> preserved. Run /cosmos crystallize <cosmos_id> again to merge later.`
+
+---
+
+*Note: `/cosmos observe` is non-destructive — it reads without collapsing the superposition.
+`/cosmos crystallize` is the measurement that collapses one cosmos into a definite result.*

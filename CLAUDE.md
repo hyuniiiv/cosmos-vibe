@@ -22,7 +22,11 @@ This repository is managed as a Cosmos Vibe multiverse harness.
 
 - **Resonance** — multiple cosmos independently reach the same conclusion → ship with confidence
 - **Uncertainty** — cosmos diverge on a decision → conscious tradeoff, developer chooses
+- **Degeneracy** — different strategies produce functionally identical implementations → single natural solution exists
 - **Decoherence** — a cosmos loses its strategy by copying others → flag, not a true sample
+- **Quantum Tunneling** (`[TUNNEL]`) — a cosmos bypasses an assumed hard constraint → unexpected solution path
+- **Quantum Jump** (`[JUMP]`) — a single entanglement read causes discontinuous architectural shift → non-obvious leap
+- **Bose-Einstein Condensate** — zero uncertainty + ≥3 resonant decisions + all cosmos participated → goal was deterministic
 
 ## Skills
 

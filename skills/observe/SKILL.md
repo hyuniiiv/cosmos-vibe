@@ -60,6 +60,19 @@ These are real tradeoffs with no universal answer. The developer must choose.
 simply copied another cosmos, flag it. Healthy entanglement is influence, not
 wholesale adoption.
 
+**Degeneracy** — if two or more cosmos with *different* strategies arrived at
+functionally identical implementations (same library, same algorithm, same concrete
+design), that is Degeneracy: the problem had a single natural solution regardless
+of approach. Flag this separately from Resonance (which is about conclusions, not
+implementations being identical).
+
+**Tunneling** — scan all insights across all cosmos for the prefix `[TUNNEL]`.
+These are solutions that bypassed assumed constraints. List each one.
+
+**Quantum Jump** — scan all insights for the prefix `[JUMP]`. These are
+discontinuous architectural leaps triggered by a single entanglement read.
+List each one with the cosmos it came from.
+
 ### Step 5 — Output quantum map
 
 ```
@@ -71,8 +84,35 @@ wholesale adoption.
    "<decision>" — alpha: <choice A>  |  beta: <choice B>  |  gamma: <choice C>
    "<decision>" — alpha: <choice A>  |  beta/gamma: <choice B>
 
+♊ Degeneracy: (only if applicable)
+   cosmos:<nameA> and cosmos:<nameB> reached identical implementations despite different
+   strategies — the problem has a single natural solution
+
+⚛️  Quantum Tunneling: (only if [TUNNEL]-tagged insights exist)
+   cosmos:<name>: "<insight content>"
+
+⚡ Quantum Jump: (only if [JUMP]-tagged insights exist)
+   cosmos:<name>: "<insight content>"
+
 ⚠️  Decoherence detected: (only if applicable)
    cosmos:<name> appears to have lost its <strategy> identity — review its insights
+```
+
+**Bose-Einstein Condensate check:** Fires only when ALL three conditions hold:
+1. ≥3 distinct decisions are detected in the Resonance map
+2. Zero Uncertainty items
+3. All active cosmos participated in every resonance (no cosmos sat out a decision)
+
+If all three hold, append:
+```
+🌡️  Bose-Einstein Condensate: complete convergence across all decisions.
+    The goal was deterministic — any strategy would have found the same answer.
+```
+
+**Footer (always):**
+```
+🔬 Non-destructive observation — superposition intact.
+   Run /cosmos crystallize <id> to collapse a cosmos into a definite result.
 ```
 
 If no resonance detected:
@@ -87,5 +127,9 @@ If no resonance detected:
   paths found it. Ship with confidence.
 - Uncertainty = the Heisenberg limit of this problem. You cannot optimize all
   dimensions simultaneously. Make a conscious choice.
+- Degeneracy = same implementation from different strategies. The problem itself
+  points to one answer — strategy choice was irrelevant.
 - Decoherence = a cosmos that lost coherence. Its insights may still be valuable
   but its strategy is no longer a true independent sample.
+- Tunneling / Jump = non-obvious breakthroughs. Worth examining even if you don't
+  crystallize that cosmos.

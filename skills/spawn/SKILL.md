@@ -22,6 +22,13 @@ Assign cosmos names in order: `alpha`, `beta`, `gamma`, `delta`, `epsilon` (max 
 
 Example: `--strategies "jwt,session,oauth2"` → alpha=jwt, beta=session, gamma=oauth2
 
+**Pauli Exclusion check:** If any two strategies are identical (case-insensitive), stop immediately:
+
+```
+❌ Pauli Exclusion violated: "<strategy>" appears more than once.
+   No two cosmos can occupy the same state. Each strategy must be distinct.
+```
+
 ### Step 2 — Detect repo root
 
 Run:
@@ -101,8 +108,26 @@ Note it in your next insight. You may adopt it.
 If another cosmos found a bug or edge case → read it carefully. Apply the fix if
 it applies to your implementation too.
 
-Decoherence warning: do NOT copy another cosmos's entire approach. Preserve your
-core strategy. Entanglement means influence, not convergence.
+### Spin Preservation (pre-action principle)
+Your strategy is your spin — an immutable intrinsic property. It defines which
+direction you explore. You may adopt patterns from other cosmos via entanglement,
+but you must reconstruct them through your own strategic lens. You cannot change
+your core approach mid-run.
+
+Decoherence is what happens when you violate Spin Preservation: you wholesale copy
+another cosmos's implementation and lose strategic independence. `/cosmos observe`
+will flag this. Influence without convergence — that is entanglement.
+
+### Quantum Tags (REQUIRED)
+When writing insights, prefix with a quantum tag when the condition applies:
+
+**[TUNNEL]** — you found a solution that bypasses a constraint you assumed was hard.
+Example: `{"content": "[TUNNEL] Redis sorted sets eliminate the need for a separate rate-limit table entirely", "ts": "..."}`
+
+**[JUMP]** — reading another cosmos's insight caused a discontinuous architectural shift in your approach (not gradual adaptation — a sudden leap to a qualitatively different solution).
+Example: `{"content": "[JUMP] Switched from polling to event-sourcing after reading alpha's insight on audit trail requirements", "ts": "..."}`
+
+Use these tags sparingly — only when the condition genuinely applies.
 ~~~
 
 ### Step 6 — Dispatch parallel agents
@@ -140,7 +165,14 @@ Your strategy: <strategy>
      <repo_root>/.quantum/epsilon/insights.jsonl (skip if missing)
    
    Resonance: if multiple cosmos independently reach the same conclusion — trust it.
-   Decoherence: do not abandon your strategy to follow another cosmos. Influence only.
+   Spin/Decoherence: your strategy is your spin — immutable. You may adopt patterns from
+   other cosmos (entanglement), but wholesale copying loses your independence. Influence
+   without convergence.
+
+3. TAG quantum breakthrough insights:
+   [TUNNEL] — prefix your insight when you bypass a constraint you assumed was hard
+   [JUMP]   — prefix your insight when another cosmos's insight causes a discontinuous
+              architectural shift (not gradual — a sudden leap to a different solution level)
 
 ━━━ Now implement the goal using your strategy. Work autonomously until complete. ━━━
 ```
