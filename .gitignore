@@ -9,3 +9,5 @@ dist/
 crystallized_*.json
 .pytest_cache/
 .coverage
+node_modules/
+keys/*.pem
