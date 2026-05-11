@@ -27,63 +27,101 @@ as actual working implementations that discover real issues.
 
 ## Quantum mechanics → development
 
-Cosmos Vibe maps six quantum physics concepts to concrete development signals:
+Cosmos Vibe maps quantum physics to concrete development mechanics. Every concept
+below has a direct operational meaning — none are decorative metaphors.
 
-**Wave-Particle Duality** (파동-입자 이중성) — Your goal, before implementation,
-is pure wave: a probability distribution of all possible solutions, with no
-definite form. Each cosmos is a measurement at a different angle — it collapses
-the wave into a concrete particle (working code). Different strategies are
-different measurement angles on the same wave. This is why the same goal produces
-genuinely different implementations across cosmos: not because any of them is
-wrong, but because each reveals a different facet of the underlying solution space.
+### Quick reference
 
-**Superposition** (중첩) — N cosmos run simultaneously, each with a different
-strategy. The solution space exists in superposition — no winner is forced until
-you deliberately collapse it. You get N explorations in the time it would take to
-build one.
+| Concept | Quantum | Development |
+|---------|---------|-------------|
+| **Wave-Particle Duality** | Particles are both wave and particle depending on measurement | Goal = wave (pure potential); each cosmos = particle (concrete implementation) |
+| **Young's Double Slit** | Wave through two slits creates interference pattern | Same goal through N strategies reveals resonance (constructive) and uncertainty (destructive) |
+| **Superposition** | System exists in multiple states simultaneously | N cosmos run in parallel — no winner until crystallization |
+| **Path Integral** | Particle takes all paths simultaneously; result from interference | Every implementation path explored at once; resonance emerges from their overlap |
+| **Quantum Annealing** | Quantum tunneling escapes local optima to find global minimum | Parallel cosmos escape architectural local optima a single sequential approach would get stuck in |
+| **Entanglement** | Particles affect each other regardless of distance | Real-time insight sharing between cosmos without merging strategies |
+| **Quantum Teleportation** | Quantum state transferred via entanglement + classical channel | Insight travels via `.quantum/` files (classical) + entanglement rules (quantum) — no implementation copying |
+| **No-Cloning Theorem** | Unknown quantum state cannot be perfectly copied | A cosmos cannot clone another's implementation — each must evolve independently |
+| **Pauli Exclusion Principle** | No two fermions can occupy the same quantum state | No two cosmos can run the same strategy — distinct strategies required |
+| **Spin** | Intrinsic immutable property of a particle | Each cosmos has an intrinsic strategic identity that defines which direction it explores |
+| **Quantum Coherence** | Phase relationships maintained across the system | Each cosmos maintains strategic integrity; coherence = independent sample value |
+| **Quantum Tunneling** | Particle passes through a classically forbidden barrier | A cosmos finds a solution path that bypasses an assumed hard constraint |
+| **Quantum Jump** | Electron transitions between energy levels discontinuously | A single insight causes a cosmos to make a discontinuous leap — not gradual, not incremental |
+| **Quantum Interference** | Waves amplify (constructive) or cancel (destructive) | Constructive → Resonance; Destructive → Uncertainty |
+| **Resonance** | Waves in phase amplify each other | Multiple cosmos independently converge → trust the signal, ship with confidence |
+| **Uncertainty Principle** | Position and momentum cannot both be precisely known | Cannot optimize all dimensions simultaneously; some tradeoffs are fundamental |
+| **Schrödinger's Cat** | System in superposition is simultaneously all states until measured | Each cosmos is simultaneously the best and worst solution until crystallized and tested |
+| **Degeneracy** | Multiple distinct states with identical energy levels | Different strategies reaching the same conclusion = degenerate solutions; equality proves robustness |
+| **Bose-Einstein Condensate** | All particles collapse to the same ground state | Total resonance across all decisions — the goal was deterministic; any cosmos would do |
+| **Measurement Problem** | Observation collapses wave function | `/cosmos observe` ≠ collapse; `/cosmos crystallize` = collapse. Distinction is intentional |
+| **Observation** | Reading state without collapsing it (in non-destructive measurement) | `/cosmos observe` runs freely while cosmos work — superposition unaffected |
+| **Crystallization** | Wave function collapse — one eigenstate selected | One cosmos chosen, result merged; superposition ends |
+| **Decoherence** | Loss of quantum coherence from environmental interaction | Cosmos that copies another loses strategic independence — no longer a valid sample |
 
-**Entanglement** (얽힘) — Agents read each other's insights between every
-implementation step. A discovery in one cosmos propagates to others in real time
-without merging their strategies. If alpha finds a race condition fix, beta and
-gamma read it and can apply it to their own implementations.
+---
 
-**Resonance** (공명) — When multiple cosmos independently reach the same conclusion
-without copying each other, that decision is robust. Every strategy found it.
-Ship it without second-guessing.
+### Key mechanics in depth
 
-```
-⚡ Resonance — trust these:
-   "15-minute token expiry" — 3 cosmos converged independently
-   "{ error: { code, message } } format" — 3 cosmos converged independently
-   "dummy bcrypt on unknown email" — 3 cosmos converged independently
-```
+**Wave-Particle Duality + Young's Double Slit**
 
-**Uncertainty** (불확정성) — When cosmos genuinely disagree, that's not a failure —
-it's a real tradeoff. You cannot optimize all dimensions simultaneously. Make a
-conscious choice.
+Your goal, before implementation, is pure wave: it has no definite form, only
+potential. Sending it through N strategies (the slits) produces an interference
+pattern. Where strategies agree — constructive interference → Resonance. Where
+they disagree — destructive interference → Uncertainty. The pattern tells you
+exactly which decisions are robust and which are genuine tradeoffs.
 
-```
-🌀 Uncertainty — your call:
-   "signing algorithm" — alpha: HS256 (single-server simplicity)
-                          beta:  RS256 (multi-service key distribution)
-   "bcrypt rounds"     — alpha/gamma: 12 (security margin)
-                          beta: 10 (NIST baseline, faster)
-```
+**Path Integral + Quantum Annealing**
 
-**Observation** (관측) — In quantum mechanics, observing a system doesn't collapse
-it — it just reads the current state. `/cosmos observe` works the same way: you
-can run it as many times as you want while cosmos are still running. The
-superposition is unaffected. Each observation gives you a snapshot of where every
-cosmos is right now, without forcing a decision.
+Feynman's path integral says a particle simultaneously takes every possible path.
+Cosmos Vibe runs every strategy simultaneously. The "most probable path" — the
+one that survives interference — is your Resonance output. Quantum annealing adds
+the optimization dimension: sequential decision-making gets trapped in local optima.
+Parallel cosmos escape them by exploring the full solution space at once.
 
-**Crystallization** (결정화) — Wave function collapse. You've observed long enough.
-`/cosmos crystallize <id>` picks one reality, extracts the result, and optionally
-merges it into your main branch. The other cosmos remain in superposition until
-you stop them.
+**No-Cloning Theorem + Pauli Exclusion + Spin**
 
-**Decoherence** (결어긋남) — If a cosmos abandons its strategy and simply copies
-another, it loses value as an independent sample. The entanglement rules
-explicitly prevent this: influence is allowed, wholesale adoption is not.
+These three together define why cosmos must stay independent. No-Cloning: you
+cannot duplicate an unknown quantum state — so a cosmos cannot copy another's
+implementation wholesale. Pauli Exclusion: no two fermions occupy the same state —
+so no two cosmos can run the same strategy. Spin: each particle's intrinsic
+identity is immutable — so each cosmos's core strategy must be preserved throughout.
+Break any of these rules and you lose independent sample value.
+
+**Entanglement + Quantum Teleportation**
+
+Entanglement is the channel; teleportation is the mechanism. When alpha writes an
+insight to `.quantum/alpha/insights.jsonl` and beta reads it, the insight
+"teleports" — information travels via the classical channel (file I/O) + the
+entanglement relationship (the read requirement in each agent's prompt). The
+original implementation in alpha is untouched. Beta reconstructs the relevant
+pattern in its own strategic context.
+
+**Quantum Tunneling + Quantum Jump**
+
+Two distinct breakthrough types. Tunneling: a cosmos finds a solution that bypasses
+a constraint you assumed was hard — it goes *through* the wall instead of over it.
+Jump: a cosmos reads an insight from another and makes a *discontinuous* architectural
+shift — not a gradual adaptation but a sudden transition to a qualitatively
+different implementation level. Both produce non-obvious solutions that sequential
+exploration would rarely find.
+
+**Schrödinger's Cat + Measurement Problem**
+
+Each cosmos is simultaneously the best and worst solution until you crystallize
+and run tests. `/cosmos observe` is a non-destructive measurement — it reads state
+without collapsing the superposition. `/cosmos crystallize` is the destructive
+measurement — it collapses one cosmos into a definite result. The distinction is
+intentional: observe as many times as you want; crystallize only when ready.
+
+**Resonance + Degeneracy + Bose-Einstein Condensate**
+
+Resonance is constructive interference — multiple cosmos reaching the same
+conclusion independently. Degeneracy deepens this: when *different* strategies
+produce *identical* solutions, those solutions have equal "energy" — they're
+equivalent at the ground state. If all decisions resonate across all cosmos,
+you've reached a Bose-Einstein Condensate: the goal was deterministic, any cosmos
+would have found the same answer. High resonance = high confidence. Full
+condensate = the problem had one correct answer all along.
 
 ---
 
