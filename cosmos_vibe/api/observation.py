@@ -9,6 +9,7 @@ def create_app(memory: QuantumMemory, engine: ResonanceEngine) -> FastAPI:
 
     @app.get("/observe")
     def observe() -> dict:
+        engine.check_resonance()
         embeddings = memory.get_latest_embeddings()
         return {
             "universes": {
@@ -31,6 +32,7 @@ def create_app(memory: QuantumMemory, engine: ResonanceEngine) -> FastAPI:
 
     @app.get("/entanglements")
     def get_entanglements() -> list:
+        engine.check_resonance()
         return [
             {"pair": list(pair), "similarity": round(sim, 4)}
             for pair, sim in engine.active_entanglements.items()
