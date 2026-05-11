@@ -4,7 +4,7 @@ from pathlib import Path
 import typer
 import uvicorn
 
-app = typer.Typer(help="Cosmos Vibe — 다차원 멀티유니버스 AI 하네스")
+app = typer.Typer(help="Cosmos Vibe: 다차원 멀티유니버스 AI 하네스")
 
 
 def _get_persist_path() -> str:
