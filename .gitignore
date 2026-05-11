@@ -1,0 +1,10 @@
+.quantum/
+universes/
+__pycache__/
+*.pyc
+.env
+dist/
+*.egg-info/
+crystallized_*.json
+.pytest_cache/
+.coverage
