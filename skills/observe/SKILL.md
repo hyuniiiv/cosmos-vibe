@@ -60,7 +60,8 @@ Example:
 
 ### Step 4 — Detect entanglements
 
-Analyze all insights semantically. Identify pairs of universes where the
+Using the full dataset read in Step 2 (not just the 2 displayed insights),
+analyze all insights semantically. Identify pairs of universes where the
 same pattern, strategy, or conclusion is emerging independently.
 
 For each detected entanglement pair:

@@ -22,8 +22,10 @@ Store as `<repo_root>`.
 git worktree list
 ```
 
-Identify all worktrees whose path contains `universes/`. Extract their names
-(the final path segment: `alpha`, `beta`, etc.).
+From the `git worktree list` output, identify worktrees whose branch column
+(the `[branch-name]` in square brackets) starts with `universe/`.
+Extract the universe name as the part after `universe/`
+(e.g., `[universe/alpha]` → name is `alpha`).
 
 If no universe worktrees are found:
 ```

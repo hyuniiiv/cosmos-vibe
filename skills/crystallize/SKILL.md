@@ -44,6 +44,9 @@ Show:
 - Last 10 commits
 - Changed/uncommitted files
 
+If the worktree no longer exists (e.g., after `/cosmos stop`), skip this step
+and proceed to Step 4 using only the insights file.
+
 ### Step 4 — Extract key decisions
 
 From the insights, identify and summarize:
@@ -88,11 +91,20 @@ Ask the user:
 Wait for user response.
 
 **If yes:**
-```bash
-git merge universe/<universe_id> --no-ff -m "feat: crystallize universe/<universe_id>
 
-Insights recorded: <N>
-Strategy: <strategy>"
+First detect the default branch and switch to it:
+```bash
+git -C <repo_root> symbolic-ref --short HEAD
+```
+If already on main (or master): proceed. Otherwise:
+```bash
+git -C <repo_root> checkout main
+```
+(substitute `master` if that's the default branch name)
+
+Then merge:
+```bash
+git -C <repo_root> merge universe/<universe_id> --no-ff -m "feat: crystallize universe/<universe_id>"
 ```
 
 Output: `✅ Merged universe/<universe_id> into main.`
