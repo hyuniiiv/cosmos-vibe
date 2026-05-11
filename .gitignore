@@ -1,5 +1,8 @@
 .quantum/
 cosmos/
+universes/
+.superpowers/
+package-lock.json
 docs/
 __pycache__/
 *.pyc
