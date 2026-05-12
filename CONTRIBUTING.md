@@ -47,8 +47,7 @@ state files.
    - Read instructions from a markdown file
    - Execute `git worktree add`, file reads/writes, `tail -f` (or
      equivalent) on `.quantum/*.jsonl`
-4. If the agent supports MCP, point to `mcp/README.md`.
-5. Open a PR titled `feat(integration): support <agent name>`.
+4. Open a PR titled `feat(integration): support <agent name>`.
 
 ## PR checklist
 
