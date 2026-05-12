@@ -201,11 +201,46 @@ branches**, preserved for reference or follow-up crystallization.
 
 ### 5. See a real run
 
-Real cosmos run outputs (spawn command + raw `.quantum/*.jsonl` + observe + crystallize) are collected in [`examples/`](examples/). We deliberately don't ship fabricated examples — only sessions a developer actually ran on real code.
+---
 
-**Featured: [`examples/auth-audit/`](examples/auth-audit/)** — a 3-cosmos security audit of a production Electron+Next.js payment terminal, executed twice (deliberate re-spawn). Three complementary lenses (security-threat, code-architecture, offline-resilience) independently converged on a systemic JWT flaw (3-way resonance: *"the token has no expiration, revocation is a no-op, and storage is plaintext — and the three reinforce each other"*). The 2nd round produced a `[TUNNEL]` find — **Electron CORS wildcard injection** in `main.js` that the 1st round missed entirely, exfiltrating bearer tokens to any origin if XSS or supply-chain compromise occurs. The verbatim auto-observe output (both rounds) and raw `.jsonl` insights are included unedited.
+## 🛰️ Featured run — [`examples/auth-audit/`](examples/auth-audit/)
 
-If you've done a meaningful cosmos run, [contribute it](examples/README.md#contributing-a-run).
+> **A 3-cosmos security audit of a production Electron + Next.js payment terminal.**
+> Run twice. Real source. Verbatim observe output included.
+
+| 3 cosmos | 2 rounds | 5 CRITICALs | 1 [TUNNEL] | 0 fabricated insights |
+|:---:|:---:|:---:|:---:|:---:|
+| security-threat<br/>code-architecture<br/>offline-resilience | deliberate re-spawn<br/>to test signal stability | including JWT no-exp,<br/>revocation gap, plaintext token | Electron CORS<br/>wildcard injection | every `.jsonl` line<br/>is the agent's actual output |
+
+### What the 1st round found
+
+> ### ⚡ 3-way resonance — *"The token has no expiration, revocation is a no-op against stateless JWT, and the token is stored plaintext. The three reinforce each other."*
+>
+> All three cosmos arrived at this independently, from three different lenses. **Systemic flaw, not a local bug.** Ship the fix as a single coordinated change.
+
+Plus: `platform_admin` self-registration (OWASP A01), `cancel-request` `body.termId` spoof, cross-tenant IDOR on `/api/terminals`, three coexisting auth schemes with no central dispatcher.
+
+### What the 2nd round added — *the case for re-spawning*
+
+> ### ✨ `[TUNNEL]` — Electron CORS wildcard injection in `electron/main.js`
+>
+> When a response is missing `Access-Control-Allow-Origin`, the main process **injects `*` plus allows the `Authorization` header**. Any XSS or supply-chain compromise exfiltrates bearer tokens to an attacker-controlled origin.
+>
+> **The 1st round missed this entirely.** A single re-spawn surfaced it.
+
+Plus: `terminals/[id]/account|key` PUT routes don't verify merchant ownership → cross-tenant **write** path → full account takeover. Another critical the 1st round didn't reach.
+
+### Why this example matters
+
+- **Resonance is real.** Three independent strategies, three different lenses, same conclusion. This is the signal you can't get from a single sub-agent.
+- **Re-spawning is not optional.** The most dangerous finding (`[TUNNEL]` CORS injection) only surfaced on round 2. For high-stakes goals, run cosmos twice.
+- **No theater.** The full verbatim auto-observe output, raw `.jsonl` insights, and spawn command are in the repo. Read [`observe-snapshot.md`](examples/auth-audit/observe-snapshot.md) and decide for yourself.
+
+→ **[Read the full audit](examples/auth-audit/)** · [insights/alpha.jsonl](examples/auth-audit/insights/alpha.jsonl) · [insights/beta.jsonl](examples/auth-audit/insights/beta.jsonl) · [insights/gamma.jsonl](examples/auth-audit/insights/gamma.jsonl)
+
+---
+
+Other real cosmos run outputs (spawn command + raw `.quantum/*.jsonl` + observe + crystallize) are collected in [`examples/`](examples/). We deliberately don't ship fabricated examples — only sessions a developer actually ran on real code. If you've done a meaningful cosmos run, [contribute it](examples/README.md#contributing-a-run).
 
 ---
 

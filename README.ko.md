@@ -195,11 +195,46 @@ graph LR
 
 ### 5. 실제 실행 사례 보기
 
-실제 cosmos 실행 결과(spawn 명령 + 원본 `.quantum/*.jsonl` + observe + crystallize)는 [`examples/`](examples/) 에 모입니다. 의도적으로 가짜 예시를 넣지 않습니다 — 개발자가 실제 코드에서 돌린 세션만 수록합니다.
+---
 
-**대표 사례: [`examples/auth-audit/`](examples/auth-audit/)** — 프로덕션 Electron+Next.js 결제 단말 코드베이스에 대한 3-cosmos 보안 감사를 **2회 실행**(의도적 재 spawn)한 결과. 세 가지 상보적 렌즈(security-threat, code-architecture, offline-resilience)가 독립적으로 같은 결론에 도달했습니다 — *"JWT에 만료가 없고, revocation은 stateless JWT에 무력하며, 토큰은 평문 저장 — 셋이 서로를 강화한다"* (3-way 공명). 2차 라운드에서는 `[TUNNEL]` 발견이 추가됨 — `main.js`의 **Electron CORS 와일드카드 인젝션**으로 XSS/공급망 침해 발생 시 bearer 토큰이 임의 origin으로 송출 가능하며, 1차 라운드는 이를 완전히 놓쳤습니다. 양 라운드의 verbatim auto-observe 출력과 원본 `.jsonl` 인사이트가 편집 없이 포함되어 있습니다.
+## 🛰️ 대표 사례 — [`examples/auth-audit/`](examples/auth-audit/)
 
-의미 있는 cosmos 실행을 해보셨다면 [기여](examples/README.md#contributing-a-run)해 주세요.
+> **프로덕션 Electron + Next.js 결제 단말 코드베이스에 대한 3-cosmos 보안 감사.**
+> 2회 실행. 실제 소스. verbatim observe 출력 포함.
+
+| 3 cosmos | 2 라운드 | CRITICAL 5건 | [TUNNEL] 1건 | 가공 인사이트 0건 |
+|:---:|:---:|:---:|:---:|:---:|
+| security-threat<br/>code-architecture<br/>offline-resilience | 의도적 재 spawn으로<br/>시그널 안정성 검증 | JWT 무만료, revocation 단절,<br/>평문 토큰 저장 등 | Electron CORS<br/>와일드카드 인젝션 | 모든 `.jsonl` 줄은<br/>에이전트가 실제로 출력한 것 |
+
+### 1차 라운드 발견
+
+> ### ⚡ 3-way 공명 — *"토큰에 만료가 없고, revocation은 stateless JWT에 무력하며, 토큰은 평문 저장. 셋이 서로를 강화한다."*
+>
+> 세 cosmos가 서로 다른 렌즈로 독립적으로 같은 결론에 도달했습니다. **국소 버그가 아닌 시스템적 결함.** 단발 패치가 아니라 한 묶음으로 ship해야 합니다.
+
+추가: `platform_admin` 자가 등록 (OWASP A01), `cancel-request`의 `body.termId` 스푸핑, `/api/terminals` cross-tenant IDOR, 중앙 디스패처 없이 공존하는 3개 인증 스킴.
+
+### 2차 라운드가 추가한 발견 — *재 spawn의 가치*
+
+> ### ✨ `[TUNNEL]` — `electron/main.js`의 Electron CORS 와일드카드 인젝션
+>
+> 응답에 `Access-Control-Allow-Origin` 헤더가 없으면 메인 프로세스가 **`*`와 `Authorization` 헤더 허용을 주입**합니다. XSS 또는 공급망 침해 시 bearer 토큰이 공격자가 제어하는 origin으로 송출 가능합니다.
+>
+> **1차 라운드는 이를 완전히 놓쳤습니다.** 단 한 번의 재 spawn으로 표면화됐습니다.
+
+추가: `terminals/[id]/account|key` PUT 라우트의 merchant 소유권 미검증 → cross-tenant **쓰기** 경로 → 전체 계정 takeover. 1차에서 도달하지 못한 또 하나의 Critical.
+
+### 왜 이 사례가 중요한가
+
+- **공명은 실재한다.** 세 개의 독립 전략, 세 개의 다른 렌즈, 같은 결론. 단일 sub-agent로는 얻을 수 없는 시그널입니다.
+- **재 spawn은 선택이 아니다.** 가장 위험한 발견(`[TUNNEL]` CORS 인젝션)이 2라운드에서야 표면화됐습니다. 고위험 골에는 두 번 돌리세요.
+- **연출 없음.** verbatim auto-observe 출력 전체, 원본 `.jsonl` 인사이트, spawn 명령이 레포에 그대로 있습니다. [`observe-snapshot.md`](examples/auth-audit/observe-snapshot.md) 직접 읽고 판단하세요.
+
+→ **[전체 감사 보기](examples/auth-audit/)** · [insights/alpha.jsonl](examples/auth-audit/insights/alpha.jsonl) · [insights/beta.jsonl](examples/auth-audit/insights/beta.jsonl) · [insights/gamma.jsonl](examples/auth-audit/insights/gamma.jsonl)
+
+---
+
+그 외 실제 cosmos 실행 결과(spawn 명령 + 원본 `.quantum/*.jsonl` + observe + crystallize)는 [`examples/`](examples/) 에 모입니다. 의도적으로 가짜 예시를 넣지 않습니다 — 개발자가 실제 코드에서 돌린 세션만 수록합니다. 의미 있는 cosmos 실행을 해보셨다면 [기여](examples/README.md#contributing-a-run)해 주세요.
 
 ---
 
