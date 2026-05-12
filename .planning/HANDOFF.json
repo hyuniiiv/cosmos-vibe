@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-12T04:07:46.861Z",
+  "source": "auto-postool",
+  "partial": false,
+  "phase": null,
+  "phase_name": null,
+  "phase_dir": null,
+  "plan": null,
+  "task": null,
+  "total_tasks": null,
+  "status": "auto-checkpoint",
+  "completed_tasks": [],
+  "remaining_tasks": [],
+  "blockers": [],
+  "human_actions_pending": [],
+  "decisions": [],
+  "uncommitted_files": [
+    {
+      "status": "M",
+      "path": ".claude-plugin/marketplace.json"
+    },
+    {
+      "status": "M",
+      "path": "README.md"
+    },
+    {
+      "status": "??",
+      "path": ".omc/"
+    },
+    {
+      "status": "??",
+      "path": ".planning/"
+    },
+    {
+      "status": "??",
+      "path": ".serena/"
+    }
+  ],
+  "next_action": null,
+  "context_notes": "Recent commits:\nd74238a fix: use github source object in marketplace.json\n9bffc36 feat: rebrand to QuantumAgent and add marketplace.json\n874253a docs: comprehensive README overhaul for production readiness\ne9547e2 fix: require mandatory final entanglement read before cosmos completion\n97bc8bc docs: add Special and General Relativity concepts to README"
+}

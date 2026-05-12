@@ -1,5 +1,5 @@
 {
-  "name": "quantum-agent",
+  "name": "cosmos",
   "description": "QuantumAgent — parallel cosmos exploration harness: agents that observe and entangle",
   "version": "1.0.0",
   "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse"]

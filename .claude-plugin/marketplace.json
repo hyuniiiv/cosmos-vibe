@@ -10,7 +10,7 @@
   },
   "plugins": [
     {
-      "name": "quantum-agent",
+      "name": "cosmos",
       "source": {
         "source": "github",
         "repo": "hyuniiiv/quantum-agent"

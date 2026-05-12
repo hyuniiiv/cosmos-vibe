@@ -90,13 +90,30 @@ QuantumAgent ships as a self-marketplace Claude Code plugin. Inside Claude Code:
 
 ```
 /plugin marketplace add hyuniiiv/quantum-agent
-/plugin install quantum-agent@quantum-agent
+/plugin install cosmos@quantum-agent
+/reload-plugins
 ```
 
 After install, the `/cosmos` slash commands are available immediately.
 
 No Python. No vector database. No subprocess. Pure markdown skills.
 Quantum Memory is plain JSON Lines files on disk.
+
+### Troubleshooting
+
+**`git@github.com: Permission denied (publickey)` during install**
+
+Claude Code clones the plugin over SSH by default. If you don't have a GitHub SSH key set up, rewrite SSH URLs to HTTPS for github.com:
+
+```bash
+git config --global url."https://github.com/".insteadOf git@github.com:
+```
+
+Then retry `/plugin install quantum-agent@quantum-agent`.
+
+Alternatives:
+- `gh auth login` → `gh auth setup-git` (uses HTTPS + credential helper)
+- Add an SSH key: `ssh-keygen -t ed25519 -C "you@example.com"` and register the public key in GitHub → Settings → SSH Keys
 
 ---
 
