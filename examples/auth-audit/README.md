@@ -63,7 +63,7 @@ was a fix set, not a single implementation):
 - [`insights/alpha.jsonl`](insights/alpha.jsonl) — 11 raw insights (vulnerability-hunter)
 - [`insights/beta.jsonl`](insights/beta.jsonl) — 8 raw insights (architecture-auditor)
 - [`insights/gamma.jsonl`](insights/gamma.jsonl) — 10 raw insights (client-dataflow)
-- [`observe-snapshot.md`](observe-snapshot.md) — manual synthesis of the run (the `/cosmos:observe` command was not invoked; this is an editorial summary of the raw JSONL, called out as such)
+- [`observe-snapshot.md`](observe-snapshot.md) — `/cosmos:observe` output (auto-run at end of `/cosmos:spawn`): superposition, resonance, tunneling, jumps, blockers
 
 ## Notes for the reader
 

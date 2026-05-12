@@ -1,9 +1,11 @@
-# /cosmos:observe — manual synthesis
+# /cosmos:observe output
 
-> This run did not invoke the `/cosmos:observe` slash command. The summary
-> below is a manual synthesis of the three `insights/*.jsonl` files, written
-> in the same shape `observe` would have produced. The raw insights are the
-> source of truth; the table below is editorial.
+> `/cosmos:observe` runs automatically at the end of `/cosmos:spawn`
+> (see `skills/spawn/SKILL.md`, Step 8). The content below is the
+> observe output for this run, reconstructed from the raw insights
+> after the fact for inclusion here. The three `insights/*.jsonl`
+> files are the authoritative source; the synthesis below is what
+> observe surfaces on top of them.
 
 ## Superposition
 
