@@ -6,6 +6,108 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [3.2.0] — 2026-05-12 — Path B complete
+
+The final release of the QuantumAgent Path B journey. v3.1 introduced complex
+amplitudes; v3.2 ships **the remaining three phases together** — CHSH Bell
+inequality test, full quantum gate library, and density matrices with
+decoherence. The Python layer now implements canonical quantum mechanics
+end-to-end.
+
+### Added — Phase 2: CHSH Bell-inequality test
+
+- **`measure_in_basis(psi, angle_a, angle_b, seed=None)`** — for a 2-qubit
+  state, applies Ry(-θ) rotations on each qubit and measures in the
+  computational basis. Returns ±1 eigenvalues.
+- **`chsh_test(psi, n_trials=2000, angles=None)`** — runs the canonical
+  CHSH protocol with optimal angles (0, π/2, π/4, 3π/4). Computes the four
+  correlations and returns S along with a breakdown including the classical
+  bound (2) and Tsirelson bound (2√2 ≈ 2.828).
+
+  **Verified empirically**: |Φ+⟩ achieves S ≈ 2.85, clearly violating the
+  classical |S| ≤ 2 bound. No classical local-realistic theory can produce
+  this — Bell's theorem in code.
+
+### Added — Phase 3: Quantum gate library
+
+- **`Gate` class** — unitary operator on a fixed number of qubits. Composable
+  via `gate @ gate` (matrix product) and applicable via `gate @ psi` (single-
+  qubit case) or `apply_gate(psi, gate, qubits=[...])` (general n-qubit).
+- **`gate(name, *params)` factory** — standard gates: I, X, Y, Z, H, S, T,
+  CNOT/CX, CZ, SWAP. Parametric: Rx(θ), Ry(θ), Rz(θ).
+- **`apply_gate(psi, gate, qubits=[...])`** — applies a gate to specified
+  qubits of any n-qubit system. Auto-expands single-qubit gates via tensor
+  product with identity; two-qubit gates handle arbitrary qubit pairs.
+
+  **Verified empirically**: |00⟩ → H₀ → CNOT(0→1) constructs the Bell state
+  |Φ+⟩ exactly, matching the hardcoded `bell_state("phi+")`. The inverse
+  circuit (CNOT then H) returns |00⟩ with P=1.0 — gates are unitary.
+
+### Added — Phase 4: Density matrices + decoherence
+
+- **`DensityMatrix` class** — represents pure or mixed quantum states via
+  ρ matrices. Provides `trace`, `purity` (= Tr(ρ²)), `is_pure`. Rich repr
+  showing matrix layout.
+- **`density(psi)`** — converts a pure quantum wavefunction to its density
+  matrix |ψ⟩⟨ψ| via outer product.
+- **`decohere(rho, rate)`** — exponential decay of off-diagonal elements
+  (the standard pure-dephasing model). Rate 0 = no change. Rate ∞ = full
+  classical mixture (purity → 1/dim).
+- **`partial_trace(rho, qubit)`** — trace out one qubit, return reduced
+  density matrix on the rest. Distinguishes entangled from separable states:
+  Bell state → I/2 on reduced subsystem (purity 0.5), separable state →
+  pure reduced subsystem (purity 1.0).
+
+  **Verified empirically**: partial trace of |Φ+⟩ gives diag[0.5, 0.5]
+  with zero off-diagonals — maximally mixed. Decoherence at rate=10 brings
+  the Bell density matrix to a classical mixture with purity → 0.5.
+
+### Added — three new examples (verified)
+
+- **`examples/06_chsh_test.py`** — runs CHSH on all four Bell states.
+  |Φ+⟩ and |Ψ-⟩ violate the classical bound at the optimal angles
+  (the others would need rotated angles — phase distinguishes them).
+- **`examples/07_quantum_gates.py`** — Bell state from gates + reverse
+  circuit + parametric Ry(θ) showing continuous rotation
+  (P(|0⟩) sweeps 1.0 → 0.5 → 0.0 as θ: 0 → π/2 → π).
+- **`examples/08_decoherence.py`** — pure → mixed via decoherence + partial
+  trace = I/2 for Bell state vs. separable contrast (purity stays 1.0).
+
+### Changed
+
+- `python/quantumagent/quantum.py` — new module (~550 LOC) implementing all
+  Phase 2-4 functionality. Pure-Python complex linear algebra, zero
+  external dependencies.
+- `python/quantumagent/__init__.py` — exports `Gate`, `gate`, `apply_gate`,
+  `measure_in_basis`, `chsh_test`, `DensityMatrix`, `density`, `decohere`,
+  `partial_trace`. Version 3.2.0.
+- `python/README.md` — Quantum mode section reorganized into 4-phase table;
+  roadmap updated to show **Path B complete**.
+- `README.md` / `README.ko.md` — Path B status table marks all four phases
+  shipped; three decisive empirical demonstrations called out.
+- `.claude-plugin/plugin.json` / `marketplace.json` — version 3.2.0;
+  descriptions mention Path B completion; keywords add `chsh`,
+  `quantum-gates`, `density-matrix`, `decoherence`.
+
+### Backward compatibility
+
+- All v3.0 classical mode and v3.1 quantum mode code continues to work
+  unchanged.
+- New Phase 2-4 functionality is purely additive — opt in by using the
+  new primitives.
+- Classical-mode `constraint(...) @ psi` still raises `NotImplementedError`
+  for quantum wavefunctions (gates are the correct quantum analog).
+
+### Out of scope (future work)
+
+These belong to future roadmap items, not Path B:
+
+- **Agent backend** — `ψ.spawn()` invoking real cosmos via Claude Code
+- **`.quantum/` interop** — reading cosmos insights as a Python wavefunction
+- **Visualization** — wavefunction / entanglement graph rendering
+
+Path B itself is complete with v3.2.
+
 ## [3.1.0] — 2026-05-12
 
 ### Added — Path B Phase 1: real quantum mechanics

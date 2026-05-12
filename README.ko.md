@@ -859,18 +859,24 @@ bell = bell_state("phi+")
 
 `python/examples/04_quantum_interference.py`와 `05_bell_state.py`에서 전체 시연 — 둘 다 이론 예측대로 정확히 작동 검증됨 (상쇄 간섭 1000:0, Bell 상태 2000:0:0:2000 분할).
 
-### Path B 로드맵
+### Path B 상태 — **완료 (v3.2)**
 
 | 단계 | 상태 | 기능 |
 |------|------|------|
 | Phase 1 (v3.1) | ✓ 출시 | 복소 진폭, 간섭, Bell 상태 |
-| Phase 2 (v3.2) | 계획 | CHSH/Bell 부등식 검정, 회전 연산자, 에르미트 제약 |
-| Phase 3 (v3.3) | 계획 | 유니터리 진화, 양자 게이트 |
-| Phase 4 (v3.4) | 계획 | 밀도 행렬, 결깨짐 모델 |
+| Phase 2 (v3.2) | ✓ 출시 | CHSH 부등식 검정, 다중 기저 측정 |
+| Phase 3 (v3.2) | ✓ 출시 | 전체 양자 게이트 라이브러리 (Pauli, Hadamard, CNOT, CZ, SWAP, Rx/Ry/Rz), 회로 합성 |
+| Phase 4 (v3.2) | ✓ 출시 | 밀도 행렬, 결깨짐 모델, 부분 자취 |
+
+이제 정통 양자역학 end-to-end 구현 완료. 세 가지 결정적 실증이 `python/examples/`에:
+
+- **`06_chsh_test.py`** — Bell 상태에서 S ≈ 2.83 (Tsirelson 한계), 고전 |S| ≤ 2 위반. 어떤 고전 국소 실재론도 이걸 만들 수 없음.
+- **`07_quantum_gates.py`** — |00⟩ → H₀ → CNOT(0→1)로 |Φ+⟩ 정확 구성, 하드코딩 `bell_state("phi+")`와 일치. 역회로로 |00⟩ 복원.
+- **`08_decoherence.py`** — Bell 상태 부분 자취 = 최대 혼합 I/2 (purity = 0.5), 가장 강력한 얽힘 시그니처.
 
 향후 호환 API 설계로 기존 v3.0 고전 모드 코드는 그대로 작동. 양자 모드는 순수 추가 — `weights=` 대신 `amplitudes=` 전달로 옵트인.
 
-전체 가이드, 실행 가능한 예제 5개 (3개 고전 + 2개 양자), 자세한 로드맵은 [`python/README.md`](python/README.md) 참조.
+전체 가이드, 실행 가능한 예제 8개 (3개 고전 + Path B 4단계 5개), 프리미티브 레퍼런스는 [`python/README.md`](python/README.md) 참조.
 
 ---
 

@@ -111,8 +111,16 @@ from quantumagent import psi, entangle, observe, measure, constraint
 - `observe(psi)` — 비파괴 분포 읽기 (두 모드 모두)
 - `measure(psi, seed)` — 본 규칙 샘플링, 붕괴 + 얽힘 전파
 - `entangle(a, b, correlation)` — 두 파동함수 연결 (고전적 소프트 얽힘)
-- `constraint(name, boost=…, suppress=…, where=…)` — `@`로 적용 (v3.1은 고전 모드만)
+- `constraint(name, boost=…, suppress=…, where=…)` — `@`로 적용 (고전 모드만)
 - *(v3.1)* `superpose(a, b)` — 양자 중첩; 진폭 덧셈 → 간섭
-- *(v3.1)* `bell_state(kind)` — 최대 얽힘된 2-qubit Bell 상태 생성
+- *(v3.1)* `bell_state(kind)` — 최대 얽힘된 2-qubit Bell 상태
+- *(v3.2)* `gate(name, *params)` + `apply_gate(psi, gate, qubits=…)` — 양자 게이트 (I, X, Y, Z, H, S, T, CNOT, CZ, SWAP, Rx, Ry, Rz)
+- *(v3.2)* `measure_in_basis(psi, θ_a, θ_b)` + `chsh_test(psi, n_trials)` — CHSH Bell 부등식 검정
+- *(v3.2)* `density(psi)`, `decohere(rho, rate)`, `partial_trace(rho, qubit)` — 밀도 행렬 + 결깨짐 모델
 
-Python 레이어는 순수 수학 (v3.x에 LLM 없음). 두 모드 공존: 고전 확률 분포 (v3.0)과 복소 진폭 파동함수 + 진짜 양자 간섭 (v3.1, Path B Phase 1). 향후 Path B 단계: CHSH 검정 (v3.2), 유니터리 게이트 (v3.3), 밀도 행렬 (v3.4). `python/README.md` 참조.
+**Path B 완료 (v3.2).** Python 레이어가 이제 정통 양자역학 end-to-end 구현:
+복소 진폭, 진짜 본 규칙, 간섭, 최대 얽힘 Bell 상태, 다중 기저 측정으로 CHSH
+위반 (S ≈ 2.83), 전체 양자 게이트 + 회로 합성, 밀도 행렬과 지수 결깨짐 모델,
+부분 자취 = 얽힘 시그니처. 모두 이론 예측 대비 실증 검증 완료.
+
+전체 레퍼런스와 실행 가능한 예제 8개는 `python/README.md` 참조.

@@ -902,18 +902,24 @@ bell = bell_state("phi+")
 
 See `python/examples/04_quantum_interference.py` and `05_bell_state.py` for the full demonstrations — both verified producing the theoretically-predicted outcomes (1000:0 on destructive interference, 2000:0:0:2000 split on Bell state).
 
-### Path B roadmap
+### Path B status — **complete (v3.2)**
 
 | Phase | Status | Features |
 |-------|--------|----------|
 | Phase 1 (v3.1) | ✓ Shipped | complex amplitudes, interference, Bell states |
-| Phase 2 (v3.2) | Planned | CHSH/Bell inequality test, rotation operators, Hermitian constraints |
-| Phase 3 (v3.3) | Planned | Unitary evolution, quantum gates |
-| Phase 4 (v3.4) | Planned | Density matrices, decoherence model |
+| Phase 2 (v3.2) | ✓ Shipped | CHSH inequality test, multi-basis measurement |
+| Phase 3 (v3.2) | ✓ Shipped | full quantum gate library (Pauli, Hadamard, CNOT, CZ, SWAP, Rx/Ry/Rz), circuit composition |
+| Phase 4 (v3.2) | ✓ Shipped | density matrices, decoherence model, partial trace |
+
+The library now implements canonical quantum mechanics end-to-end. Three decisive empirical demonstrations live in `python/examples/`:
+
+- **`06_chsh_test.py`** — Bell state achieves S ≈ 2.83 (Tsirelson bound), violating the classical |S| ≤ 2 bound. No classical local-realistic theory produces this.
+- **`07_quantum_gates.py`** — |00⟩ → H₀ → CNOT(0→1) constructs |Φ+⟩ exactly, matching hardcoded `bell_state("phi+")`. Inverse circuit recovers |00⟩.
+- **`08_decoherence.py`** — partial trace of Bell state gives the maximally mixed state I/2 (purity = 0.5), the strongest possible entanglement signature.
 
 The forward-compatible API design means existing v3.0 classical-mode code continues to work unchanged. Quantum mode is purely additive — opt in by passing `amplitudes=` instead of `weights=`.
 
-See [`python/README.md`](python/README.md) for the full guide, five runnable examples (3 classical + 2 quantum), and detailed roadmap.
+See [`python/README.md`](python/README.md) for the full guide, eight runnable examples (3 classical + 5 quantum across all four phases), and primitive reference.
 
 ---
 

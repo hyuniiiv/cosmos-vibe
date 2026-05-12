@@ -1,6 +1,6 @@
 {
   "name": "cosmos",
-  "description": "QuantumAgent — three-layer architecture for quantum-inspired AI exploration. v3.1 adds Path B Phase 1: complex amplitudes, real quantum interference, and maximally-entangled Bell states.",
-  "version": "3.1.0",
-  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference"]
+  "description": "QuantumAgent — three-layer architecture for quantum-inspired AI exploration. v3.2 completes Path B: full quantum mechanics in Python (CHSH Bell test, quantum gates, density matrices, decoherence) — canonical QM verified empirically.",
+  "version": "3.2.0",
+  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference", "chsh", "quantum-gates", "density-matrix", "decoherence"]
 }

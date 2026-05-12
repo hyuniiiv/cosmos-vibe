@@ -119,11 +119,18 @@ from quantumagent import psi, entangle, observe, measure, constraint
 - `observe(psi)` — non-destructive read of the distribution (works for both modes)
 - `measure(psi, seed)` — Born-rule sampling, collapses + propagates to entangled
 - `entangle(a, b, correlation)` — link two wavefunctions (classical-style soft entanglement)
-- `constraint(name, boost=…, suppress=…, where=…)` — operator applied via `@` (classical mode only in v3.1)
+- `constraint(name, boost=…, suppress=…, where=…)` — operator applied via `@` (classical mode only)
 - *(v3.1)* `superpose(a, b)` — quantum superposition; amplitudes add → interference
 - *(v3.1)* `bell_state(kind)` — construct a maximally-entangled 2-qubit Bell state
+- *(v3.2)* `gate(name, *params)` + `apply_gate(psi, gate, qubits=…)` — quantum gates (I, X, Y, Z, H, S, T, CNOT, CZ, SWAP, Rx, Ry, Rz)
+- *(v3.2)* `measure_in_basis(psi, θ_a, θ_b)` + `chsh_test(psi, n_trials)` — CHSH Bell-inequality test
+- *(v3.2)* `density(psi)`, `decohere(rho, rate)`, `partial_trace(rho, qubit)` — density matrix formalism + decoherence model
 
-The Python layer is pure math (no LLM in v3.x). Two modes coexist: classical
-probability distributions (v3.0) and complex amplitude wavefunctions with real
-quantum interference (v3.1, Path B Phase 1). Future Path B phases: CHSH test
-(v3.2), unitary gates (v3.3), density matrices (v3.4). See `python/README.md`.
+**Path B is complete (v3.2).** The Python layer now implements canonical
+quantum mechanics end-to-end: complex amplitudes, true Born rule, interference,
+maximally-entangled Bell states, multi-basis measurement with CHSH violation
+(S ≈ 2.83), full quantum gate library with circuit composition, density
+matrices with exponential decoherence model, partial trace = entanglement
+signature. All verified empirically against theoretical predictions.
+
+See `python/README.md` for the full reference and eight runnable examples.

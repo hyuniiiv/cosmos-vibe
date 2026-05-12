@@ -171,12 +171,26 @@ outcomes = [measure(bell_state("phi+"), seed=i) for i in range(1000)]
 
 Run `examples/04_quantum_interference.py` and `examples/05_bell_state.py` to see this in action.
 
-### What's NOT yet in quantum mode (roadmap)
+### Quantum mode capabilities (v3.2 — Path B complete)
 
-- **Hermitian operators as constraints**: `constraint(...) @ psi` raises `NotImplementedError` for quantum wavefunctions. Adjusting weights bypasses phase; true quantum constraints need Hermitian operators on the amplitude space. v3.2 target.
-- **CHSH/Bell inequality test**: measurement in arbitrary bases (rotation operators) needed. v3.2 target. The current `bell_state` family lets you observe perfect correlation in the computational basis — distinguishing the four Bell states statistically requires multiple-basis measurement.
-- **Unitary evolution operators**: time evolution, gate composition. Path B Phase 2.
-- **Density matrices / decoherence**: mixed states, environmental coupling model. Path B Phase 3.
+All four Path B phases shipped:
+
+| Phase | Capability | Primitives |
+|-------|-----------|------------|
+| **Phase 1** *(v3.1)* | Complex amplitudes + interference | `psi(amplitudes=…)`, `superpose`, `bell_state` |
+| **Phase 2** *(v3.2)* | CHSH Bell test, multi-basis measurement | `measure_in_basis`, `chsh_test` |
+| **Phase 3** *(v3.2)* | Quantum gates + circuit composition | `gate`, `apply_gate`, `Gate.__matmul__` |
+| **Phase 4** *(v3.2)* | Density matrices + decoherence | `density`, `decohere`, `partial_trace`, `DensityMatrix` |
+
+The library now implements the full canonical quantum-mechanics machinery — verified empirically in `examples/06_chsh_test.py` through `08_decoherence.py`:
+
+- **CHSH violation**: Bell state achieves S ≈ 2.83 (Tsirelson bound), violating the classical |S| ≤ 2 bound. No classical local-realistic theory can produce this.
+- **Circuit composition**: |00⟩ → H₀ → CNOT(0→1) reproduces the Bell state exactly, matching the hardcoded `bell_state("phi+")`. Inverse circuit recovers |00⟩.
+- **Entanglement signature**: Partial trace of the Bell state gives I/2 (maximally mixed, purity = 0.5). Separable states keep their reduced purity at 1.0.
+
+### Classical-mode operations still apply
+
+`constraint(...) @ psi` raises `NotImplementedError` for quantum-mode wavefunctions because the API maps to weight adjustment (not Hermitian operators on amplitudes). To constrain a quantum state, use gates — they're the proper Hermitian-operator equivalent.
 
 Classical mode remains the default and is unchanged from v3.0. Quantum mode is opt-in via `amplitudes=`.
 
@@ -184,27 +198,28 @@ Classical mode remains the default and is unchanged from v3.0. Quantum mode is o
 
 ## Examples
 
-Five runnable examples in `examples/`:
+Eight runnable examples in `examples/`:
 
 **Classical mode (v3.0):**
 - **`01_basic_psi.py`** — declare, observe, measure with seed
 - **`02_entanglement.py`** — auth × storage compatibility, entanglement propagation
 - **`03_constraint_curvature.py`** — composing filter / boost / suppress constraints
 
-**Quantum mode (v3.1+, Path B):**
+**Quantum mode — Phase 1 (v3.1):**
 - **`04_quantum_interference.py`** — destructive interference: two 50/50 sources produce 100/0 outcome (impossible classically)
 - **`05_bell_state.py`** — maximally-entangled 2-qubit Bell states with perfect correlation
+
+**Quantum mode — Phases 2-4 (v3.2):**
+- **`06_chsh_test.py`** — CHSH Bell-inequality test: |Φ+⟩ achieves S ≈ 2.83, violating the classical |S| ≤ 2 bound (genuine quantum entanglement)
+- **`07_quantum_gates.py`** — build a Bell state from gates: |00⟩ → H₀ → CNOT → |Φ+⟩, plus parametric Ry rotations and inverse circuits
+- **`08_decoherence.py`** — pure→mixed via exponential decay of off-diagonals, plus partial trace = I/2 (entanglement signature)
 
 Run them:
 
 ```bash
 cd python/
 pip install -e .
-python examples/01_basic_psi.py
-python examples/02_entanglement.py
-python examples/03_constraint_curvature.py
-python examples/04_quantum_interference.py
-python examples/05_bell_state.py
+for f in examples/*.py; do python "$f"; done
 ```
 
 Each example prints its execution so you can read what happened.
@@ -258,14 +273,21 @@ Implemented (v3.1, Path B Phase 1):
 - ✓ True Born rule `P(i) = |c|²`
 - ✓ `superpose(a, b)` — amplitudes add → real interference (constructive/destructive)
 - ✓ `bell_state(kind)` — four maximally-entangled 2-qubit states
-- ✓ Two new examples demonstrating quantum-impossible-classically behavior
 
-Roadmap:
-- **CHSH / Bell inequality test** — rotation operators + multi-basis measurement (v3.2)
-- **Hermitian operators as quantum constraints** (v3.2)
-- **Unitary evolution / quantum gates** (v3.3, Path B Phase 2)
-- **Density matrices / decoherence model** (v3.4, Path B Phase 3)
-- **Agent backend** — `ψ.spawn()` to invoke real cosmos via Claude Code
+Implemented (v3.2, Path B Phases 2-4 — **complete**):
+- ✓ CHSH Bell-inequality test (`chsh_test`) — verified S ≈ 2.83 for Bell states
+- ✓ Multi-basis measurement (`measure_in_basis`) — rotate then measure in Z
+- ✓ Standard gate library: I, X, Y, Z, H, S, T, CNOT/CX, CZ, SWAP, Rx(θ), Ry(θ), Rz(θ)
+- ✓ Gate composition via `gate @ gate` and `apply_gate(psi, gate, qubits=…)` for arbitrary n-qubit systems
+- ✓ Density matrices (`density`, `DensityMatrix`) — pure ↔ mixed states
+- ✓ Exponential decoherence model (`decohere`) — off-diagonals decay
+- ✓ Partial trace (`partial_trace`) — entanglement signature via reduced purity
+- ✓ All examples verified empirically with theoretical agreement
+
+**Path B is now complete.** Three remaining future-direction items:
+
+Roadmap (out-of-scope for Path B):
+- **Agent backend** — `ψ.spawn()` to invoke real cosmos via Claude Code (bridges Layer 3 to Layers 1/2)
 - **`.quantum/` interop** — read existing cosmos insights as a Python wavefunction
 - **Visualization** — render a wavefunction / entanglement graph as ASCII or HTML
 

@@ -39,6 +39,17 @@ from .core import (
     superpose,
     bell_state,
 )
+from .quantum import (
+    Gate,
+    gate,
+    apply_gate,
+    measure_in_basis,
+    chsh_test,
+    DensityMatrix,
+    density,
+    decohere,
+    partial_trace,
+)
 
 # Greek alias for fans of the notation
 ψ = psi  # noqa: PLC2401 - intentional non-ASCII alias
@@ -53,9 +64,21 @@ __all__ = [
     "constraint",
     "Constraint",
     "Operator",
-    # Path B (quantum mode, v3.1+)
+    # Path B Phase 1 (quantum mode, v3.1)
     "superpose",
     "bell_state",
+    # Path B Phase 2 — CHSH (v3.2)
+    "measure_in_basis",
+    "chsh_test",
+    # Path B Phase 3 — quantum gates (v3.2)
+    "Gate",
+    "gate",
+    "apply_gate",
+    # Path B Phase 4 — density matrices & decoherence (v3.2)
+    "DensityMatrix",
+    "density",
+    "decohere",
+    "partial_trace",
 ]
 
-__version__ = "3.1.0"
+__version__ = "3.2.0"
