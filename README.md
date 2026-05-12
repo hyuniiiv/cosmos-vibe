@@ -121,15 +121,21 @@ QuantumAgent's core is platform-neutral markdown. The same workflows run in **an
 | Environment | Mechanism |
 |---|---|
 | Claude Code | Native plugin (above) |
+| Claude Desktop / claude.ai | Custom Instructions |
 | Cursor | `.cursor/rules/cosmos.mdc` |
 | Windsurf | `.windsurfrules` |
 | Cline / Roo Code | Custom Instructions |
 | Continue.dev | `config.json` system message |
 | Aider | `CONVENTIONS.md` via `--read` |
 | OpenAI Codex CLI | `--prompt-file` |
+| Gemini CLI | `GEMINI.md` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Zed AI | Assistant custom prompt |
-| Claude Desktop / claude.ai | Custom Instructions |
+| OpenCode (sst) | `AGENTS.md` |
+| Crush (Charm) | `AGENTS.md` / `CRUSH.md` |
+| OpenHands | `.openhands/microagents/cosmos.md` |
+| Goose (Block) | `.goosehints` |
+| Any AGENTS.md-aware agent | `AGENTS.md` |
 
 The same `.quantum/` memory works across agents — spawn in Cursor, observe in Claude Code, crystallize in Aider. See **[INTEGRATIONS.md](INTEGRATIONS.md)** for per-platform setup and the universal **[`bundle/cosmos-instructions.md`](bundle/cosmos-instructions.md)** drop-in file.
 

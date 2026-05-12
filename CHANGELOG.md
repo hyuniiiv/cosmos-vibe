@@ -6,6 +6,16 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+### Added — broader agent ecosystem coverage
+- **Gemini CLI** integration via `GEMINI.md` (Google's repo-root instructions file).
+- **OpenCode** (sst) integration via `AGENTS.md`.
+- **Crush** (Charm) integration via `AGENTS.md` / `CRUSH.md`.
+- **OpenHands** (formerly OpenDevin) integration via `.openhands/microagents/cosmos.md`.
+- **Goose** (Block) integration via `.goosehints`.
+- **Generic AGENTS.md** section — one-line install for any agent following
+  the de-facto `AGENTS.md` repo convention. README and INTEGRATIONS.md
+  compatibility matrices updated.
+
 ### Added
 - **Typed insight schema** in `.quantum/<name>/insights.jsonl`. Each line
   now carries `type` alongside `content` and `ts`:

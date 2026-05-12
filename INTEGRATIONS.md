@@ -28,10 +28,18 @@ No Claude-specific APIs. No proprietary runtime. Any agent that can:
 | **Continue.dev** | `config.json` system message | Slash command alias |
 | **Aider** | `CONVENTIONS.md` / `--read` | "/run cosmos spawn …" |
 | **OpenAI Codex CLI** | Prompt file via `--prompt-file` | Per-invocation |
+| **Gemini CLI** | `GEMINI.md` in repo root | Natural language |
 | **GitHub Copilot** | `.github/copilot-instructions.md` | Conversation hint |
 | **Zed AI** | Assistant rules / config | Always-on rule |
+| **OpenCode** (sst) | `AGENTS.md` in repo root | Natural language |
+| **Crush** (Charm) | `AGENTS.md` / `CRUSH.md` | Natural language |
+| **OpenHands** | Microagent file in `.openhands/microagents/` | Natural language |
+| **Goose** (Block) | Goose hints file / profile | Natural language |
+| **Any AGENTS.md-aware agent** | `AGENTS.md` in repo root | Natural language |
 
 Every entry is the same workflow — paste `bundle/cosmos-instructions.md` (or a curl-fetched copy) into the agent's instructions surface. No code, no install step, no dependencies.
+
+> **AGENTS.md convention**: a growing number of AI coding agents (OpenCode, Crush, and others) read `AGENTS.md` from the repository root by default. Dropping the bundle there gives you instant compatibility with the entire AGENTS.md ecosystem in one move — see the [generic install](#generic-any-agentmd-aware-agent) section below.
 
 ## Universal bundle
 
@@ -92,6 +100,17 @@ Then ask Aider: "spawn 3 parallel cosmos to implement X with strategies A, B, C"
 codex --prompt-file bundle/cosmos-instructions.md "spawn cosmos for rate limiting with 3 strategies"
 ```
 
+### Gemini CLI
+
+Gemini CLI reads `GEMINI.md` from the repo root automatically (Google's equivalent of `CLAUDE.md`):
+
+```bash
+curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md \
+  -o GEMINI.md
+```
+
+Then in any Gemini CLI session: "spawn 3 parallel cosmos for X with strategies A, B, C".
+
 ### GitHub Copilot (Chat)
 
 Copy `bundle/cosmos-instructions.md` into `.github/copilot-instructions.md`. Copilot Chat will respect it for the repo.
@@ -110,6 +129,60 @@ Open the conversation, click the **Custom Instructions** (or system prompt) pane
 > spawn cosmos for "implement rate limiting" with strategies "token-bucket,sliding-window,fixed-window"
 
 Claude will execute the workflow using its filesystem tools.
+
+### OpenCode (sst)
+
+OpenCode reads `AGENTS.md` from the repo root:
+
+```bash
+curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md \
+  -o AGENTS.md
+opencode
+```
+
+Then ask: "spawn cosmos for X with strategies Y, Z, W".
+
+### Crush (Charm)
+
+Crush also follows the `AGENTS.md` convention (and recognizes `CRUSH.md` as an alternative). If you already added `AGENTS.md` from the OpenCode section above, Crush picks it up automatically. Otherwise:
+
+```bash
+curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md \
+  -o AGENTS.md
+crush
+```
+
+### OpenHands (formerly OpenDevin)
+
+Add a repository microagent so OpenHands loads cosmos instructions for every session in this repo:
+
+```bash
+mkdir -p .openhands/microagents
+curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md \
+  -o .openhands/microagents/cosmos.md
+```
+
+Then in OpenHands: "spawn parallel cosmos for X with strategies Y, Z".
+
+### Goose (Block)
+
+Drop the bundle into your Goose hints file (path varies by Goose version; typical locations include `.goosehints` in the repo or a profile-level hints file under your Goose config dir):
+
+```bash
+curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md \
+  -o .goosehints
+```
+
+### Generic (any AGENTS.md-aware agent)
+
+The `AGENTS.md` convention is becoming a de-facto standard for repo-level AI agent instructions. If your agent supports it, install in one line:
+
+```bash
+curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md \
+  -o AGENTS.md
+```
+
+One file unlocks compatibility with the whole AGENTS.md ecosystem at once. If your agent doesn't read `AGENTS.md`, check its documentation for the equivalent instructions/rules/hints file — the bundle is plain markdown and works in all of them.
 
 ## Cross-agent invariants
 
