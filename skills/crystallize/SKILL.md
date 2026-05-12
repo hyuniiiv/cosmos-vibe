@@ -1,6 +1,6 @@
 ---
 name: cosmos:crystallize
-description: Collapse one cosmos from superposition into a concrete deliverable — merge its branch, generate a wavefunction-collapse report, and preserve other cosmos for further exploration.
+description: QuantumAgent — Collapse one cosmos from superposition into a concrete deliverable. Merge its branch, generate a wavefunction-collapse report, and preserve other cosmos for further exploration.
 ---
 
 # cosmos:crystallize

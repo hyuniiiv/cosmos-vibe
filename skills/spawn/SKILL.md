@@ -1,6 +1,6 @@
 ---
 name: cosmos:spawn
-description: Spawn N parallel cosmos agents in isolated git worktrees, each tackling the same goal with a different strategy. Agents share live discoveries through Quantum Memory (.quantum/*.jsonl) — entanglement without external infrastructure.
+description: QuantumAgent — Spawn N parallel cosmos agents in isolated git worktrees, each tackling the same goal with a different strategy. Agents share live discoveries through Quantum Memory (.quantum/*.jsonl) — entanglement without external infrastructure.
 ---
 
 # cosmos:spawn

@@ -1,6 +1,6 @@
 ---
 name: cosmos:observe
-description: Inspect the live superposition of running cosmos agents — read insights, detect resonance (agreement), uncertainty (divergence), tunneling, and condensate signals across all cosmos namespaces.
+description: QuantumAgent — Inspect the live superposition of running cosmos agents. Read insights, detect resonance (agreement), uncertainty (divergence), tunneling, and condensate signals across all cosmos namespaces.
 ---
 
 # cosmos:observe

@@ -1,6 +1,6 @@
 ---
 name: cosmos:stop
-description: Tear down all cosmos worktrees and branches, optionally purging Quantum Memory (.quantum/) — clean shutdown of the multiverse harness.
+description: QuantumAgent — Tear down all cosmos worktrees and branches, optionally purging Quantum Memory (.quantum/). Clean shutdown of the multiverse harness.
 ---
 
 # cosmos:stop
