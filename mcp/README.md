@@ -1,6 +1,9 @@
-# @hyuniiiv/quantum-agent-mcp
+# quantum-agent MCP server
 
 MCP (Model Context Protocol) server for [QuantumAgent](https://github.com/hyuniiiv/quantum-agent). Exposes the four `cosmos:*` workflows as MCP prompts for any MCP-compatible AI agent host.
+
+> **npm publish deferred.** Run from a local clone for now. If you'd like an
+> `npx`-able package, open an issue on the parent repo.
 
 ## What it does
 
@@ -13,7 +16,15 @@ The server provides four prompts:
 
 When a host LLM requests one of these prompts, the server returns the full SKILL.md workflow instructions. The host LLM then executes the steps using its own bash/file tools. **The MCP server itself has no privileged shell access** — it's a pure instruction provider.
 
-## Install
+## Install (from source)
+
+```bash
+git clone https://github.com/hyuniiiv/quantum-agent ~/tools/quantum-agent
+cd ~/tools/quantum-agent/mcp
+npm install
+```
+
+Then point your MCP host at the absolute path of `index.js`.
 
 ### Claude Desktop
 
@@ -22,8 +33,8 @@ When a host LLM requests one of these prompts, the server returns the full SKILL
 {
   "mcpServers": {
     "quantum-agent": {
-      "command": "npx",
-      "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
+      "command": "node",
+      "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
     }
   }
 }
@@ -36,8 +47,8 @@ When a host LLM requests one of these prompts, the server returns the full SKILL
 {
   "mcpServers": {
     "quantum-agent": {
-      "command": "npx",
-      "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
+      "command": "node",
+      "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
     }
   }
 }
@@ -51,8 +62,8 @@ When a host LLM requests one of these prompts, the server returns the full SKILL
   "mcpServers": [
     {
       "name": "quantum-agent",
-      "command": "npx",
-      "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
+      "command": "node",
+      "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
     }
   ]
 }
@@ -64,23 +75,15 @@ Settings → MCP Servers → Add:
 ```json
 {
   "quantum-agent": {
-    "command": "npx",
-    "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
+    "command": "node",
+    "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
   }
 }
 ```
 
-### Generic (any MCP host)
-
-```bash
-npx -y @hyuniiiv/quantum-agent-mcp
-```
-
-The server speaks MCP over stdio.
-
 ## Usage
 
-After install, ask the host LLM:
+After your host loads the server, ask its LLM:
 
 > Use cosmos_spawn to explore "implement rate limiting middleware" with strategies "token-bucket,sliding-window,fixed-window"
 
@@ -99,8 +102,8 @@ This means you can spawn cosmos in Cline, observe in Claude Desktop, and crystal
 
 ```bash
 npm install
-npm run sync-skills  # copy latest SKILL.md from parent
-npm start            # start the server (stdio)
+npm run sync-skills   # copy latest SKILL.md from parent
+npm start             # start the server (stdio)
 ```
 
 ## License

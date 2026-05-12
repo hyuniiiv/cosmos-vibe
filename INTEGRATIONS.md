@@ -20,7 +20,7 @@ No Claude-specific APIs. No proprietary runtime. Any agent that can:
 | Environment | Mechanism | Status | Trigger |
 |---|---|---|---|
 | **Claude Code** | Native plugin | ✅ First-class | `/cosmos:spawn`, etc. |
-| **Claude Desktop / claude.ai** | MCP server | ✅ Available | Natural language |
+| **Claude Desktop / claude.ai** | MCP server (run from source) or Custom Instructions | ✅ Available | Natural language |
 | **Cursor** | `.cursor/rules/*.mdc` | ✅ Drop-in | Auto-attach by glob |
 | **Windsurf** | `.windsurfrules` | ✅ Drop-in | Always-on rule |
 | **Cline (VS Code)** | Custom Instructions / MCP | ✅ Drop-in | "run cosmos spawn …" |
@@ -69,8 +69,8 @@ Or use MCP — add to `cline_mcp_settings.json`:
 {
   "mcpServers": {
     "quantum-agent": {
-      "command": "npx",
-      "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
+      "command": "node",
+      "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
     }
   }
 }
@@ -122,19 +122,22 @@ Edit `claude_desktop_config.json`:
 {
   "mcpServers": {
     "quantum-agent": {
-      "command": "npx",
-      "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
+      "command": "node",
+      "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
     }
   }
 }
 ```
 
-Or via CLI:
+First clone the repo somewhere, then point the `args` path at `mcp/index.js`:
 ```bash
-claude mcp add quantum-agent npx -y @hyuniiiv/quantum-agent-mcp
+git clone https://github.com/hyuniiiv/quantum-agent ~/tools/quantum-agent
+cd ~/tools/quantum-agent/mcp && npm install
 ```
 
 The MCP server exposes four prompts (`cosmos_spawn`, `cosmos_observe`, `cosmos_crystallize`, `cosmos_stop`) to any MCP-compatible host. See [`mcp/README.md`](mcp/README.md) for details.
+
+> npm publish (`@hyuniiiv/quantum-agent-mcp`) is deferred until there's demand. Open an issue if you want one-line `npx` install instead of the clone-and-run flow above.
 
 ## Cross-agent invariants
 
@@ -152,9 +155,10 @@ This means **you can spawn cosmos in Cursor, observe in Claude Code, and crystal
 - [x] Claude Code plugin (`/cosmos:*`)
 - [x] Universal markdown bundle
 - [x] Documentation for 10+ environments
-- [x] MCP server (`@hyuniiiv/quantum-agent-mcp`) — see `mcp/`
+- [x] MCP server source in `mcp/` (run via `node mcp/index.js`)
 - [x] Cursor `.mdc` preset with glob hints — see `presets/cursor/cosmos.mdc`
-- [x] CLI wrapper (`@hyuniiiv/quantum-agent-cli`) for non-LLM execution — see `cli/`
+- [x] CLI source in `cli/` (run via `node cli/index.js`)
 - [x] Conformance tests verifying each integration honors the filesystem contract — see `tests/conformance.sh` (16 checks, all pass against the local CLI)
+- [ ] npm publish (`@hyuniiiv/quantum-agent-mcp`, `@hyuniiiv/quantum-agent-cli`) — deferred; current path is git clone + node
 
 Contributions adding support for additional environments are welcome — open a PR adding a section to this file plus any platform-specific shim.

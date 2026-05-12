@@ -6,6 +6,13 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- npm publish (`@hyuniiiv/quantum-agent-mcp`, `@hyuniiiv/quantum-agent-cli`) deferred.
+  Current distribution path is git clone + `node mcp/index.js` / `node cli/index.js`.
+  Will publish to npm when there's user demand (open an issue to request).
+- Removed `.github/workflows/publish.yml` to avoid confusion — can be restored
+  from git history when npm publish is enabled.
+
 ## [1.0.0] — 2026-05-12
 
 Initial public release.

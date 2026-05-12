@@ -89,11 +89,13 @@ Scope is optional but encouraged for integrations: `feat(cursor):`,
 ## Release process (maintainer only)
 
 1. Update `CHANGELOG.md` — move `[Unreleased]` items under a new version heading.
-2. Bump versions in `mcp/package.json` and `cli/package.json`.
+2. Bump versions in `mcp/package.json` and `cli/package.json` (if user-visible).
 3. Commit: `chore: release vX.Y.Z`.
 4. Tag: `git tag vX.Y.Z && git push --tags`.
-5. GitHub Actions `publish.yml` runs `npm publish --access public` for both
-   packages.
+5. Create a GitHub Release from the tag with notes from `CHANGELOG.md`.
+
+> npm publish is currently deferred. When demand justifies it, restore
+> `.github/workflows/publish.yml` from git history and configure `NPM_TOKEN`.
 
 ## Code of conduct
 
