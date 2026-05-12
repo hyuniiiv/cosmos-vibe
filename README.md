@@ -111,9 +111,9 @@ graph TD
     G --> A[🌌 cosmos: alpha<br/>strategy: token-bucket<br/>worktree: cosmos/alpha/]
     G --> B[🌌 cosmos: beta<br/>strategy: sliding-window<br/>worktree: cosmos/beta/]
     G --> C[🌌 cosmos: gamma<br/>strategy: fixed-window<br/>worktree: cosmos/gamma/]
-    A -.entangle via .quantum.- B
-    B -.entangle via .quantum.- C
-    C -.entangle via .quantum.- A
+    A -.entangle.- B
+    B -.entangle.- C
+    C -.entangle.- A
 
     style A fill:#1e3a5f,stroke:#4a9eff,color:#fff
     style B fill:#1e3a5f,stroke:#4a9eff,color:#fff
@@ -171,11 +171,11 @@ cosmos:gamma   (fixed-window)    ●●●●●●     6 insights
 ```mermaid
 graph LR
     S[🌌 Superposition<br/>3 cosmos parallel]
-    S -->|observe<br/>(non-destructive)| O[📊 Resonance / Uncertainty map<br/>+ tunneling / jumps / blockers]
-    O -->|/cosmos:crystallize alpha| C[💎 alpha<br/>merged → main]
-    O -.preserved as branch.-> Ba[cosmos/beta]
-    O -.preserved as branch.-> Ga[cosmos/gamma]
-    C --> R[✅ Production code<br/>with full audit trail in .quantum/]
+    S -->|observe| O[📊 Resonance and Uncertainty map<br/>tunneling, jumps, blockers]
+    O -->|crystallize alpha| C[💎 alpha<br/>merged to main]
+    O -.preserved.-> Ba[cosmos/beta]
+    O -.preserved.-> Ga[cosmos/gamma]
+    C --> R[✅ Production code<br/>full audit trail in quantum memory]
 
     style S fill:#2d1b4e,stroke:#b975e8,color:#fff
     style O fill:#1e3a5f,stroke:#4a9eff,color:#fff
