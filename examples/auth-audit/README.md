@@ -33,16 +33,39 @@ flag the same thing independently, it is real and systemic.
 
 ## What we got
 
-| Signal | Finding | Confidence |
-|---|---|---|
-| ⚡ **3-way resonance** | Terminal JWT has no `exp` claim → tokens are effectively immortal | Ship the fix |
-| ⚡ **2-way resonance** | Refresh route's `clockTolerance: 999_999_999` would ignore `exp` even if it existed | Ship the fix |
-| ✨ **Tunneling (gamma)** | Token dual-storage drift → offline payment queue silently never flushes (a **money** bug found by a **security** audit) | Adjacent revenue regression caught for free |
-| (alpha-only) | `cancel-request` trusts `body.termId` instead of authenticated payload → cross-merchant cancellation | Same-day fix |
-| (beta-only) | 3 auth schemes coexist, no central dispatcher, `revoke` is a no-op against stateless JWT | Tech-debt to schedule |
+The run was executed **twice** on the same goal — a deliberate re-spawn
+to test whether complementary findings would surface in a second round.
+The headline resonance held across both rounds; the 2nd round added a
+new CRITICAL and write-path account-takeover findings.
 
-See [`observe-snapshot.md`](observe-snapshot.md) for the full synthesis,
-and [`insights/`](insights/) for the raw, unedited JSONL from each cosmos.
+### 1st round (3 cosmos, 43 insights: alpha 22 / beta 11 / gamma 10)
+
+| Signal | Finding |
+|---|---|
+| ⚡ **3-way resonance** | Terminal JWT has no `exp` claim → tokens are effectively immortal (compounded by stateless-JWT revocation gap + plaintext token storage) |
+| ⚡ **2-way (α+β)** | No runtime JWT payload validation — `as unknown as TerminalJWTPayload` cast |
+| ⚡ **2-way (α+γ)** | `jwtVerify` called without `algorithms: ['HS256']` allowlist |
+| (alpha) | `/api/setup/merchant` allows self-registration as `platform_admin` (OWASP A01) |
+| (alpha) | `cancel-request` trusts `body.termId` instead of authenticated payload |
+| (alpha) | `/api/terminals` GET leaks cross-tenant data (IDOR) |
+| (beta) | 3 auth schemes coexist with no central dispatcher; no `middleware.ts`; web-side `auth.getUser()` duplicated across 30+ routes |
+| (gamma) | Token dual-storage drift → first offline queue flush can silently fail |
+| (gamma) | Offline `pending_payments` IDB records have no HMAC → amount tampering possible |
+
+### 2nd round (~33 insights — new findings)
+
+| Signal | Finding |
+|---|---|
+| ✨ **[TUNNEL] gamma** | **Electron CORS wildcard injection** — `main.js` injects `Access-Control-Allow-Origin: *` + allows `Authorization` for any response missing the header. XSS or supply-chain compromise → token exfiltrated to any origin. 1st round missed this entirely. |
+| (alpha) | `terminals/[id]/account` & `terminals/[id]/key` PUT routes don't verify merchant ownership → cross-tenant **write** path → full account takeover via password/key overwrite |
+| (gamma) | `syncedIds ?? []` fallback → if server response is malformed, client retries → duplicate charge risk |
+| (gamma) | PIN plaintext-fallback (`settingsStore.ts:68`) — migration leftover, timing-leak vector |
+| (beta) | `heartbeat` re-parses Authorization header after `requireTerminalAuth` — structural defect: helper doesn't return full claims |
+
+See [`observe-snapshot.md`](observe-snapshot.md) for the **verbatim
+auto-observe output** from both rounds (Korean, as the run was executed
+in a Korean session), and [`insights/`](insights/) for the raw, unedited
+JSONL from each cosmos.
 
 ## What was shipped
 
@@ -67,20 +90,27 @@ was a fix set, not a single implementation):
 
 ## Notes for the reader
 
+**Re-spawning the same goal works.** The 2nd round was not a copy of the
+1st — it surfaced a new CRITICAL (Electron CORS wildcard) and the actual
+write-path takeover routes that the 1st round missed. Treat cosmos as
+probabilistic: if the topic is high-stakes, run it twice.
+
 **Tunneling is the headline.** The most-quoted use of QuantumAgent will be
 the resonance signal ("3 cosmos agreed → ship"). But the *highest-leverage*
-moment in this run was the tunneling find from gamma: a security audit
-discovered a payment-loss bug because one cosmos was following data
-instead of categories. Strategies that **trace** find things strategies
-that **classify** miss.
+moment in this run was gamma's 2nd-round `[TUNNEL]` find — the Electron
+CORS wildcard injection. A security audit found it because one cosmos
+was tracing where the token *physically goes*, not enumerating CWE
+categories. Strategies that **trace data** find things strategies that
+**classify bugs** miss.
 
 **No `crystallize` was run.** This was an audit, not a build. The
 deliverable was a fix list extracted from the insights, not a merged
-branch. `crystallize` exists for the build case, not every cosmos run
+branch. `crystallize` exists for the build case — not every cosmos run
 needs to end with it. The output of cosmos is *signal*, and signal is
 useful whether or not it ends in a merge.
 
-**Sanitization scope.** Company-identifying strings were replaced with
-"ExampleSYSTEM". All file paths, function names, library names
-(`jose`, `bcryptjs`, `Zustand`), and architectural decisions are real
-from the source codebase.
+**Sanitization scope.** Company-identifying strings were replaced
+(`BIZPOS` → `EXAMPLE_SYSTEM`, `bizpos-settings` → `example-system-settings`).
+All file paths, line numbers, function names, library names
+(`jose`, `bcryptjs`, `Zustand`), severity grades, and architectural
+decisions are verbatim from the source codebase.

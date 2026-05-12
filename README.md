@@ -203,7 +203,7 @@ branches**, preserved for reference or follow-up crystallization.
 
 Real cosmos run outputs (spawn command + raw `.quantum/*.jsonl` + observe + crystallize) are collected in [`examples/`](examples/). We deliberately don't ship fabricated examples — only sessions a developer actually ran on real code.
 
-**Featured: [`examples/auth-audit/`](examples/auth-audit/)** — a 3-cosmos security audit of a production Electron+Next.js payment terminal. Three complementary lenses (vulnerability-hunter, architecture-auditor, client-dataflow) independently converged on a systemic JWT flaw (3-way resonance: *"the token has no expiration"*), and one cosmos **tunneled** out of the security audit into an adjacent territory — discovering that the offline payment queue silently never flushes due to a token-storage drift. A money bug found by a security audit. Raw `.jsonl` insights are included unedited.
+**Featured: [`examples/auth-audit/`](examples/auth-audit/)** — a 3-cosmos security audit of a production Electron+Next.js payment terminal, executed twice (deliberate re-spawn). Three complementary lenses (security-threat, code-architecture, offline-resilience) independently converged on a systemic JWT flaw (3-way resonance: *"the token has no expiration, revocation is a no-op, and storage is plaintext — and the three reinforce each other"*). The 2nd round produced a `[TUNNEL]` find — **Electron CORS wildcard injection** in `main.js` that the 1st round missed entirely, exfiltrating bearer tokens to any origin if XSS or supply-chain compromise occurs. The verbatim auto-observe output (both rounds) and raw `.jsonl` insights are included unedited.
 
 If you've done a meaningful cosmos run, [contribute it](examples/README.md#contributing-a-run).
 
