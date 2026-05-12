@@ -1,3 +1,8 @@
+---
+name: cosmos:stop
+description: Tear down all cosmos worktrees and branches, optionally purging Quantum Memory (.quantum/) — clean shutdown of the multiverse harness.
+---
+
 # cosmos:stop
 
 Remove all cosmos worktrees and branches. Optionally clean quantum memory.

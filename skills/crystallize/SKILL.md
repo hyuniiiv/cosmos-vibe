@@ -1,3 +1,8 @@
+---
+name: cosmos:crystallize
+description: Collapse one cosmos from superposition into a concrete deliverable — merge its branch, generate a wavefunction-collapse report, and preserve other cosmos for further exploration.
+---
+
 # cosmos:crystallize
 
 Collapse a specific cosmos from superposition into a concrete result.

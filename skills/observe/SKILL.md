@@ -1,3 +1,8 @@
+---
+name: cosmos:observe
+description: Inspect the live superposition of running cosmos agents — read insights, detect resonance (agreement), uncertainty (divergence), tunneling, and condensate signals across all cosmos namespaces.
+---
+
 # cosmos:observe
 
 Show the current superposition snapshot: all cosmos insights, resonance signals,
