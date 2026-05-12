@@ -39,8 +39,8 @@ body:
     validations:
       required: true
   - type: textarea
-    id: conformance
+    id: logs
     attributes:
-      label: Conformance result (optional)
-      description: Did you run `bash tests/conformance.sh`? Paste the output.
+      label: Logs (optional)
+      description: Any relevant `.quantum/*.jsonl` contents or agent output.
       render: shell

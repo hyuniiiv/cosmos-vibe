@@ -13,26 +13,19 @@ contribution moves the needle — from a typo fix to a new agent integration.
 3. **Bug reports** — open an issue with a minimal reproduction.
 4. **Documentation** — corrections, translations (Korean `README.ko.md`
    especially welcome), or new examples.
-5. **CLI/MCP server improvements** — `cli/index.js` and `mcp/index.js` are
-   intentionally small. PRs adding tests, better error messages, or new
-   subcommands are welcome.
-
 ## Development setup
 
 ```bash
 git clone https://github.com/hyuniiiv/quantum-agent
 cd quantum-agent
-
-# Run the conformance suite — should output: PASS: 16  FAIL: 0
-bash tests/conformance.sh
 ```
 
-No build step. Skills are plain markdown; CLI/MCP are plain Node.js.
+No build step. Skills are plain markdown.
 
 ## Filesystem contract (do not break)
 
-These invariants are tested by `tests/conformance.sh` and run in CI on every
-PR. Any change that breaks them will fail:
+These invariants define how cosmos workflows interoperate across agents.
+Any change that breaks them will silently break multi-agent use:
 
 - `cosmos/<name>/` is a git worktree on branch `cosmos/<name>`
 - `.quantum/<name>/insights.jsonl` is append-only JSON Lines, one line per
@@ -59,11 +52,8 @@ state files.
 
 ## PR checklist
 
-- [ ] `bash tests/conformance.sh` passes locally
 - [ ] No secrets, API keys, tokens, or personal data
-- [ ] If `skills/*/SKILL.md` changed, mirror the change in `mcp/skills/` (or
-      run `cd mcp && npm run sync-skills`)
-- [ ] If `bundle/cosmos-instructions.md` is regenerated, document the change
+- [ ] If `skills/*/SKILL.md` changed, regenerate `bundle/cosmos-instructions.md`
 - [ ] CHANGELOG entry under `## [Unreleased]` (if user-visible)
 
 ## Commit messages
@@ -81,21 +71,15 @@ Scope is optional but encouraged for integrations: `feat(cursor):`,
 
 ## Code style
 
-- **JavaScript**: ES modules, no transpiler. Match the existing terse style in
-  `cli/index.js` and `mcp/index.js`.
 - **Markdown**: 80-column soft wrap, prefer `—` over `--` in prose.
-- **Bash**: `set -euo pipefail` for any non-trivial script.
+- **Bash** (in SKILL.md examples): `set -euo pipefail` for any non-trivial snippet.
 
 ## Release process (maintainer only)
 
 1. Update `CHANGELOG.md` — move `[Unreleased]` items under a new version heading.
-2. Bump versions in `mcp/package.json` and `cli/package.json` (if user-visible).
-3. Commit: `chore: release vX.Y.Z`.
-4. Tag: `git tag vX.Y.Z && git push --tags`.
-5. Create a GitHub Release from the tag with notes from `CHANGELOG.md`.
-
-> npm publish is currently deferred. When demand justifies it, restore
-> `.github/workflows/publish.yml` from git history and configure `NPM_TOKEN`.
+2. Commit: `chore: release vX.Y.Z`.
+3. Tag: `git tag vX.Y.Z && git push --tags`.
+4. Create a GitHub Release from the tag with notes from `CHANGELOG.md`.
 
 ## Code of conduct
 

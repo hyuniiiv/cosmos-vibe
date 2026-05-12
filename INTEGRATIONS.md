@@ -1,6 +1,6 @@
 # Integrations — Using QuantumAgent in any AI coding agent
 
-QuantumAgent ships as a Claude Code plugin, but its core (markdown SKILL files + bash commands) is **platform-neutral**. This document shows how to install the same `cosmos` workflow in 10+ other AI coding environments.
+QuantumAgent ships as a Claude Code plugin, but its core is just **markdown instructions** that any LLM-powered coding agent can follow. This document shows how to install the same `cosmos` workflows in 10+ other environments.
 
 ## Why it ports cleanly
 
@@ -17,25 +17,25 @@ No Claude-specific APIs. No proprietary runtime. Any agent that can:
 
 ## Compatibility matrix
 
-| Environment | Mechanism | Status | Trigger |
-|---|---|---|---|
-| **Claude Code** | Native plugin | ✅ First-class | `/cosmos:spawn`, etc. |
-| **Claude Desktop / claude.ai** | MCP server (run from source) or Custom Instructions | ✅ Available | Natural language |
-| **Cursor** | `.cursor/rules/*.mdc` | ✅ Drop-in | Auto-attach by glob |
-| **Windsurf** | `.windsurfrules` | ✅ Drop-in | Always-on rule |
-| **Cline (VS Code)** | Custom Instructions / MCP | ✅ Drop-in | "run cosmos spawn …" |
-| **Roo Code** | Custom Instructions / MCP | ✅ Drop-in | "run cosmos spawn …" |
-| **Continue.dev** | `config.json` rules + MCP | ✅ Drop-in | Slash command alias |
-| **Aider** | `CONVENTIONS.md` / `--read` | ✅ Drop-in | "/run cosmos spawn …" |
-| **OpenAI Codex CLI** | Prompt file via `--prompt-file` | ✅ Drop-in | Per-invocation |
-| **GitHub Copilot** | `.github/copilot-instructions.md` | ✅ Drop-in | Conversation hint |
-| **Zed AI** | Assistant rules / config | ✅ Drop-in | Always-on rule |
+| Environment | Mechanism | Trigger |
+|---|---|---|
+| **Claude Code** | Native plugin | `/cosmos:spawn`, etc. |
+| **Claude Desktop / claude.ai** | Custom Instructions | Natural language |
+| **Cursor** | `.cursor/rules/*.mdc` | Auto-attach by glob |
+| **Windsurf** | `.windsurfrules` | Always-on rule |
+| **Cline (VS Code)** | Custom Instructions | "run cosmos spawn …" |
+| **Roo Code** | Custom Instructions | "run cosmos spawn …" |
+| **Continue.dev** | `config.json` system message | Slash command alias |
+| **Aider** | `CONVENTIONS.md` / `--read` | "/run cosmos spawn …" |
+| **OpenAI Codex CLI** | Prompt file via `--prompt-file` | Per-invocation |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Conversation hint |
+| **Zed AI** | Assistant rules / config | Always-on rule |
 
-> **Drop-in** = copy `bundle/cosmos-instructions.md` into the agent's instructions file. No code changes.
+Every entry is the same workflow — paste `bundle/cosmos-instructions.md` (or a curl-fetched copy) into the agent's instructions surface. No code, no install step, no dependencies.
 
 ## Universal bundle
 
-For agents that don't have a plugin system, we ship a single consolidated instructions file:
+For most agents, we ship a single consolidated instructions file:
 
 **[`bundle/cosmos-instructions.md`](bundle/cosmos-instructions.md)** — all four `cosmos:*` workflows concatenated, ready to paste as a system prompt or rules file.
 
@@ -62,19 +62,7 @@ Windsurf treats `.windsurfrules` as always-on context.
 
 ### Cline / Roo Code (VS Code)
 
-Open Cline settings → **Custom Instructions** → paste the contents of `bundle/cosmos-instructions.md`.
-
-Or use MCP — add to `cline_mcp_settings.json`:
-```json
-{
-  "mcpServers": {
-    "quantum-agent": {
-      "command": "node",
-      "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
-    }
-  }
-}
-```
+Open Cline (or Roo Code) settings → **Custom Instructions** → paste the contents of `bundle/cosmos-instructions.md`.
 
 ### Continue.dev
 
@@ -115,29 +103,13 @@ Add to your Zed assistant config (Settings → Assistant → Custom System Promp
 @import bundle/cosmos-instructions.md
 ```
 
-### Claude Desktop / claude.ai (via MCP)
+### Claude Desktop / claude.ai
 
-Edit `claude_desktop_config.json`:
-```json
-{
-  "mcpServers": {
-    "quantum-agent": {
-      "command": "node",
-      "args": ["/absolute/path/to/quantum-agent/mcp/index.js"]
-    }
-  }
-}
-```
+Open the conversation, click the **Custom Instructions** (or system prompt) panel, and paste `bundle/cosmos-instructions.md`. Then ask:
 
-First clone the repo somewhere, then point the `args` path at `mcp/index.js`:
-```bash
-git clone https://github.com/hyuniiiv/quantum-agent ~/tools/quantum-agent
-cd ~/tools/quantum-agent/mcp && npm install
-```
+> spawn cosmos for "implement rate limiting" with strategies "token-bucket,sliding-window,fixed-window"
 
-The MCP server exposes four prompts (`cosmos_spawn`, `cosmos_observe`, `cosmos_crystallize`, `cosmos_stop`) to any MCP-compatible host. See [`mcp/README.md`](mcp/README.md) for details.
-
-> npm publish (`@hyuniiiv/quantum-agent-mcp`) is deferred until there's demand. Open an issue if you want one-line `npx` install instead of the clone-and-run flow above.
+Claude will execute the workflow using its filesystem tools.
 
 ## Cross-agent invariants
 
@@ -150,15 +122,4 @@ All integrations rely on the same on-disk contract:
 
 This means **you can spawn cosmos in Cursor, observe in Claude Code, and crystallize in Aider** — all on the same `.quantum/` memory. The harness is fundamentally a filesystem protocol, not a runtime.
 
-## Status & roadmap
-
-- [x] Claude Code plugin (`/cosmos:*`)
-- [x] Universal markdown bundle
-- [x] Documentation for 10+ environments
-- [x] MCP server source in `mcp/` (run via `node mcp/index.js`)
-- [x] Cursor `.mdc` preset with glob hints — see `presets/cursor/cosmos.mdc`
-- [x] CLI source in `cli/` (run via `node cli/index.js`)
-- [x] Conformance tests verifying each integration honors the filesystem contract — see `tests/conformance.sh` (16 checks, all pass against the local CLI)
-- [ ] npm publish (`@hyuniiiv/quantum-agent-mcp`, `@hyuniiiv/quantum-agent-cli`) — deferred; current path is git clone + node
-
-Contributions adding support for additional environments are welcome — open a PR adding a section to this file plus any platform-specific shim.
+Contributions adding support for additional environments are welcome — open a PR adding a section to this file.

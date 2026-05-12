@@ -6,12 +6,18 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+### Removed
+- `mcp/` MCP server, `cli/` non-LLM CLI, `tests/conformance.sh`, and
+  `.github/workflows/conformance.yml`. The Claude Code plugin plus the
+  universal `bundle/cosmos-instructions.md` already cover every supported
+  agent via Custom Instructions / rules files — the extra runtime artifacts
+  added maintenance surface without unlocking new use cases. They remain in
+  git history if needed later.
+
 ### Changed
-- npm publish (`@hyuniiiv/quantum-agent-mcp`, `@hyuniiiv/quantum-agent-cli`) deferred.
-  Current distribution path is git clone + `node mcp/index.js` / `node cli/index.js`.
-  Will publish to npm when there's user demand (open an issue to request).
-- Removed `.github/workflows/publish.yml` to avoid confusion — can be restored
-  from git history when npm publish is enabled.
+- `INTEGRATIONS.md` matrix: every entry now installs via "paste bundle into
+  Custom Instructions / rules file" — no Node runtime, no MCP server, no
+  npm install. Same workflows, simpler delivery.
 
 ## [1.0.0] — 2026-05-12
 
@@ -27,13 +33,7 @@ Initial public release.
 - `INTEGRATIONS.md` documenting setup for 11 environments:
   Claude Code, Claude Desktop, Cursor, Windsurf, Cline, Roo Code,
   Continue.dev, Aider, OpenAI Codex CLI, GitHub Copilot, Zed AI.
-- MCP server (`@hyuniiiv/quantum-agent-mcp`) — exposes the four cosmos
-  workflows as MCP prompts for any MCP-compatible host.
-- Non-LLM CLI (`@hyuniiiv/quantum-agent-cli`) — deterministic cosmos
-  lifecycle ops: `init`, `list`, `insight`, `observe`, `crystallize`, `stop`.
 - Cursor `.mdc` preset (`presets/cursor/cosmos.mdc`) with `globs` header.
-- Conformance test suite (`tests/conformance.sh`) — 16 filesystem-contract
-  checks runnable against any implementation.
 
 ### Documentation
 - `README.md` — overview, install, quick start, signal taxonomy.

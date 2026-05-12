@@ -26,5 +26,5 @@ body:
       label: Scope
       options:
         - label: This change preserves the filesystem contract (.quantum/ + cosmos/ worktrees)
-        - label: This change does NOT introduce a runtime dependency beyond Node 18+ and git
+        - label: This change does NOT introduce a runtime dependency (project stays markdown-only)
         - label: I'd be willing to open a PR if the proposal is accepted

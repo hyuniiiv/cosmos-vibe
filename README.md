@@ -1,6 +1,5 @@
 # 🌌 QuantumAgent
 
-[![Conformance](https://github.com/hyuniiiv/quantum-agent/actions/workflows/conformance.yml/badge.svg)](https://github.com/hyuniiiv/quantum-agent/actions/workflows/conformance.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > Before you commit to one approach, explore three in parallel.
@@ -104,36 +103,22 @@ Quantum Memory is plain JSON Lines files on disk.
 
 ### Use in other AI agents
 
-QuantumAgent's core is platform-neutral markdown + bash. It runs in **10+ environments** beyond Claude Code:
+QuantumAgent's core is platform-neutral markdown. The same workflows run in **any AI coding agent** that accepts custom instructions or rules files:
 
 | Environment | Mechanism |
 |---|---|
 | Claude Code | Native plugin (above) |
 | Cursor | `.cursor/rules/cosmos.mdc` |
 | Windsurf | `.windsurfrules` |
-| Cline / Roo Code | Custom Instructions or MCP |
+| Cline / Roo Code | Custom Instructions |
 | Continue.dev | `config.json` system message |
 | Aider | `CONVENTIONS.md` via `--read` |
 | OpenAI Codex CLI | `--prompt-file` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Zed AI | Assistant custom prompt |
-| Claude Desktop / claude.ai | MCP server (`@hyuniiiv/quantum-agent-mcp`) |
+| Claude Desktop / claude.ai | Custom Instructions |
 
 The same `.quantum/` memory works across agents — spawn in Cursor, observe in Claude Code, crystallize in Aider. See **[INTEGRATIONS.md](INTEGRATIONS.md)** for per-platform setup and the universal **[`bundle/cosmos-instructions.md`](bundle/cosmos-instructions.md)** drop-in file.
-
-#### Non-LLM CLI (optional, run from source)
-
-For scripted environments without any AI agent, a deterministic CLI lives in `cli/`. It's not published to npm yet — run it from a local clone:
-
-```bash
-git clone https://github.com/hyuniiiv/quantum-agent && cd quantum-agent
-node cli/index.js init alpha
-node cli/index.js insight alpha "discovery text"
-node cli/index.js observe
-node cli/index.js stop --purge
-```
-
-Verified by the 16-check conformance suite (`tests/conformance.sh`). npm publish is deferred until there's demand — open an issue if you'd like an `npx`-able package.
 
 ### Troubleshooting
 

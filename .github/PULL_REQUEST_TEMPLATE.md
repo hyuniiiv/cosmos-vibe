@@ -14,14 +14,11 @@
 
 ## Verification
 
-- [ ] `bash tests/conformance.sh` passes locally (16/16)
 - [ ] Manually tested in: <!-- Claude Code / Cursor / Cline / Aider / other -->
-- [ ] No new dependencies (or justified below)
 
 ## Filesystem contract
 
-- [ ] No changes to `.quantum/` or `cosmos/` semantics
-- [ ] If yes → conformance test in `tests/conformance.sh` updated accordingly
+- [ ] No changes to `.quantum/` or `cosmos/` semantics (or documented if intentional)
 
 ## If this is a new integration
 
@@ -31,8 +28,7 @@
 
 ## Skill sync (if `skills/*/SKILL.md` changed)
 
-- [ ] Ran `cd mcp && npm run sync-skills` (or copied manually) so `mcp/skills/` matches
-- [ ] Regenerated `bundle/cosmos-instructions.md` if needed
+- [ ] Regenerated `bundle/cosmos-instructions.md`
 
 ## CHANGELOG
 
