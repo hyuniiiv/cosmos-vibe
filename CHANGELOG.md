@@ -6,6 +6,36 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Typed insight schema** in `.quantum/<name>/insights.jsonl`. Each line
+  now carries `type` alongside `content` and `ts`:
+  ```
+  {"type": "<discovery|decision|blocker|tunnel|jump|resonance|complete|crystallize>",
+   "content": "<text>", "ts": "<ISO 8601>"}
+  ```
+  Enables filtered observe, grouped crystallize summaries, and blocker
+  surfacing. Backward-compatible: missing `type` is treated as `discovery`;
+  legacy `[TUNNEL]`/`[JUMP]` content prefixes are recognized.
+- **Git-Native Orchestration architecture** explained in `README.md`,
+  `CLAUDE.md`, and `COSMOS.md`. Two layers: Control Plane (Git/Markdown,
+  agent-agnostic) + Effector Layer (host agent's native tools). Clarifies
+  why the same workflows port to 10+ AI agents.
+- **Concurrency note** in `skills/spawn/SKILL.md` and `CLAUDE.md`: POSIX
+  atomic append covers single-agent sequential writes; concurrent
+  sub-agent writes to the same insights file should use `flock` or
+  write-then-rename.
+
+### Changed
+- `skills/spawn/SKILL.md`: insight examples updated to typed schema;
+  `[TUNNEL]`/`[JUMP]` documented as legacy text prefixes.
+- `skills/observe/SKILL.md`: parsing now reads `type` (defaulting to
+  `discovery`) and adds a Blockers section for unresolved
+  `type: "blocker"` entries.
+- `skills/crystallize/SKILL.md`: report groups insights by type
+  (decisions / tunnels / jumps / blockers / complete), and the merge step
+  records a `type: "crystallize"` marker in the cosmos's insights file.
+- `bundle/cosmos-instructions.md` regenerated to reflect all of the above.
+
 ### Removed
 - `mcp/` MCP server, `cli/` non-LLM CLI, `tests/conformance.sh`, and
   `.github/workflows/conformance.yml`. The Claude Code plugin plus the

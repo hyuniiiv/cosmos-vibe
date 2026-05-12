@@ -28,9 +28,18 @@ Store as `<repo_root>`.
 
 Read every file matching `<repo_root>/.quantum/*/insights.jsonl`.
 
-Parse each line as JSON: `{"content": "<text>", "ts": "<timestamp>"}`
+Parse each line as JSON. Current schema (preferred):
+```
+{"type": "<type>", "content": "<text>", "ts": "<timestamp>"}
+```
 
-Build a map: `cosmos_id → [insights sorted by ts]`
+Legacy compatibility:
+- If `type` is missing → treat as `"discovery"`
+- If `content` starts with `[TUNNEL]` → treat as `type: "tunnel"`
+- If `content` starts with `[JUMP]` → treat as `type: "jump"`
+
+Build a map: `cosmos_id → [insights sorted by ts]`. Also build a secondary
+index `type → [insights]` for grouped reporting in Step 4.
 
 If `.quantum/` is empty or missing, output:
 ```
@@ -71,12 +80,18 @@ design), that is Degeneracy: the problem had a single natural solution regardles
 of approach. Flag this separately from Resonance (which is about conclusions, not
 implementations being identical).
 
-**Tunneling** — scan all insights across all cosmos for the prefix `[TUNNEL]`.
-These are solutions that bypassed assumed constraints. List each one.
+**Tunneling** — collect all insights with `type: "tunnel"` (or legacy
+`[TUNNEL]` content prefix). These are solutions that bypassed assumed
+constraints. List each one.
 
-**Quantum Jump** — scan all insights for the prefix `[JUMP]`. These are
-discontinuous architectural leaps triggered by a single entanglement read.
-List each one with the cosmos it came from.
+**Quantum Jump** — collect all insights with `type: "jump"` (or legacy
+`[JUMP]` content prefix). These are discontinuous architectural leaps
+triggered by a single entanglement read. List each one with the cosmos
+it came from.
+
+**Blockers** — collect all `type: "blocker"` insights still unresolved
+(no later `type: "decision"` or `type: "discovery"` from the same cosmos
+that addresses them). Surface these — they need developer attention.
 
 ### Step 5 — Output quantum map
 

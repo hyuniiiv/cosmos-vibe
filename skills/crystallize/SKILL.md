@@ -30,7 +30,9 @@ Store as `<repo_root>`.
 ### Step 2 — Read insights
 
 Read `<repo_root>/.quantum/<cosmos_id>/insights.jsonl`.
-Parse each line as JSON.
+Parse each line as JSON. Each entry has a `type` field — see `cosmos:spawn`
+for the type vocabulary. Treat missing `type` as `discovery`; treat legacy
+`[TUNNEL]`/`[JUMP]` content prefixes as the corresponding type.
 
 If the file is empty or missing:
 ```
@@ -57,13 +59,14 @@ and proceed using only the insights file.
 
 ### Step 4 — Crystallization report
 
-From the insights, identify and summarize:
-1. **Core decisions** — What architectural choices were made?
-2. **Trade-offs rejected** — What alternatives were considered and why?
-3. **Resonance adopted** — Which insights came from other cosmos via entanglement?
-4. **Quantum Tunneling** — Any `[TUNNEL]`-tagged insights? List each: what constraint was assumed, what bypass was found.
-5. **Quantum Jumps** — Any `[JUMP]`-tagged insights? List each: what single entanglement read caused the discontinuous shift, and what changed.
-6. **Final answer** — What is this cosmos's solution to the goal?
+From the insights, identify and summarize (group by `type`):
+1. **Core decisions** — all `type: "decision"` entries. What architectural choices were made?
+2. **Trade-offs rejected** — derive from decisions: what alternatives were considered and why?
+3. **Resonance adopted** — all `type: "resonance"` entries. Which insights came from other cosmos via entanglement?
+4. **Quantum Tunneling** — all `type: "tunnel"` entries. What constraint was assumed, what bypass was found.
+5. **Quantum Jumps** — all `type: "jump"` entries. What single entanglement read caused the discontinuous shift, and what changed.
+6. **Unresolved blockers** — any `type: "blocker"` without a follow-up `type: "decision"` or `discovery` resolving them. List or confirm "(none)".
+7. **Final answer** — drawn from `type: "complete"` and accumulated decisions. What is this cosmos's solution to the goal?
 
 Present as:
 
@@ -133,6 +136,12 @@ git symbolic-ref --short HEAD
 Switch to main/master if not already on it, then:
 ```bash
 git merge cosmos/<cosmos_id> --no-ff -m "feat: crystallize cosmos/<cosmos_id>"
+```
+
+Then record the collapse in quantum memory:
+```bash
+echo '{"type":"crystallize","content":"Cosmos <cosmos_id> collapsed and merged into main.","ts":"<ISO timestamp>"}' \
+  >> <repo_root>/.quantum/<cosmos_id>/insights.jsonl
 ```
 
 Output: `✅ Merged cosmos/<cosmos_id> into main.`

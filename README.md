@@ -17,6 +17,19 @@ your signal to trust it. When they diverge, that's your actual tradeoff made vis
 
 ---
 
+## Architecture — Git-Native Orchestration
+
+QuantumAgent's design separates **intent** from **execution**:
+
+| Layer | Lives in | Who owns it |
+|---|---|---|
+| **Control Plane** — goals, plans, memory, signals, review | Git working tree (Markdown + JSONL) | QuantumAgent |
+| **Effector Layer** — external APIs, DBs, browsers, code execution | Host agent's native tools / MCP / CLI | The host (Claude Code, Cursor, Aider, ...) |
+
+Everything QuantumAgent persists is a plain file you can `cat`, `grep`, `git diff`, and `git revert`. The host agent owns the side effects. This is what makes the same workflow portable across 10+ environments — there is no proprietary runtime to port.
+
+---
+
 ## What you get
 
 A typical 30-minute run produces:

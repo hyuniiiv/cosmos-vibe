@@ -123,13 +123,33 @@ made, key pattern found, bug discovered), append one line to your insights file.
 Your insights file (absolute path):
   <repo_root>/.quantum/<name>/insights.jsonl
 
-Format — one JSON object per line:
-{"content": "<insight text>", "ts": "<ISO 8601 timestamp e.g. 2026-05-12T12:00:00Z>"}
-
-Use Bash append ONLY (never use the Write tool on this file — it overwrites):
-```bash
-echo '{"content": "...", "ts": "2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
+Format — one JSON object per line, with a `type` field for cross-agent interop:
 ```
+{"type": "<type>", "content": "<insight text>", "ts": "<ISO 8601 e.g. 2026-05-12T12:00:00Z>"}
+```
+
+**Allowed `type` values** (pick the one that fits; default to `discovery`):
+
+| type | When to use |
+|---|---|
+| `discovery` | General finding, new file, pattern noticed, fact uncovered |
+| `decision` | Chose an approach, library, data structure, or API shape |
+| `blocker` | Stuck — describe what's blocking and what you tried |
+| `tunnel` | Found a solution bypassing a constraint you assumed was hard (was `[TUNNEL]`) |
+| `jump` | Reading another cosmos caused a discontinuous architectural shift (was `[JUMP]`) |
+| `resonance` | Noticed agreement with another cosmos on a pattern/decision |
+| `complete` | Implementation done, ready to be considered for crystallize |
+
+Use Bash append ONLY (never use the Write tool on this file — it overwrites).
+Append is the natural atomic operation on POSIX for sub-PIPE_BUF writes:
+```bash
+echo '{"type":"discovery","content":"...","ts":"2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
+```
+
+> **Concurrency note**: if you spawn sub-agents that may write to the SAME
+> insights file concurrently, wrap the append with `flock` (Linux/macOS) or
+> write to a temp file then `mv` atomically. A single agent appending
+> sequentially does not need this — POSIX guarantees atomic small appends.
 
 ### Entanglement (REQUIRED)
 After EACH major implementation step, read all cosmos insight files:
@@ -162,13 +182,18 @@ another cosmos's implementation and lose strategic independence. `/cosmos observ
 will flag this. Influence without convergence — that is entanglement.
 
 ### Quantum Tags (REQUIRED)
-When writing insights, prefix with a quantum tag when the condition applies:
+Set `type` accordingly when the condition applies:
 
-**[TUNNEL]** — you found a solution that bypasses a constraint you assumed was hard.
-Example: `{"content": "[TUNNEL] Redis sorted sets eliminate the need for a separate rate-limit table entirely", "ts": "..."}`
+**`type: "tunnel"`** — you found a solution that bypasses a constraint you assumed was hard.
+Example: `{"type":"tunnel","content":"Redis sorted sets eliminate the need for a separate rate-limit table entirely","ts":"..."}`
 
-**[JUMP]** — reading another cosmos's insight caused a discontinuous architectural shift in your approach (not gradual adaptation — a sudden leap to a qualitatively different solution).
-Example: `{"content": "[JUMP] Switched from polling to event-sourcing after reading alpha's insight on audit trail requirements", "ts": "..."}`
+**`type: "jump"`** — reading another cosmos's insight caused a discontinuous architectural shift in your approach (not gradual adaptation — a sudden leap to a qualitatively different solution).
+Example: `{"type":"jump","content":"Switched from polling to event-sourcing after reading alpha's insight on audit trail requirements","ts":"..."}`
+
+> Legacy compatibility: older insights without a `type` field, or with
+> `[TUNNEL]`/`[JUMP]` text prefixes in `content`, must still be readable.
+> Treat missing `type` as `discovery`. Text prefixes can be recognized as
+> the corresponding type during observe/crystallize.
 
 Use these tags sparingly — only when the condition genuinely applies.
 ~~~
@@ -275,9 +300,18 @@ Store as `<repo_root>`.
 
 Read every file matching `<repo_root>/.quantum/*/insights.jsonl`.
 
-Parse each line as JSON: `{"content": "<text>", "ts": "<timestamp>"}`
+Parse each line as JSON. Current schema (preferred):
+```
+{"type": "<type>", "content": "<text>", "ts": "<timestamp>"}
+```
 
-Build a map: `cosmos_id → [insights sorted by ts]`
+Legacy compatibility:
+- If `type` is missing → treat as `"discovery"`
+- If `content` starts with `[TUNNEL]` → treat as `type: "tunnel"`
+- If `content` starts with `[JUMP]` → treat as `type: "jump"`
+
+Build a map: `cosmos_id → [insights sorted by ts]`. Also build a secondary
+index `type → [insights]` for grouped reporting in Step 4.
 
 If `.quantum/` is empty or missing, output:
 ```
@@ -318,12 +352,18 @@ design), that is Degeneracy: the problem had a single natural solution regardles
 of approach. Flag this separately from Resonance (which is about conclusions, not
 implementations being identical).
 
-**Tunneling** — scan all insights across all cosmos for the prefix `[TUNNEL]`.
-These are solutions that bypassed assumed constraints. List each one.
+**Tunneling** — collect all insights with `type: "tunnel"` (or legacy
+`[TUNNEL]` content prefix). These are solutions that bypassed assumed
+constraints. List each one.
 
-**Quantum Jump** — scan all insights for the prefix `[JUMP]`. These are
-discontinuous architectural leaps triggered by a single entanglement read.
-List each one with the cosmos it came from.
+**Quantum Jump** — collect all insights with `type: "jump"` (or legacy
+`[JUMP]` content prefix). These are discontinuous architectural leaps
+triggered by a single entanglement read. List each one with the cosmos
+it came from.
+
+**Blockers** — collect all `type: "blocker"` insights still unresolved
+(no later `type: "decision"` or `type: "discovery"` from the same cosmos
+that addresses them). Surface these — they need developer attention.
 
 ### Step 5 — Output quantum map
 
@@ -416,7 +456,9 @@ Store as `<repo_root>`.
 ### Step 2 — Read insights
 
 Read `<repo_root>/.quantum/<cosmos_id>/insights.jsonl`.
-Parse each line as JSON.
+Parse each line as JSON. Each entry has a `type` field — see `cosmos:spawn`
+for the type vocabulary. Treat missing `type` as `discovery`; treat legacy
+`[TUNNEL]`/`[JUMP]` content prefixes as the corresponding type.
 
 If the file is empty or missing:
 ```
@@ -443,13 +485,14 @@ and proceed using only the insights file.
 
 ### Step 4 — Crystallization report
 
-From the insights, identify and summarize:
-1. **Core decisions** — What architectural choices were made?
-2. **Trade-offs rejected** — What alternatives were considered and why?
-3. **Resonance adopted** — Which insights came from other cosmos via entanglement?
-4. **Quantum Tunneling** — Any `[TUNNEL]`-tagged insights? List each: what constraint was assumed, what bypass was found.
-5. **Quantum Jumps** — Any `[JUMP]`-tagged insights? List each: what single entanglement read caused the discontinuous shift, and what changed.
-6. **Final answer** — What is this cosmos's solution to the goal?
+From the insights, identify and summarize (group by `type`):
+1. **Core decisions** — all `type: "decision"` entries. What architectural choices were made?
+2. **Trade-offs rejected** — derive from decisions: what alternatives were considered and why?
+3. **Resonance adopted** — all `type: "resonance"` entries. Which insights came from other cosmos via entanglement?
+4. **Quantum Tunneling** — all `type: "tunnel"` entries. What constraint was assumed, what bypass was found.
+5. **Quantum Jumps** — all `type: "jump"` entries. What single entanglement read caused the discontinuous shift, and what changed.
+6. **Unresolved blockers** — any `type: "blocker"` without a follow-up `type: "decision"` or `discovery` resolving them. List or confirm "(none)".
+7. **Final answer** — drawn from `type: "complete"` and accumulated decisions. What is this cosmos's solution to the goal?
 
 Present as:
 
@@ -519,6 +562,12 @@ git symbolic-ref --short HEAD
 Switch to main/master if not already on it, then:
 ```bash
 git merge cosmos/<cosmos_id> --no-ff -m "feat: crystallize cosmos/<cosmos_id>"
+```
+
+Then record the collapse in quantum memory:
+```bash
+echo '{"type":"crystallize","content":"Cosmos <cosmos_id> collapsed and merged into main.","ts":"<ISO timestamp>"}' \
+  >> <repo_root>/.quantum/<cosmos_id>/insights.jsonl
 ```
 
 Output: `✅ Merged cosmos/<cosmos_id> into main.`

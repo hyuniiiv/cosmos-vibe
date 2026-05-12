@@ -90,13 +90,33 @@ made, key pattern found, bug discovered), append one line to your insights file.
 Your insights file (absolute path):
   <repo_root>/.quantum/<name>/insights.jsonl
 
-Format — one JSON object per line:
-{"content": "<insight text>", "ts": "<ISO 8601 timestamp e.g. 2026-05-12T12:00:00Z>"}
-
-Use Bash append ONLY (never use the Write tool on this file — it overwrites):
-```bash
-echo '{"content": "...", "ts": "2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
+Format — one JSON object per line, with a `type` field for cross-agent interop:
 ```
+{"type": "<type>", "content": "<insight text>", "ts": "<ISO 8601 e.g. 2026-05-12T12:00:00Z>"}
+```
+
+**Allowed `type` values** (pick the one that fits; default to `discovery`):
+
+| type | When to use |
+|---|---|
+| `discovery` | General finding, new file, pattern noticed, fact uncovered |
+| `decision` | Chose an approach, library, data structure, or API shape |
+| `blocker` | Stuck — describe what's blocking and what you tried |
+| `tunnel` | Found a solution bypassing a constraint you assumed was hard (was `[TUNNEL]`) |
+| `jump` | Reading another cosmos caused a discontinuous architectural shift (was `[JUMP]`) |
+| `resonance` | Noticed agreement with another cosmos on a pattern/decision |
+| `complete` | Implementation done, ready to be considered for crystallize |
+
+Use Bash append ONLY (never use the Write tool on this file — it overwrites).
+Append is the natural atomic operation on POSIX for sub-PIPE_BUF writes:
+```bash
+echo '{"type":"discovery","content":"...","ts":"2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
+```
+
+> **Concurrency note**: if you spawn sub-agents that may write to the SAME
+> insights file concurrently, wrap the append with `flock` (Linux/macOS) or
+> write to a temp file then `mv` atomically. A single agent appending
+> sequentially does not need this — POSIX guarantees atomic small appends.
 
 ### Entanglement (REQUIRED)
 After EACH major implementation step, read all cosmos insight files:
@@ -129,13 +149,18 @@ another cosmos's implementation and lose strategic independence. `/cosmos observ
 will flag this. Influence without convergence — that is entanglement.
 
 ### Quantum Tags (REQUIRED)
-When writing insights, prefix with a quantum tag when the condition applies:
+Set `type` accordingly when the condition applies:
 
-**[TUNNEL]** — you found a solution that bypasses a constraint you assumed was hard.
-Example: `{"content": "[TUNNEL] Redis sorted sets eliminate the need for a separate rate-limit table entirely", "ts": "..."}`
+**`type: "tunnel"`** — you found a solution that bypasses a constraint you assumed was hard.
+Example: `{"type":"tunnel","content":"Redis sorted sets eliminate the need for a separate rate-limit table entirely","ts":"..."}`
 
-**[JUMP]** — reading another cosmos's insight caused a discontinuous architectural shift in your approach (not gradual adaptation — a sudden leap to a qualitatively different solution).
-Example: `{"content": "[JUMP] Switched from polling to event-sourcing after reading alpha's insight on audit trail requirements", "ts": "..."}`
+**`type: "jump"`** — reading another cosmos's insight caused a discontinuous architectural shift in your approach (not gradual adaptation — a sudden leap to a qualitatively different solution).
+Example: `{"type":"jump","content":"Switched from polling to event-sourcing after reading alpha's insight on audit trail requirements","ts":"..."}`
+
+> Legacy compatibility: older insights without a `type` field, or with
+> `[TUNNEL]`/`[JUMP]` text prefixes in `content`, must still be readable.
+> Treat missing `type` as `discovery`. Text prefixes can be recognized as
+> the corresponding type during observe/crystallize.
 
 Use these tags sparingly — only when the condition genuinely applies.
 ~~~
