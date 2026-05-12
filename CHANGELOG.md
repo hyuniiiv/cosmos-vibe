@@ -6,6 +6,26 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-05-12
+
+### Added — first real cosmos run in `examples/`
+- **`examples/auth-audit/`** — 3-cosmos security audit of a production
+  Electron+Next.js payment terminal codebase, executed twice (deliberate
+  re-spawn). Three complementary strategies (security-threat,
+  code-architecture, offline-resilience) converged on a 3-way resonance:
+  *"the token has no expiration, revocation is a no-op against stateless
+  JWT, and the token is stored plaintext — and the three reinforce each
+  other."* The 2nd round surfaced a `[TUNNEL]` find — Electron CORS
+  wildcard injection in `main.js` that the 1st round missed entirely.
+  Includes verbatim auto-observe output (both rounds), raw `.jsonl`
+  insights from each cosmos, and the spawn command. Only
+  company-identifying strings masked (`BIZPOS` → `EXAMPLE_SYSTEM`).
+- README.md and README.ko.md both feature the auth-audit example
+  prominently — stats row (3 cosmos × 2 rounds × 5 CRITICALs × 1
+  [TUNNEL]), two pull-quote callouts (3-way resonance + tunneling
+  finding), "Why this example matters" takeaways, and deep links to
+  observe-snapshot + each insights file.
+
 ### Added — examples scaffold for real cosmos runs
 - New `examples/` directory with index `examples/README.md` documenting
   the contribution path for real cosmos run artifacts.

@@ -1,4 +1,5 @@
 .quantum/
+.release-notes-*.md
 cosmos/
 universes/
 .superpowers/
