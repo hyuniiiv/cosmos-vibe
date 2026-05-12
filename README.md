@@ -484,7 +484,7 @@ Final Answer:
 ### `/cosmos spawn`
 
 ```
-/cosmos spawn --goal "<goal>" --strategies "<s1,s2,...>" [--entanglement <mode>]
+/cosmos spawn --goal "<goal>" --strategies "<s1,s2,...>" [--entanglement <mode>] [--models <m1,m2,m3>]
 ```
 
 Launches one cosmos per strategy. Names assigned alphabetically: `alpha`, `beta`,
@@ -509,7 +509,28 @@ Agents run in parallel. When all finish, `/cosmos observe` runs automatically.
 |------|-------------|
 | `--goal` | The task every cosmos works toward |
 | `--strategies` | Comma-separated list — one cosmos per strategy |
-| `--entanglement` | `none` / `passive` *(default)* / `active` — see below |
+| `--entanglement` | `none` / `passive` *(default)* / `active` / `strict` — see below |
+| `--models` *(v3.3)* | Comma-separated list of model names (length must match `--strategies`). Per-cosmos model assignment. See "Model diversity" below |
+
+**Model diversity** *(v3.3)*:
+
+```bash
+/cosmos spawn \
+  --goal "implement rate limiting" \
+  --strategies "token-bucket,sliding-window,fixed-window" \
+  --models "claude-haiku-4-5,claude-sonnet-4-6,claude-opus-4-7"
+```
+
+| Mode | Behavior |
+|------|---------|
+| `--models` omitted | All cosmos inherit the host's default model. |
+| `--models` supplied | Length must match strategies. Each cosmos uses its assigned model. |
+
+Why mix models?
+- **Asymmetric token economics** — cheap models for exploration fan-out, expensive ones for synthesis steps
+- **Blind-spot mitigation** — different models reduce *shared bias*, so Resonance can't become *false consensus* from a single model's idiosyncrasies
+
+Common model identifiers: `claude-haiku-4-5` (fast/cheap), `claude-sonnet-4-6` (balanced, default), `claude-opus-4-7` (most capable). Exact names depend on your Claude Code installation.
 
 **Entanglement modes** *(v1.2, extended in v1.3)*:
 
@@ -611,7 +632,9 @@ Executes a **declarative quantum experiment** from a YAML file. Quantum explorat
 /cosmos run experiments/rate-limiting.qa.yaml
 ```
 
-The YAML can declare project spin, singularities, and the spawn configuration in a single file:
+The YAML can declare project spin, singularities, and the spawn configuration in a single file. Two **spawn forms** are supported — pick one:
+
+**Form A — strategies + optional models (parallel lists):**
 
 ```yaml
 experiment: rate-limiting-design
@@ -628,8 +651,26 @@ singularities:                          # optional — declare macro events
 spawn:                                  # required — the exploration itself
   goal: "rate limiting middleware"
   strategies: [token-bucket, sliding-window, fixed-window]
+  models: [claude-haiku-4-5, claude-sonnet-4-6, claude-opus-4-7]   # optional, v3.3+
+  entanglement: passive                                              # optional
+```
+
+**Form B — verbose per-cosmos (alternative to `strategies` + `models`, v3.3+):**
+
+```yaml
+experiment: rate-limiting-design
+version: 1
+
+spawn:
+  goal: "rate limiting middleware"
+  cosmos:
+    - { strategy: token-bucket,   model: claude-haiku-4-5 }
+    - { strategy: sliding-window, model: claude-sonnet-4-6 }
+    - { strategy: fixed-window,   model: claude-opus-4-7 }
   entanglement: passive
 ```
+
+Form B is more flexible when each cosmos needs distinct configuration. Form A is concise when most cosmos share defaults.
 
 Execution order: validate → apply spin → apply singularities → spawn (with provenance tagged into every cosmos's first insight) → auto-observe on completion.
 
@@ -680,6 +721,54 @@ See [Multi-scale: the macro layer](#multi-scale-the-macro-layer) for the full me
 
 ---
 
+### `/cosmos scan` *(new in v4.0)*
+
+```
+/cosmos scan [--paths "<glob1,glob2,...>"] [--languages "<ts,py,go,...>"] [--include-tests] [--git-churn-threshold N]
+```
+
+Scans the codebase for **code-level quantum phenomena**. The micro scale of QuantumAgent — function/file/symbol-level quantum state. Findings append to `.quantum/code/findings.jsonl`.
+
+Four detection types:
+
+| Type | What it detects |
+|------|----------------|
+| `code-tunnel` | Type-system bypasses: `as unknown as`, `@ts-ignore`, `# type: ignore`, `eval`, `unsafe`, `transmute` |
+| `code-decoherence` | Source file with no corresponding test (state never "observed") |
+| `code-superposition` | Feature flags + A/B branches (code runs in multiple states) |
+| `code-jump` *(optional)* | High recent git churn (file recently restructured) |
+
+Language support: TypeScript, JavaScript, Python, Go, Rust.
+
+Example:
+
+```bash
+/cosmos scan --paths "src/" --languages "ts,py" --git-churn-threshold 50
+```
+
+Output (summary):
+
+```
+🔬 Code scan complete
+
+   Tunnels (type-system bypass):    12  ████████████
+   Decoherence (untested files):     8  ████████
+   Superposition (feature flags):    3  ███
+   Jumps (high recent churn):        2  ██
+
+   Top tunnel hotspots:
+     src/auth.ts:42      as-unknown-as     "as unknown as User"
+     src/utils.ts:18     ts-ignore         "// @ts-ignore"
+
+   Stored at: .quantum/code/findings.jsonl
+```
+
+`/cosmos observe` (v4.0+) automatically surfaces code findings + cross-scale signals (cosmos that modified files with code findings = crystallize-review candidates).
+
+See [Micro scale — `/cosmos scan`](#micro-scale--cosmos-scan-new-in-v40) for full pattern catalog.
+
+---
+
 ## Multi-scale: the macro layer *(new in v1.2)*
 
 QuantumAgent operates at three scales:
@@ -687,7 +776,7 @@ QuantumAgent operates at three scales:
 ```
 🌌 Cosmos scale  — /cosmos spawn (N parallel strategies)
 🌍 Project scale — /cosmos singularity + .quantum/project/spin.json  ← v1.2
-⚛️  Code scale    — (v2.0 roadmap)
+⚛️  Code scale    — /cosmos scan + .quantum/code/findings.jsonl       ← v4.0
 ```
 
 The macro layer adds two files that every spawn reads automatically:
@@ -902,15 +991,45 @@ pip install -e python/    # from this repo
 
 Python 3.9+. No runtime dependencies — pure stdlib.
 
-### The five primitives
+### Primitives
+
+**Core (v3.0):**
 
 | Primitive | Purpose |
 |-----------|---------|
-| `psi(states, weights)` | Declare a decision as a probability distribution (aka `ψ`) |
-| `observe(psi)` | Read distribution without collapsing — non-destructive |
+| `psi(states, weights=…)` | Declare a decision as a probability distribution (aka `ψ`) — classical mode |
+| `psi(states, amplitudes=…)` *(v3.1)* | Same constructor, quantum mode — complex amplitudes with phase |
+| `observe(psi)` | Read distribution without collapsing — non-destructive, idempotent |
 | `measure(psi, seed=None)` | Collapse to one state via Born-rule sampling — irreversible |
 | `entangle(a, b, correlation)` | Link two decisions so measurement of one conditions the other |
-| `constraint(name, boost=…, suppress=…, where=…) @ psi` | Apply an operator that curves the distribution |
+| `constraint(name, boost=…, suppress=…, where=…) @ psi` | Apply an operator that curves the distribution (classical mode) |
+
+**Path B — quantum operations (v3.1, v3.2):**
+
+| Primitive | Purpose |
+|-----------|---------|
+| `superpose(a, b, weight_a=1, weight_b=1)` *(v3.1)* | Amplitude addition → interference (constructive/destructive) |
+| `bell_state(kind)` *(v3.1)* | Maximally-entangled 2-qubit Bell states (`phi+`/`phi-`/`psi+`/`psi-`) |
+| `gate(name, *params)` *(v3.2)* | Build a quantum gate: `I`, `X`, `Y`, `Z`, `H`, `S`, `T`, `CNOT`, `CZ`, `SWAP`, `Rx`/`Ry`/`Rz` |
+| `apply_gate(psi, gate, qubits=[...])` *(v3.2)* | Apply a gate to specified qubits of n-qubit state |
+| `measure_in_basis(psi, θ_a, θ_b)` *(v3.2)* | Rotate then measure — multi-basis observable measurement |
+| `chsh_test(psi, n_trials)` *(v3.2)* | Run CHSH protocol — verify Bell-inequality violation on entangled state |
+| `density(psi)` *(v3.2)* | Convert pure wavefunction to its density matrix `|ψ⟩⟨ψ|` |
+| `decohere(rho, rate)` *(v3.2)* | Exponential decay of off-diagonal coherences (decoherence model) |
+| `partial_trace(rho, qubit)` *(v3.2)* | Trace out one qubit — reduced state reveals entanglement |
+
+**Layer 1 ↔ Layer 3 interop (v3.3, v4.0):**
+
+| Primitive | Purpose |
+|-----------|---------|
+| `from_cosmos(repo_path, weights="by-insight-count")` *(v3.3)* | Read `.quantum/` cosmos output into a Python `CosmosRun` |
+| `CosmosRun.psi` | Wavefunction over cosmos names (weighted by insight count or uniform) |
+| `CosmosRun.insights` | Per-cosmos parsed insight JSONL |
+| `CosmosRun.resonance` / `.uncertainty` | Heuristic token-overlap signals (for semantic quality use `/cosmos observe`) |
+| `CosmosRun.spin` / `.singularities` | Project-scale state if defined |
+| `CosmosRun.code_findings` / `.code_summary()` *(v4.0)* | Code-scale findings from `/cosmos scan` |
+
+All primitives composable — e.g., `cache = constraint("low-latency") @ psi(states, weights=…)` then `entangle(cache, store, ...)` then `measure(cache)`.
 
 ### Two modes — classical and quantum *(v3.1 — Path B Phase 1)*
 
@@ -962,7 +1081,7 @@ The library now implements canonical quantum mechanics end-to-end. Three decisiv
 
 The forward-compatible API design means existing v3.0 classical-mode code continues to work unchanged. Quantum mode is purely additive — opt in by passing `amplitudes=` instead of `weights=`.
 
-See [`python/README.md`](python/README.md) for the full guide, eight runnable examples (3 classical + 5 quantum across all four phases), and primitive reference.
+See [`python/README.md`](python/README.md) for the full guide, **nine runnable examples** (3 classical + 5 quantum across all four Path B phases + 1 cosmos interop), and primitive reference.
 
 ---
 
