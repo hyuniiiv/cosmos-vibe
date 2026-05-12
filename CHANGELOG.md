@@ -6,6 +6,99 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.3.0] — 2026-05-12
+
+### Added — verifiable live entanglement (strict mode)
+
+QuantumAgent now offers `--entanglement strict` mode, completing the
+four-mode entanglement palette (`none` / `passive` / `active` / `strict`).
+Strict mode introduces a **heartbeat protocol** that produces verifiable
+proof of live agent-to-agent communication.
+
+- **Heartbeat protocol** — at every major step boundary, each cosmos
+  publishes a `heartbeat` insight and MUST write `heartbeat-ack` entries
+  referencing every unacknowledged heartbeat from other cosmos before
+  proceeding to the next step.
+
+  Insight schema additions:
+  - `{"type": "heartbeat", "step": <N>, "content": "<name> at step <N>", "ts": "..."}`
+  - `{"type": "heartbeat-ack", "content": "acknowledged <other>:step <M>", "refs": ["<other>@<ts>"], "ts": "..."}`
+
+- **`/cosmos observe` heartbeat audit** — for strict runs, the observer
+  builds the heartbeat graph and reports **entanglement quality**:
+  - **High** (≥80% of expected ACKs present)
+  - **Medium** (40–80%)
+  - **Low** (<40%)
+  Broken channels are surfaced explicitly: `cosmos:<C> → cosmos:<C'>: <N> unacknowledged heartbeat(s)`.
+
+- **Final-completion heartbeat** — before stopping, each cosmos in strict
+  mode writes a `step: "final"` heartbeat and acknowledges any late
+  heartbeats from peers. Closes the loop on the entanglement graph.
+
+This is QuantumAgent's **Bell-test analog** — observable proof of live
+quantum-style communication between agents, not just trust.
+
+### Added — `/cosmos spin` skill
+
+Declares or updates the project's **immutable identity** — its quantum
+spin. Once declared, every `/cosmos spawn` automatically inherits the
+spin as invariant constraints.
+
+- `/cosmos spin --name "<name>" [--type "<type>"] [--description "<text>"] [--constraints "<c1,c2,c3>"]`
+- `/cosmos spin` (no args) — display current spin
+
+Spin schema (`.quantum/project/spin.json`):
+```json
+{
+  "name": "string (required)",
+  "type": "string (optional)",
+  "description": "string (optional)",
+  "immutable_constraints": ["string", ...],
+  "established": "ISO 8601 (set once)",
+  "updated": "ISO 8601 (most recent change)"
+}
+```
+
+`established` is preserved across updates — the project's identity is
+anchored to its first declaration. `updated` reflects each modification.
+
+### Changed
+
+- `skills/spawn/SKILL.md` — entanglement modes table now lists four
+  modes including `strict`. CLAUDE.md template Entanglement Mode section
+  describes the heartbeat protocol for strict. Step 6 dispatch prompt
+  Block B includes a strict-mode variant emitting the full heartbeat
+  protocol (write heartbeat → read others → write ACKs → proceed).
+  Block D closing includes a strict-mode completion sequence.
+- `skills/observe/SKILL.md` — Step 4 adds live entanglement audit logic
+  for strict runs (heartbeat graph build, expected/actual ACK ratio,
+  broken channel detection). Step 5 output includes Live entanglement
+  quality section with High/Medium/Low rating and broken channel list.
+  Informal signal (cross-cosmos references in content/`read_from`) for
+  non-strict runs.
+- `CLAUDE.md` / `COSMOS.md` — Entanglement Modes section extended with
+  strict; Skills list includes `/cosmos spin` and `/cosmos singularity`.
+- `.claude-plugin/plugin.json` — version 1.3.0; description mentions
+  verifiable live entanglement; keywords add `heartbeat`, `spin`.
+- `.claude-plugin/marketplace.json` — version 1.3.0; description
+  mentions four entanglement modes including heartbeat protocol.
+- `README.md` / `README.ko.md` — entanglement modes table extended;
+  new `/cosmos spin` command section; "How entanglement works" gains
+  a "Verifiable live entanglement — strict mode (v1.3)" subsection;
+  repository layout reflects new `skills/spin/`.
+
+### Backward compatibility
+
+All v1.3 additions are optional and backward-compatible:
+
+- Default entanglement remains `passive` = v1.2 behavior.
+- Projects without `spin.json` continue to work; `/cosmos spin` is opt-in.
+- Existing insight schemas unchanged; `heartbeat` and `heartbeat-ack`
+  are new types that fall into the legacy `discovery` bucket for older
+  observers that don't recognize them.
+- v1.2 (`/cosmos singularity`, project spin via file edit, modes
+  `none`/`passive`/`active`) work identically.
+
 ## [1.2.0] — 2026-05-12
 
 ### Added — multi-scale macro layer

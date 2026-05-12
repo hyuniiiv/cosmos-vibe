@@ -41,11 +41,12 @@ Example: `--strategies "jwt,session,oauth2"` → alpha=jwt, beta=session, gamma=
 | `none` | Cosmos do NOT read other cosmos insights. Pure independent exploration. |
 | `passive` *(default)* | Cosmos read other insights between major implementation steps. Current behavior. |
 | `active` | Cosmos read AND must record `read_from: cosmos:<source>` when adopting another cosmos's pattern. |
+| `strict` | Heartbeat protocol — each cosmos publishes `heartbeat` per major step, and MUST write `heartbeat-ack` for every unacknowledged heartbeat from other cosmos before its next step. Verifiable live entanglement. |
 
 If `--entanglement` is omitted, default to `passive`. Reject unknown values:
 ```
 ❌ Unknown entanglement mode: "<mode>".
-   Allowed: none | passive (default) | active
+   Allowed: none | passive (default) | active | strict
 ```
 
 ### Step 2 — Detect repo root
@@ -138,6 +139,13 @@ Insights or patterns from before these singularities may be stale. Treat with ca
 - `none` — You are in independent mode. Do NOT read other cosmos insight files. Pure parallel exploration without cross-influence. Skip the "Entanglement" subsection below.
 - `passive` *(default)* — Read other cosmos insights between major implementation steps. Adopt patterns through your own strategic lens. This is the standard quantum behavior.
 - `active` — Read other cosmos insights AND record citation in any derived insight. Whenever you adopt or react to another cosmos's finding, your insight MUST include `read_from: cosmos:<source>` and reference the originating ts. Used when traceability matters (security, compliance, debugging).
+- `strict` — Heartbeat protocol enforced. At every major step boundary you MUST:
+  1. Write a `heartbeat` insight: `{"type":"heartbeat","step":<N>,"content":"<name> at step <N>","ts":"..."}`
+  2. Read all other cosmos heartbeats published since your last ACK
+  3. For every unacknowledged heartbeat from another cosmos, write `{"type":"heartbeat-ack","content":"acknowledged <other>:step <M>","refs":["<other>@<ts>"],"ts":"..."}`
+  4. ONLY then proceed with the next implementation step
+
+  Strict mode produces a verifiable entanglement graph — `/cosmos observe` flags any unacknowledged heartbeat as a broken entanglement channel. Used when race conditions, distributed system semantics, or compliance traceability require *proof* of live agent-to-agent communication.
 
 ## Quantum Memory Rules
 
@@ -289,6 +297,30 @@ Your strategy: <strategy>
      and debugging use cases.
   ```
 
+- **`strict`** — emit the `passive` rule 2 plus the heartbeat protocol:
+  ```
+     STRICT MODE — heartbeat protocol enforced:
+
+     At EVERY major step boundary you MUST execute this sequence:
+
+     (a) WRITE your heartbeat:
+         echo '{"type":"heartbeat","step":<N>,"content":"<your-name> at step <N>","ts":"<ts>"}' \
+           >> <repo_root>/.quantum/<your-name>/insights.jsonl
+
+     (b) READ all other cosmos insight files; find their `heartbeat` entries with ts
+         later than your last `heartbeat-ack` for that cosmos.
+
+     (c) For EACH unacknowledged heartbeat from another cosmos, WRITE an ACK:
+         echo '{"type":"heartbeat-ack","content":"acknowledged <other>:step <M>","refs":["<other>@<their-ts>"],"ts":"<now>"}' \
+           >> <repo_root>/.quantum/<your-name>/insights.jsonl
+
+     (d) ONLY THEN proceed to the next implementation step.
+
+     Failure mode: if /cosmos observe finds heartbeats without ACKs, it flags broken
+     entanglement. Strict mode is for race-condition debugging, distributed-system
+     design, and compliance audits that require *verifiable* live agent communication.
+  ```
+
 **Block C — Rule 3 (always):**
 
 ```
@@ -317,6 +349,22 @@ Your strategy: <strategy>
      If any other cosmos recorded a bug fix, edge case, or security finding after
      your last read, apply it to your implementation and write a final insight.
      Only then stop.
+  ━━━
+  ```
+
+- For **`strict`** mode, emit:
+  ```
+  ━━━ Now implement the goal using your strategy. Work autonomously until complete.
+
+     STRICT MODE COMPLETION SEQUENCE:
+     1. Final entanglement read — same as passive/active modes
+     2. Write a final heartbeat with step="final"
+     3. Read all other cosmos for any heartbeats published after your last ACK
+        and write ACKs for each
+     4. Only then stop
+
+     Any unacknowledged heartbeat will be flagged by /cosmos observe as a
+     broken entanglement channel for this run.
   ━━━
   ```
 

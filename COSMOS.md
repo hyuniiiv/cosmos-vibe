@@ -57,15 +57,16 @@ QuantumAgent의 양자 메모리는 세 스케일에서 작동 (v1.2+):
 **동시성:** POSIX에서 PIPE_BUF 미만 append는 원자적. 단일 에이전트의 순차
 append는 안전. 같은 insights 파일에 동시 쓰기 시 `flock` 또는 임시파일+`mv`.
 
-## Entanglement 모드 (v1.2)
+## Entanglement 모드 (v1.2 — v1.3 확장)
 
 `/cosmos spawn`은 `--entanglement <mode>` 수용:
 
 - `none` — cosmos가 다른 cosmos 인사이트를 읽지 않음 (순수 독립)
 - `passive` *(기본)* — 매 주요 단계 사이 인사이트 읽음 (기존 동작)
 - `active` — 읽고 + 다른 cosmos 패턴 채택 시 `read_from: cosmos:<source>` 기록 필수 (추적성)
+- `strict` *(v1.3)* — Heartbeat 프로토콜. 매 단계마다 `heartbeat` 발행 + 다른 cosmos 미응답 heartbeat에 `heartbeat-ack` 작성 필수. `/cosmos observe`가 heartbeat 그래프를 감사해 얽힘 품질(High/Medium/Low)과 끊긴 채널 보고.
 
-진짜 통계적 독립이 필요하면 `none`, 감사 추적성이 중요하면 `active` 선택.
+`none`은 통계적 독립, `active`는 감사 추적성, `strict`는 라이브 통신의 *증명*이 필요할 때 (레이스 컨디션 디버깅, 분산 시스템 설계, 컴플라이언스 감사).
 
 ## Quantum Signals
 
@@ -80,7 +81,8 @@ append는 안전. 같은 insights 파일에 동시 쓰기 시 `flock` 또는 임
 ## Skills
 
 - `/cosmos spawn --goal "<목표>" --strategies "<s1,s2,s3>" [--entanglement <mode>]` — cosmos 발진
-- `/cosmos observe` — 중첩 스냅샷 + 공명/불확실성 맵 + 거시 컨텍스트
+- `/cosmos observe` — 중첩 스냅샷 + 공명/불확실성 맵 + 거시 컨텍스트 + 얽힘 품질
 - `/cosmos crystallize <id>` — 한 cosmos를 결과로 붕괴
 - `/cosmos stop` — 모든 워크트리/브랜치 제거
 - `/cosmos singularity --name "<이벤트>" --invalidates "<패턴>"` *(v1.2)* — 향후 모든 spawn 컨텍스트를 재구성하는 프로젝트 레벨 이벤트 선언
+- `/cosmos spin --name "<이름>" [--type "<타입>"] [--constraints "<c1,c2,c3>"]` *(v1.3)* — 프로젝트의 불변 정체성 선언 또는 갱신; 향후 모든 spawn에 자동 주입

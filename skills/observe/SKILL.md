@@ -111,6 +111,23 @@ it came from.
 (no later `type: "decision"` or `type: "discovery"` from the same cosmos
 that addresses them). Surface these — they need developer attention.
 
+**Live entanglement audit (v1.3)** — for runs using `--entanglement strict`,
+verify the heartbeat protocol:
+
+1. Collect all `type: "heartbeat"` entries across cosmos. Each has `step`, `ts`, source cosmos.
+2. Collect all `type: "heartbeat-ack"` entries. Each has `refs: ["<cosmos>@<ts>", ...]` citing the heartbeats it acknowledges.
+3. For each heartbeat `H` from cosmos `C` at time `T`:
+   - For every OTHER active cosmos `C'`, check if `C'` has emitted any `heartbeat-ack` whose `refs` includes `C@T` (or a later `T'` from `C`).
+   - If not → `H` is unacknowledged by `C'` → broken entanglement.
+4. Compute **entanglement quality**:
+   - `total_heartbeats` × `(N - 1)` = expected ACK count (each heartbeat needs ACK from every other cosmos)
+   - `actual_acks` = total heartbeat-ack count
+   - ratio = actual / expected
+   - **High** if ratio ≥ 0.8, **Medium** if 0.4 ≤ ratio < 0.8, **Low** if < 0.4
+5. List broken channels: `<cosmos_C> → <cosmos_C'>: <count> unacknowledged heartbeat(s)`.
+
+For non-strict runs (none/passive/active), heartbeat audit is skipped. Optionally, for any run, scan insight `content` and `read_from` fields for cross-cosmos references to compute an informal entanglement signal (count of insights citing other cosmos / total insights).
+
 ### Step 5 — Output quantum map
 
 **Macro context block (only if Step 2 loaded any):**
@@ -154,6 +171,12 @@ Then the standard quantum map:
 
 ⚠️  Decoherence detected: (only if applicable)
    cosmos:<name> appears to have lost its <strategy> identity — review its insights
+
+🔗 Live entanglement quality: <High | Medium | Low>   (v1.3+, when applicable)
+   Strict runs: <actual>/<expected> heartbeat ACKs (<ratio>%)
+   Broken channels: (only if any)
+     • cosmos:<C> → cosmos:<C'>: <N> unacknowledged heartbeat(s)
+   Non-strict runs: <X>/<total> insights reference other cosmos (informal signal)
 ```
 
 **Bose-Einstein Condensate check:** Fires only when ALL three conditions hold:

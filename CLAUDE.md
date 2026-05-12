@@ -65,15 +65,16 @@ QuantumAgent's quantum memory operates at three scales (v1.2+):
   may write to the SAME insights file concurrently, wrap appends with
   `flock` or write-then-rename.
 
-## Entanglement Modes (v1.2)
+## Entanglement Modes (v1.2 — extended in v1.3)
 
 `/cosmos spawn` accepts `--entanglement <mode>`:
 
 - `none` — cosmos do not read other cosmos insights (pure independent exploration)
 - `passive` *(default)* — cosmos read insights between major steps (current behavior)
 - `active` — cosmos read AND record `read_from: cosmos:<source>` when adopting another's pattern (traceability)
+- `strict` *(v1.3)* — heartbeat protocol. Each cosmos publishes `heartbeat` per step AND must write `heartbeat-ack` for every unacknowledged heartbeat from other cosmos before its next step. `/cosmos observe` audits the heartbeat graph and reports entanglement quality (High/Medium/Low) plus any broken channels.
 
-The mode chosen for a run determines how strictly entanglement is enforced. `none` is appropriate when you want true statistical independence; `active` is appropriate when audit traceability matters.
+The mode chosen for a run determines how strictly entanglement is enforced. `none` is appropriate when you want true statistical independence; `active` is appropriate when audit traceability matters; `strict` is appropriate when you need observable proof of live agent communication (race conditions, distributed system semantics, compliance audits).
 
 ## Quantum Signals
 
@@ -88,7 +89,8 @@ The mode chosen for a run determines how strictly entanglement is enforced. `non
 ## Skills
 
 - `/cosmos spawn --goal "<goal>" --strategies "<s1,s2,s3>" [--entanglement <mode>]` — launch cosmos
-- `/cosmos observe` — superposition snapshot + resonance/uncertainty map + macro context
+- `/cosmos observe` — superposition snapshot + resonance/uncertainty map + macro context + entanglement quality
 - `/cosmos crystallize <id>` — collapse one cosmos into a result
 - `/cosmos stop` — remove all worktrees and branches
 - `/cosmos singularity --name "<event>" --invalidates "<patterns>"` *(v1.2)* — declare a project-level event that reshapes context for all future spawns
+- `/cosmos spin --name "<name>" [--type "<type>"] [--constraints "<c1,c2,c3>"]` *(v1.3)* — declare or update the project's immutable identity; auto-injected into every future spawn

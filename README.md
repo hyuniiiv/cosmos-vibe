@@ -511,13 +511,14 @@ Agents run in parallel. When all finish, `/cosmos observe` runs automatically.
 | `--strategies` | Comma-separated list — one cosmos per strategy |
 | `--entanglement` | `none` / `passive` *(default)* / `active` — see below |
 
-**Entanglement modes** *(new in v1.2)*:
+**Entanglement modes** *(v1.2, extended in v1.3)*:
 
 | Mode | Behavior | When to use |
 |------|---------|-------------|
 | `none` | Cosmos do NOT read other cosmos insights. Pure independent exploration. | When you want true independence — agentic A/B testing, statistical sampling |
 | `passive` *(default)* | Cosmos read other insights between major implementation steps. | Default — most architecture/implementation tasks |
 | `active` | Cosmos read AND must record `read_from: cosmos:<source>` when adopting another's pattern. | When traceability matters — security audit, compliance, debugging |
+| `strict` *(v1.3)* | Heartbeat protocol — each cosmos publishes `heartbeat` per step AND must write `heartbeat-ack` for every unACK'd heartbeat from others before its next step. Verifiable live entanglement. | When you need *proof* of live agent communication — race condition debugging, distributed system design, compliance audits |
 
 ---
 
@@ -555,6 +556,46 @@ Other cosmos are unaffected. Superposition holds for remaining cosmos until `/co
 
 Removes all cosmos worktrees and branches. Offers to wipe `.quantum/`
 (insights are preserved by default — you may want them for retrospectives).
+
+---
+
+### `/cosmos spin` *(new in v1.3)*
+
+```
+/cosmos spin --name "<name>" [--type "<type>"] [--description "<text>"] [--constraints "<c1,c2,c3>"]
+/cosmos spin                                        # display current spin (no args)
+```
+
+Declares or updates the **project's immutable identity** — its quantum spin. Once declared, every `/cosmos spawn` automatically inherits the spin as invariant constraints. A strategy that violates the spin isn't exploring the goal; it's exploring a different problem.
+
+```bash
+/cosmos spin \
+  --name "QuantumAgent" \
+  --type "claude-code-plugin" \
+  --description "Parallel cosmos exploration harness" \
+  --constraints "no external runtime dependencies,git-native control plane,claude code compatible"
+```
+
+Output:
+
+```
+✨ Project spin declared
+
+   Name:        QuantumAgent
+   Type:        claude-code-plugin
+   Description: Parallel cosmos exploration harness
+
+   Immutable constraints (3):
+     • no external runtime dependencies
+     • git-native control plane
+     • claude code compatible
+
+🌌 All future /cosmos spawn calls will inherit this spin as invariant context.
+```
+
+`established` is set once on first declaration and preserved on updates. `updated` reflects each change. To declare a paradigm shift instead, use `/cosmos singularity`.
+
+See [Multi-scale: the macro layer](#multi-scale-the-macro-layer) for the full mental model.
 
 ---
 
@@ -882,6 +923,15 @@ superposition is observed. The final read is built into the spawn prompt.
 - Each append is atomic — no write conflicts between parallel agents
 - Git-ignored — insights don't pollute your history
 - Human-readable — debug the quantum memory by opening the files
+
+**Verifiable live entanglement — `strict` mode (v1.3):** The default `passive` mode *trusts* that agents read between steps. `strict` mode *proves* it via a heartbeat protocol:
+
+```jsonl
+{"type":"heartbeat","step":3,"content":"alpha at step 3","ts":"2026-05-12T11:00:00Z"}
+{"type":"heartbeat-ack","content":"acknowledged alpha:step 3","refs":["alpha@2026-05-12T11:00:00Z"],"ts":"2026-05-12T11:00:42Z"}
+```
+
+Each cosmos publishes a `heartbeat` per major step. Other cosmos MUST write `heartbeat-ack` referencing it before their own next step. `/cosmos observe` then audits the heartbeat graph and reports **entanglement quality** (High/Medium/Low) based on the ACK ratio. Broken channels are surfaced explicitly. This is QuantumAgent's Bell-test analog — observable proof of agent-to-agent live communication when it matters.
 
 **The No-Cloning principle in practice:** Alpha cannot `cp -r cosmos/beta cosmos/alpha`.
 It can *read* beta's insight that Redis sorted sets eliminate a separate rate-limit table,
@@ -1230,6 +1280,7 @@ skills/
   crystallize/SKILL.md     — /cosmos crystallize
   stop/SKILL.md            — /cosmos stop
   singularity/SKILL.md     — /cosmos singularity        (v1.2)
+  spin/SKILL.md            — /cosmos spin               (v1.3)
 .claude-plugin/
   plugin.json              — plugin manifest
   marketplace.json         — marketplace registration

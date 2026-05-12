@@ -1,6 +1,6 @@
 {
   "name": "cosmos",
-  "description": "QuantumAgent — parallel cosmos exploration harness with multi-scale quantum mechanics: micro (insights), macro (project spin + singularities), cosmos (parallel agents)",
-  "version": "1.2.0",
-  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic"]
+  "description": "QuantumAgent — parallel cosmos exploration harness with multi-scale quantum mechanics: micro (insights), macro (project spin + singularities), cosmos (parallel agents), and verifiable live entanglement via heartbeat protocol",
+  "version": "1.3.0",
+  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin"]
 }
