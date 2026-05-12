@@ -1,5 +1,10 @@
 # 🌌 QuantumAgent
 
+[![Conformance](https://github.com/hyuniiiv/quantum-agent/actions/workflows/conformance.yml/badge.svg)](https://github.com/hyuniiiv/quantum-agent/actions/workflows/conformance.yml)
+[![npm: mcp](https://img.shields.io/npm/v/@hyuniiiv/quantum-agent-mcp?label=mcp)](https://www.npmjs.com/package/@hyuniiiv/quantum-agent-mcp)
+[![npm: cli](https://img.shields.io/npm/v/@hyuniiiv/quantum-agent-cli?label=cli)](https://www.npmjs.com/package/@hyuniiiv/quantum-agent-cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > Before you commit to one approach, explore three in parallel.
 >
 > *Parallel cosmos exploration harness for Claude Code.*

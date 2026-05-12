@@ -1,0 +1,30 @@
+name: Feature request
+description: Propose a new feature, workflow, or capability
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem does this feature solve? Who hits it?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the feature. Sketches, command examples, or rough APIs welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This change preserves the filesystem contract (.quantum/ + cosmos/ worktrees)
+        - label: This change does NOT introduce a runtime dependency beyond Node 18+ and git
+        - label: I'd be willing to open a PR if the proposal is accepted

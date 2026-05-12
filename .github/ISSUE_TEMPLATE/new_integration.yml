@@ -1,0 +1,49 @@
+name: New integration request
+description: Propose adding support for a new AI agent environment
+labels: ["integration"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        QuantumAgent is platform-neutral by design. If an agent isn't yet listed in
+        `INTEGRATIONS.md`, propose support here.
+  - type: input
+    id: agent
+    attributes:
+      label: Agent name
+      placeholder: "e.g., Trae, Cody, AI2 Code, JetBrains AI"
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Agent homepage
+      placeholder: "https://..."
+    validations:
+      required: true
+  - type: textarea
+    id: mechanism
+    attributes:
+      label: How does this agent load custom instructions?
+      description: System prompt, rules file (.cursorrules-style), MCP server, plugin system?
+    validations:
+      required: true
+  - type: textarea
+    id: trigger
+    attributes:
+      label: How would users invoke cosmos commands in this agent?
+      placeholder: "Slash command, chat prompt, keyboard shortcut, etc."
+  - type: checkboxes
+    id: capabilities
+    attributes:
+      label: Required capabilities (check what's confirmed)
+      options:
+        - label: Agent can execute `git worktree` commands
+        - label: Agent can read/write arbitrary files in the workspace
+        - label: Agent can append to `.quantum/<name>/insights.jsonl`
+        - label: Agent supports MCP (Model Context Protocol)
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else?
+      description: Known limitations, version requirements, weird quirks.

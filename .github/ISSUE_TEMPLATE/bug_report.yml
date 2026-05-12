@@ -1,0 +1,46 @@
+name: Bug report
+description: Something isn't working as documented
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. The more reproducible, the faster the fix.
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: Which agent did you use? (Claude Code, Cursor, Cline, etc.) Include version.
+      placeholder: "Claude Code 2.1.105, macOS 14.5"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Minimal steps to reproduce.
+      placeholder: |
+        1. /plugin install cosmos@quantum-agent
+        2. /cosmos:spawn --goal "X" --strategies "A,B"
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include error output, stack trace, or screenshots.
+    validations:
+      required: true
+  - type: textarea
+    id: conformance
+    attributes:
+      label: Conformance result (optional)
+      description: Did you run `bash tests/conformance.sh`? Paste the output.
+      render: shell
