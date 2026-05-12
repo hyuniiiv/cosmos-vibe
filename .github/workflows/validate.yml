@@ -1,0 +1,53 @@
+name: Validate
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+jobs:
+  validate:
+    name: Lightweight checks (JSON + frontmatter + bundle sync)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: All *.json files parse
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            if node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" 2>/dev/null; then
+              echo "✓ $f"
+            else
+              echo "❌ Invalid JSON: $f"
+              node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" || true
+              fail=1
+            fi
+          done < <(find . -name '*.json' -not -path './.git/*')
+          exit $fail
+
+      - name: Every SKILL.md has name and description frontmatter
+        run: |
+          fail=0
+          for f in skills/*/SKILL.md; do
+            if [ "$(sed -n '1p' "$f")" != "---" ]; then
+              echo "❌ $f: missing leading '---' frontmatter delimiter"
+              fail=1
+              continue
+            fi
+            if ! grep -q '^name: cosmos:' "$f"; then
+              echo "❌ $f: missing 'name: cosmos:*' field"
+              fail=1
+            fi
+            if ! grep -q '^description: ' "$f"; then
+              echo "❌ $f: missing 'description:' field"
+              fail=1
+            fi
+            if [ $fail -eq 0 ]; then
+              echo "✓ $f"
+            fi
+          done
+          exit $fail
+
+      - name: bundle/cosmos-instructions.md in sync with skills/
+        run: bash scripts/build-bundle.sh --check

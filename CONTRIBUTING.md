@@ -52,8 +52,13 @@ state files.
 ## PR checklist
 
 - [ ] No secrets, API keys, tokens, or personal data
-- [ ] If `skills/*/SKILL.md` changed, regenerate `bundle/cosmos-instructions.md`
+- [ ] If `skills/*/SKILL.md` changed → run `bash scripts/build-bundle.sh` to regenerate `bundle/cosmos-instructions.md`
 - [ ] CHANGELOG entry under `## [Unreleased]` (if user-visible)
+
+CI runs three lightweight checks on every push and PR (see `.github/workflows/validate.yml`):
+1. All `*.json` files parse (catches typos in `marketplace.json`, `plugin.json`)
+2. Every `SKILL.md` has `name` and `description` YAML frontmatter
+3. `bundle/cosmos-instructions.md` is byte-for-byte in sync with `skills/*/SKILL.md`
 
 ## Commit messages
 

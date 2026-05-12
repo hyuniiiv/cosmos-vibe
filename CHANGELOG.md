@@ -19,6 +19,14 @@ All notable changes to QuantumAgent are documented here. Format follows
   Custom Instructions / rules file" — no Node runtime, no MCP server, no
   npm install. Same workflows, simpler delivery.
 
+### Added
+- `scripts/build-bundle.sh` — regenerates `bundle/cosmos-instructions.md`
+  from `skills/*/SKILL.md`. Also runs with `--check` flag for CI diff mode.
+- `.github/workflows/validate.yml` — 3 lightweight checks on every push/PR:
+  JSON parse for all `*.json`, SKILL.md frontmatter presence, and bundle
+  sync. Replaces the deleted Conformance workflow with much smaller scope
+  appropriate for a markdown-only project.
+
 ## [1.0.0] — 2026-05-12
 
 Initial public release.
