@@ -86,7 +86,17 @@ The mode chosen for a run determines how strictly entanglement is enforced. `non
 - **Quantum Jump** (`type: "jump"`) — a single entanglement read causes discontinuous architectural shift → non-obvious leap
 - **Bose-Einstein Condensate** — zero uncertainty + ≥3 resonant decisions + all cosmos participated → goal was deterministic
 
-## Skills
+## Architecture — three layers
+
+QuantumAgent is layered. Each layer exposes the same quantum-decision model in a different idiom:
+
+- **Layer 1 — CLI** (Claude Code skills): imperative, agent-backed. The original interface.
+- **Layer 2 — YAML DSL** (`experiments/*.qa.yaml`): declarative, agent-backed. Reproducible experiments as code.
+- **Layer 3 — Python primitives** (`pip install -e python/`): programmable, math-backed. Compose decisions directly in any Python program.
+
+All three layers share concepts (ψ, entanglement, observe vs measure, constraint operators) but execute differently. Mix freely.
+
+## Skills (Layer 1 + 2)
 
 - `/cosmos spawn --goal "<goal>" --strategies "<s1,s2,s3>" [--entanglement <mode>]` — launch cosmos
 - `/cosmos observe` — superposition snapshot + resonance/uncertainty map + macro context + entanglement quality
@@ -95,3 +105,19 @@ The mode chosen for a run determines how strictly entanglement is enforced. `non
 - `/cosmos singularity --name "<event>" --invalidates "<patterns>"` *(v1.2)* — declare a project-level event that reshapes context for all future spawns
 - `/cosmos spin --name "<name>" [--type "<type>"] [--constraints "<c1,c2,c3>"]` *(v1.3)* — declare or update the project's immutable identity; auto-injected into every future spawn
 - `/cosmos run <path-to-yaml>` *(v2.0)* — execute a declarative quantum experiment defined in YAML; orchestrates spin + singularities + spawn in one command for reproducible CI/CD-grade runs
+
+## Python primitives (Layer 3, v3.0)
+
+`pip install -e python/` exposes `quantumagent` as a Python package:
+
+```python
+from quantumagent import psi, entangle, observe, measure, constraint
+```
+
+- `psi(states, weights, name)` — declare a wavefunction (alias `ψ`)
+- `observe(psi)` — non-destructive read of the distribution
+- `measure(psi, seed)` — Born-rule sampling, collapses + propagates to entangled
+- `entangle(a, b, correlation)` — link two wavefunctions
+- `constraint(name, boost=…, suppress=…, where=…)` — operator applied via `@`
+
+The Python layer is pure math (no LLM in v3.0). Agent-backed mode planned for a future release. See `python/README.md`.

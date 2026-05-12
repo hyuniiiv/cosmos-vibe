@@ -770,6 +770,70 @@ spawn:
 
 ---
 
+## Python 프리미티브 — Layer 3 *(v3.0 신규)*
+
+QuantumAgent v3.0은 **프로그래머블 레이어**를 추가: 양자 의사결정 프리미티브를 코드에서 직접 노출하는 Python 패키지. Layer 1 (CLI)과 Layer 2 (YAML DSL)는 AI 에이전트 오케스트레이션, Layer 3은 그 아래 깔린 수학을 노출.
+
+```python
+from quantumagent import psi, entangle, observe, measure, constraint
+
+cache = psi(["redis-ttl", "cdn-edge", "in-memory-lru"], weights=[0.5, 0.3, 0.2])
+storage = psi(["postgres", "redis", "memory"])
+
+entangle(cache, storage, lambda c, s:
+    (c == "redis-ttl"     and s == "redis") or
+    (c == "cdn-edge"      and s == "postgres") or
+    (c == "in-memory-lru" and s == "memory")
+)
+
+cache = constraint("low-latency", boost={"redis-ttl": 2.0}) @ cache
+
+print(observe(cache))           # {'redis-ttl': 0.667, ...} — 비파괴
+final = measure(cache)          # 본 규칙 샘플링으로 한 상태 붕괴
+                                # storage의 분포는 얽힘으로 자동 조건화
+```
+
+### 세 레이어, 하나의 철학
+
+```
+Layer 1 (v1.x) — CLI                 Layer 2 (v2.0) — YAML DSL          Layer 3 (v3.0) — Python
+────────────────────────             ─────────────────────────          ────────────────────────
+/cosmos spawn --goal "..."           experiment: my-exp                 cache = psi(...)
+/cosmos observe                      spawn:                             entangle(cache, store, ...)
+/cosmos crystallize alpha              goal: "..."                      constraint("...") @ cache
+                                       strategies: [...]                measure(cache)
+                                     /cosmos run my-exp.qa.yaml
+
+백엔드: worktree 내 LLM 에이전트       백엔드: YAML을 통한 같은 에이전트   백엔드: 순수 수학
+                                                                        (LLM 통합: 미래)
+```
+
+### 설치
+
+```bash
+pip install -e python/    # 이 레포에서
+```
+
+Python 3.9+. 런타임 의존성 없음 — 순수 stdlib.
+
+### 다섯 프리미티브
+
+| 프리미티브 | 목적 |
+|----------|------|
+| `psi(states, weights)` | 의사결정을 확률 분포로 선언 (별칭 `ψ`) |
+| `observe(psi)` | 붕괴 없이 분포 읽기 — 비파괴 |
+| `measure(psi, seed=None)` | 본 규칙 샘플링으로 한 상태로 붕괴 — 비가역 |
+| `entangle(a, b, correlation)` | 두 결정을 연결, 하나의 측정이 다른 하나를 조건화 |
+| `constraint(name, boost=…, suppress=…, where=…) @ psi` | 분포를 휘는 연산자 적용 |
+
+### 왜 확률 분포 (지금은)
+
+v3.0 MVP는 실수 확률 가중치 + 본 규칙 유사 샘플링. **복소 진폭** (진짜 양자 간섭, Bell test 검증 가능)은 향후 **Path B** 릴리스로 예약 — 별도의 큰 작업. API는 향후 호환되도록 설계되어 Path B 도입 시 기존 코드 그대로 작동.
+
+전체 가이드, 실행 가능한 예제 3개, 로드맵은 [`python/README.md`](python/README.md) 참조.
+
+---
+
 ## 신호 읽는 법
 
 ### ⚡ 공명 (Resonance)
@@ -1307,7 +1371,7 @@ alpha의 원본 구현은 그대로입니다. beta가 자신의 전략적 맥락
 ## 레포지토리 구조
 
 ```
-skills/
+skills/                                          # Layer 1 — CLI (Claude Code 스킬)
   spawn/SKILL.md             — /cosmos spawn
   observe/SKILL.md           — /cosmos observe
   crystallize/SKILL.md       — /cosmos crystallize
@@ -1315,9 +1379,14 @@ skills/
   singularity/SKILL.md       — /cosmos singularity        (v1.2)
   spin/SKILL.md              — /cosmos spin               (v1.3)
   run/SKILL.md               — /cosmos run                (v2.0)
-experiments/                 — 선언적 실험                 (v2.0)
+experiments/                                     # Layer 2 — YAML DSL (v2.0)
   _template.qa.yaml          — 주석 달린 스키마 템플릿
   *.example.qa.yaml          — 실행 가능 예제
+python/                                          # Layer 3 — Python 프리미티브 (v3.0)
+  pyproject.toml             — pip 설치 가능 패키지
+  quantumagent/              — psi, entangle, observe, measure, constraint
+  examples/                  — 실행 가능 .py 데모
+  README.md                  — Python 패키지 가이드
 .claude-plugin/
   plugin.json                — 플러그인 매니페스트
   marketplace.json           — 마켓플레이스 등록

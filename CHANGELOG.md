@@ -6,6 +6,90 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [3.0.0] — 2026-05-12
+
+### Added — Layer 3: Python primitives (`quantumagent` package)
+
+QuantumAgent now ships a **pip-installable Python package** that exposes
+the underlying quantum decision primitives directly in code. This is the
+third layer of the architecture:
+
+- **Layer 1 (v1.x)** — CLI (Claude Code skills): `/cosmos spawn`, etc.
+- **Layer 2 (v2.0)** — YAML DSL: declarative `experiment.qa.yaml` files
+- **Layer 3 (v3.0)** — Python primitives: `ψ`, `entangle`, `observe`,
+  `measure`, `constraint` — composable in any Python program
+
+The five primitives:
+
+- **`psi(states, weights=None, name=None)`** — declare a decision as a
+  probability distribution. Auto-normalized. Greek alias `ψ` exported.
+- **`observe(psi)`** — non-destructive read of the current distribution.
+  Returns `{state: probability}`. Idempotent. The first-class realization
+  of QuantumAgent's observe-vs-measure distinction.
+- **`measure(psi, seed=None)`** — Born-rule sampling collapses the
+  wavefunction. Propagates to entangled partners. Subsequent calls
+  return the same state (irreversible). `seed` for deterministic tests.
+- **`entangle(a, b, correlation)`** — register a compatibility function
+  between two wavefunctions. Measuring one conditions the other's
+  distribution on compatible states. Contradictions raise explicitly.
+- **`constraint(name, *, boost=…, suppress=…, where=…)`** — immutable
+  operator applied via `op @ psi` returning a new wavefunction. Three
+  composable patterns:
+  - `where=callable` keeps only states for which the callable returns truthy
+  - `boost={state: multiplier}` multiplies specific weights
+  - `suppress={state: divisor}` divides specific weights
+
+This MVP uses **real-valued probability distributions** (classical-
+probability mode). Complex amplitudes and true quantum interference
+are reserved for a future Path B release. The API is forward-compatible
+so existing v3.0 code will continue to work in classical mode when
+Path B lands.
+
+### Added — `python/` directory
+
+- `python/pyproject.toml` — package metadata, `pip install -e python/`
+- `python/quantumagent/__init__.py` — public API exports
+- `python/quantumagent/core.py` — single-file implementation of all
+  primitives, ~330 LOC, zero runtime dependencies (pure stdlib)
+- `python/examples/01_basic_psi.py` — declare, observe, measure
+- `python/examples/02_entanglement.py` — auth × storage entanglement
+  with conditional propagation
+- `python/examples/03_constraint_curvature.py` — composing filter +
+  boost + suppress constraints
+- `python/README.md` — full guide, primitives reference, philosophy,
+  CLI/DSL/Python comparison table, roadmap
+
+### Changed
+
+- `CLAUDE.md` / `COSMOS.md` — Skills lists reorganized into Layer 1/2/3
+  architecture; Python primitives documented at top level.
+- `.claude-plugin/plugin.json` — version 3.0.0; description and keywords
+  reflect three-layer architecture (added `python`, `wavefunction`).
+- `.claude-plugin/marketplace.json` — version 3.0.0; metadata
+  description updated.
+- `README.md` / `README.ko.md` — new "Python primitives — Layer 3"
+  section with full example, three-layer comparison ASCII diagram,
+  five-primitives table. Repository layout reflects new `python/`
+  directory and labels each layer.
+
+### Why the major version bump (v2.x → v3.0)
+
+The Python package introduces a third paradigm: **programmable**
+quantum decision primitives. Where v1.x is *imperative orchestration*
+and v2.x is *declarative experiments*, v3.x is *composable
+math-in-code*. Each layer adds a distinct mental model for using
+QuantumAgent, and the major version bump signals that to users. The
+v1.x and v2.x layers are fully preserved and continue to work
+identically — v3.0 is purely additive.
+
+### Backward compatibility
+
+- All v1.x CLI commands work identically
+- All v2.0 YAML DSL features work identically
+- Python lib is **opt-in** via `pip install -e python/`
+- Projects that don't adopt the Python layer notice no change
+- v1.3 entanglement strict mode + heartbeat protocol unchanged
+
 ## [2.0.0] — 2026-05-12
 
 ### Added — declarative quantum experiments (YAML DSL)

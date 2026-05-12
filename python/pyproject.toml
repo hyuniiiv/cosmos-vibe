@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quantumagent"
+version = "3.0.0"
+description = "Quantum-inspired decision primitives for Python — ψ, entangle, observe, measure. The programmable layer of QuantumAgent."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+  { name = "hyuniiiv", email = "hyuniiiv@gmail.com" }
+]
+keywords = [
+  "quantum",
+  "decision",
+  "agentic",
+  "parallel-exploration",
+  "wavefunction",
+  "entanglement",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/hyuniiiv/quantum-agent"
+Documentation = "https://github.com/hyuniiiv/quantum-agent/tree/master/python#readme"
+Repository = "https://github.com/hyuniiiv/quantum-agent"
+Issues = "https://github.com/hyuniiiv/quantum-agent/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["quantumagent*"]
+exclude = ["examples*", "tests*"]

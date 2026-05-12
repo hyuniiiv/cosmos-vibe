@@ -1,6 +1,6 @@
 {
   "name": "cosmos",
-  "description": "QuantumAgent — parallel cosmos exploration harness with multi-scale quantum mechanics (micro/macro/cosmos), verifiable live entanglement via heartbeat protocol, and declarative YAML experiments for CI/CD-grade reproducibility",
-  "version": "2.0.0",
-  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative"]
+  "description": "QuantumAgent — three-layer architecture for quantum-inspired AI exploration: CLI (v1), declarative YAML experiments (v2), and Python primitives (v3 — psi/entangle/observe/measure/constraint)",
+  "version": "3.0.0",
+  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction"]
 }

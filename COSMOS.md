@@ -78,7 +78,17 @@ append는 안전. 같은 insights 파일에 동시 쓰기 시 `flock` 또는 임
 - **Quantum Jump** (`type: "jump"`) — 단 한 번의 얽힘 읽기가 불연속적 아키텍처 도약 유발
 - **Bose-Einstein Condensate** — uncertainty 0 + 공명 결정 ≥3 + 모든 cosmos 참여 → 목표가 결정론적
 
-## Skills
+## 아키텍처 — 세 레이어
+
+QuantumAgent는 계층적 구조. 각 레이어는 같은 양자 의사결정 모델을 다른 표현으로 노출:
+
+- **Layer 1 — CLI** (Claude Code 스킬): 명령형, 에이전트 백엔드. 원래 인터페이스.
+- **Layer 2 — YAML DSL** (`experiments/*.qa.yaml`): 선언적, 에이전트 백엔드. 재현 가능한 실험 코드.
+- **Layer 3 — Python 프리미티브** (`pip install -e python/`): 프로그래머블, 수학 백엔드. Python 프로그램에서 결정 직접 조합.
+
+세 레이어 모두 같은 개념(ψ, 얽힘, observe vs measure, 제약 연산자)을 공유하지만 실행 방식이 다름. 자유롭게 혼용 가능.
+
+## Skills (Layer 1 + 2)
 
 - `/cosmos spawn --goal "<목표>" --strategies "<s1,s2,s3>" [--entanglement <mode>]` — cosmos 발진
 - `/cosmos observe` — 중첩 스냅샷 + 공명/불확실성 맵 + 거시 컨텍스트 + 얽힘 품질
@@ -87,3 +97,19 @@ append는 안전. 같은 insights 파일에 동시 쓰기 시 `flock` 또는 임
 - `/cosmos singularity --name "<이벤트>" --invalidates "<패턴>"` *(v1.2)* — 향후 모든 spawn 컨텍스트를 재구성하는 프로젝트 레벨 이벤트 선언
 - `/cosmos spin --name "<이름>" [--type "<타입>"] [--constraints "<c1,c2,c3>"]` *(v1.3)* — 프로젝트의 불변 정체성 선언 또는 갱신; 향후 모든 spawn에 자동 주입
 - `/cosmos run <path-to-yaml>` *(v2.0)* — YAML로 선언된 양자 실험 실행; spin + singularity + spawn을 한 커맨드로 오케스트레이션, 재현 가능한 CI/CD 등급 실행
+
+## Python 프리미티브 (Layer 3, v3.0)
+
+`pip install -e python/`로 `quantumagent` Python 패키지 노출:
+
+```python
+from quantumagent import psi, entangle, observe, measure, constraint
+```
+
+- `psi(states, weights, name)` — 파동함수 선언 (별칭 `ψ`)
+- `observe(psi)` — 비파괴 분포 읽기
+- `measure(psi, seed)` — 본 규칙 샘플링, 붕괴 + 얽힘 전파
+- `entangle(a, b, correlation)` — 두 파동함수 연결
+- `constraint(name, boost=…, suppress=…, where=…)` — `@`로 적용되는 연산자
+
+Python 레이어는 순수 수학 (v3.0에 LLM 없음). 에이전트 백엔드 모드는 향후 릴리스 계획. `python/README.md` 참조.

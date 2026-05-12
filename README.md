@@ -813,6 +813,70 @@ Both call the same underlying spawn logic — `/cosmos run` is `/cosmos spawn` w
 
 ---
 
+## Python primitives — Layer 3 *(new in v3.0)*
+
+QuantumAgent v3.0 adds a **programmable layer**: a Python package that exposes the underlying quantum decision primitives directly in code. Layer 1 (CLI) and Layer 2 (YAML DSL) orchestrate AI agents; Layer 3 exposes the math that conceptually underlies them.
+
+```python
+from quantumagent import psi, entangle, observe, measure, constraint
+
+cache = psi(["redis-ttl", "cdn-edge", "in-memory-lru"], weights=[0.5, 0.3, 0.2])
+storage = psi(["postgres", "redis", "memory"])
+
+entangle(cache, storage, lambda c, s:
+    (c == "redis-ttl"     and s == "redis") or
+    (c == "cdn-edge"      and s == "postgres") or
+    (c == "in-memory-lru" and s == "memory")
+)
+
+cache = constraint("low-latency", boost={"redis-ttl": 2.0}) @ cache
+
+print(observe(cache))           # {'redis-ttl': 0.667, 'cdn-edge': 0.200, ...}  — non-destructive
+final = measure(cache)          # collapses to one state via Born-rule sampling
+                                # storage's distribution is automatically conditioned
+```
+
+### Three layers, one philosophy
+
+```
+Layer 1 (v1.x) — CLI                 Layer 2 (v2.0) — YAML DSL          Layer 3 (v3.0) — Python
+────────────────────────             ─────────────────────────          ────────────────────────
+/cosmos spawn --goal "..."           experiment: my-exp                 cache = psi(...)
+/cosmos observe                      spawn:                             entangle(cache, store, ...)
+/cosmos crystallize alpha              goal: "..."                      constraint("...") @ cache
+                                       strategies: [...]                measure(cache)
+                                     /cosmos run my-exp.qa.yaml
+
+Backend: LLM agents in worktrees     Backend: same agents via YAML      Backend: pure math
+                                                                        (LLM integration: future)
+```
+
+### Install
+
+```bash
+pip install -e python/    # from this repo
+```
+
+Python 3.9+. No runtime dependencies — pure stdlib.
+
+### The five primitives
+
+| Primitive | Purpose |
+|-----------|---------|
+| `psi(states, weights)` | Declare a decision as a probability distribution (aka `ψ`) |
+| `observe(psi)` | Read distribution without collapsing — non-destructive |
+| `measure(psi, seed=None)` | Collapse to one state via Born-rule sampling — irreversible |
+| `entangle(a, b, correlation)` | Link two decisions so measurement of one conditions the other |
+| `constraint(name, boost=…, suppress=…, where=…) @ psi` | Apply an operator that curves the distribution |
+
+### Why probability distributions (for now)
+
+The v3.0 MVP uses real-valued probability weights with Born-rule-flavored sampling. **Complex amplitudes** (true quantum interference, Bell-test demonstrable) are reserved for a future **Path B** release — a substantial separate effort. The API is designed forward-compatible so existing code will continue to work when Path B lands.
+
+See [`python/README.md`](python/README.md) for the full guide, three runnable examples, and roadmap.
+
+---
+
 ## Reading the signals
 
 ### ⚡ Resonance
@@ -1395,7 +1459,7 @@ dressed as a proper design.
 ## Repository layout
 
 ```
-skills/
+skills/                                          # Layer 1 — CLI (Claude Code skills)
   spawn/SKILL.md           — /cosmos spawn
   observe/SKILL.md         — /cosmos observe
   crystallize/SKILL.md     — /cosmos crystallize
@@ -1403,9 +1467,14 @@ skills/
   singularity/SKILL.md     — /cosmos singularity        (v1.2)
   spin/SKILL.md            — /cosmos spin               (v1.3)
   run/SKILL.md             — /cosmos run                (v2.0)
-experiments/               — declarative experiments     (v2.0)
+experiments/                                     # Layer 2 — YAML DSL  (v2.0)
   _template.qa.yaml        — annotated schema template
   *.example.qa.yaml        — runnable examples
+python/                                          # Layer 3 — Python primitives (v3.0)
+  pyproject.toml           — pip-installable package
+  quantumagent/            — psi, entangle, observe, measure, constraint
+  examples/                — runnable .py demonstrations
+  README.md                — Python package guide
 .claude-plugin/
   plugin.json              — plugin manifest
   marketplace.json         — marketplace registration
