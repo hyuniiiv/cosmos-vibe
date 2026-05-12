@@ -1342,7 +1342,7 @@ Quantum Memory 규칙을 따르지 않은 것입니다.
 
 ## 양자역학 → 개발
 
-아래의 모든 개념은 직접적인 동작 의미를 가집니다 — 장식용 메타포가 아닙니다.
+아래의 모든 개념은 직접적인 동작 의미를 가집니다. 이 섹션 끝의 *검증 가능한 매핑*([각 개념이 어디 살아있나](#각-개념이-어디-살아있나--검증-가능한-매핑))이 각 개념이 *구체적으로 어느 파일/스킬/함수*에 구현됐는지 인용합니다 — 주장이 아닌 *검증 가능*.
 
 ### 한눈에 보기
 
@@ -1456,6 +1456,57 @@ alpha의 원본 구현은 그대로입니다. beta가 자신의 전략적 맥락
 동작, 같은 테스트 통과. 더 넓은 맥락만이 차이를 드러냅니다. `/cosmos observe`가 그 넓은
 시야를 제공합니다: 전략들이 같은 결론에 대해 *추론*에서 갈라질 때, 한 경로가 제대로 된
 설계로 위장한 국소 임시 해결책일 수 있다는 신호입니다.
+
+---
+
+### 각 개념이 어디 살아있나 — 검증 가능한 매핑
+
+"모든 개념이 직접적인 동작 의미를 가진다"는 주장은 *검증되지 않으면 무의미*. 이 섹션은 각 개념이 *어떤 파일/스킬/함수*에 구현됐는지 구체적으로 인용. 강도별 분류:
+
+- 🧮 **진짜 수학** — Path B가 양자역학 연산을 그대로 구현. 실증 검증 가능 (예: Bell test S ≈ 2.83)
+- 🔧 **강제** — 시스템에 실제 체크, 메커니즘, 출력 있음. 메타포 아님
+- 🔍 **검출** — 도구가 자동으로 인스턴스 표면화 (scan, observe 분석)
+- 🪞 **가이드라인** — 문서화된 규칙이지만 기술적 강제는 없음
+
+| 개념 | 강도 | 어디에 구현됨 |
+|------|:---:|---------------|
+| **파동-입자 이중성** | 🔧 | `skills/spawn/SKILL.md` Step 5 — 목표가 N개 worktree + 코드로 변환 |
+| **영의 이중 슬릿** | 🔧 | `skills/observe/SKILL.md` Step 4-5 — Resonance + Uncertainty 맵 검출 |
+| **중첩** | 🔧 | `skills/spawn/SKILL.md` Step 6 — 병렬 Agent dispatch + 공존 worktree |
+| **경로 적분** | 🔧 | 중첩과 동일 — N개 병렬 cosmos = 여러 구현 경로 샘플링 |
+| **양자 어닐링** | 🪞 | 행동적 — 병렬 cosmos가 국소 최적값 탈출 |
+| **얽힘** | 🔧 | spawn CLAUDE.md 템플릿 — `.quantum/*/insights.jsonl` 필수 읽기 + `--entanglement strict` heartbeat (v1.3) |
+| **양자 텔레포테이션** | 🔧 | `.quantum/` 파일 I/O (고전 채널) + 얽힘 읽기 규칙 |
+| **복제 불가 정리** | 🪞 | Spin Preservation 규칙 — 행동 가이드라인 (기술적 강제 안 됨; `cp -r` 가능). 위반은 observe Decoherence가 사후 검출 |
+| **파울리 배타 원리** | 🔧 | `skills/spawn/SKILL.md` Step 1 — 중복 전략 체크로 spawn 거부 |
+| **스핀** | 🔧 | `.quantum/project/spin.json` (v1.2) + Spin Preservation 규칙 + `/cosmos spin` (v1.3) |
+| **양자 결맞음** | 🪞 | 행동적 — cosmos 실행 내내 전략 보존 |
+| **양자 터널링** | 🔧 🔍 | `[TUNNEL]` 인사이트 태그 + `/cosmos scan` 자동 `code-tunnel` 검출 (v4.0) |
+| **양자 도약** | 🔧 | `[JUMP]` 인사이트 태그 + active 모드 `read_from` 인용 필수 |
+| **양자 간섭** | 🧮 | `python/quantumagent/core.py` `superpose()` — 복소 진폭 덧셈, 1000/0 상쇄 검증 (`examples/04_quantum_interference.py`) |
+| **공명** | 🔧 | `skills/observe/SKILL.md` Step 4 — 시맨틱 분석 (auth-audit가 3중 수렴 실증) |
+| **불확정성 원리** | 🔧 | `skills/observe/SKILL.md` Step 4 — Uncertainty 맵 표면화 |
+| **슈뢰딩거의 고양이** | 🔧 | `skills/crystallize/SKILL.md` Step 5 — 테스트 통과 확인 강제 |
+| **축퇴** | 🔧 | `skills/observe/SKILL.md` Step 4 — 다른 전략 동일 구현 검출 |
+| **보즈-아인슈타인 응축** | 🔧 | `skills/observe/SKILL.md` Step 5 — BEC 체크 (≥3 + 0 + 전원) |
+| **측정 문제** | 🔧 | observe 비파괴 vs crystallize 파괴; `observe()` vs `measure()` |
+| **관측** | 🔧 | observe 명시적 비파괴 footer + `python/quantumagent/core.py` `observe()` |
+| **결정화** | 🔧 | `skills/crystallize/SKILL.md` + `python/quantumagent/core.py` `measure()` |
+| **결어긋남** | 🔧 🧮 🔍 | **3 레벨**: observe Decoherence (v1.x); `decohere()` 밀도 행렬 (v3.2); `code-decoherence` scan (v4.0) |
+| **기준계** *(특수상대성)* | 🪞 | 행동적 유비 — Resonance/Uncertainty의 프레임 의존성 |
+| **측지선 + 시공간 곡률** *(일반상대성)* | 🔧 | `.quantum/project/spin.json` immutable_constraints — 해법 공간을 휘는 구체적 제약 |
+| **등가 원리** *(일반상대성)* | 🪞 | 행동적 — observe의 넓은 시야 + v4.0 cross-scale 신호 |
+
+### 정직한 집계
+
+- **🧮 진짜 수학 (Path B)**: 2개 — 양자 간섭, 결어긋남
+- **🔧 강제**: 18개 — 시스템 대부분이 실제 운영 메커니즘 보유
+- **🔍 검출**: 3개 — 터널링, 결어긋남(코드)
+- **🪞 가이드라인**: 6개 — 양자 어닐링, 복제 불가, 양자 결맞음, 기준계, 등가 원리, cosmos 결어긋남 예방
+
+일부 개념은 여러 레벨에 걸침 (예: 결어긋남은 세 레벨 — cosmos 행동, 수학, 코드 검출 — v1→v4 시스템 성숙하면서 실재성 누적).
+
+두 개의 순수 Path B 수학 구현 (간섭, 밀도 행렬 결어긋남)이 가장 강한 주장 — *정량적으로 예측된* 양자역학 효과 재현. 🔧 강제 카테고리가 시스템 대부분 — 장식 아닌 실제 if문/파일/검출 로직. 🪞 가이드라인 카테고리는 시스템이 행동적일 뿐임을 정직하게 인정. 이게 "모든 개념이 직접적인 동작 의미를 가진다"의 *실제 의미*.
 
 ---
 

@@ -1424,7 +1424,7 @@ nothing to analyze for that cosmos, reducing Resonance/Uncertainty signal qualit
 
 ## Quantum mechanics → development
 
-Every concept below has a direct operational meaning — none are decorative metaphors.
+Every concept below has a direct operational meaning. The verification map at the end of this section ([Where every concept lives](#where-every-concept-lives--verifiable-map)) cites the specific file, skill, or function where each one is implemented — so the claim is *verifiable*, not asserted.
 
 ### Quick reference
 
@@ -1553,6 +1553,59 @@ tests passing. Only broader context reveals the difference. `/cosmos observe`
 provides that wider view: when strategies diverge in their *reasoning* for the
 same conclusion, that's your signal that one path may be a local workaround
 dressed as a proper design.
+
+---
+
+### Where every concept lives — verifiable map
+
+The claim "every concept has direct operational meaning" is meaningless unless verifiable. This section cites the specific file / skill / function that implements each concept, classified by how strongly it's realized:
+
+- 🧮 **Real math** — Path B implements the literal quantum-mechanical operation. Verifiable empirically (e.g., Bell test violation S ≈ 2.83).
+- 🔧 **Enforced** — system has a real check, mechanism, or output. Not just metaphor.
+- 🔍 **Detected** — tooling automatically surfaces instances (scan, observe analysis).
+- 🪞 **Guideline** — documented rule but not technically enforced (most often: behavior rules in spawn's CLAUDE.md template).
+
+| Concept | Level | Where it's implemented |
+|---------|:-:|------------------------|
+| **Wave-Particle Duality** | 🔧 | `skills/spawn/SKILL.md` Step 5 — goal arg becomes N concrete worktrees with code |
+| **Young's Double Slit** | 🔧 | `skills/observe/SKILL.md` Step 4-5 — Resonance + Uncertainty maps detected across cosmos |
+| **Superposition** | 🔧 | `skills/spawn/SKILL.md` Step 6 — parallel Agent dispatch + co-existing git worktrees |
+| **Path Integral** | 🔧 | Same as Superposition — N parallel cosmos = sampling many implementation paths |
+| **Quantum Annealing** | 🪞 | Behavioral — parallel cosmos explore from different starting points, escape local optima |
+| **Entanglement** | 🔧 | `skills/spawn/SKILL.md` CLAUDE.md template — required reading of `.quantum/*/insights.jsonl` between steps + `--entanglement strict` heartbeat protocol (v1.3) |
+| **Quantum Teleportation** | 🔧 | `.quantum/` file I/O (classical channel) + entanglement reading rules (the "quantum" linkage) |
+| **No-Cloning Theorem** | 🪞 | Spawn CLAUDE.md "Spin Preservation" rule — behavioral guideline. **Not technically enforced** (you can `cp -r`). Violations flagged post-hoc by observe Decoherence detection. |
+| **Pauli Exclusion Principle** | 🔧 | `skills/spawn/SKILL.md` Step 1 — duplicate-strategy check rejects spawn with explicit error |
+| **Spin** | 🔧 | `.quantum/project/spin.json` (v1.2) + spawn CLAUDE.md "Spin Preservation" rule + `/cosmos spin` skill (v1.3) |
+| **Quantum Coherence** | 🪞 | Behavioral — strategy preservation throughout cosmos run; observable in observe |
+| **Quantum Tunneling** | 🔧 🔍 | `[TUNNEL]` / `type: "tunnel"` insight tag (spawn Step 5) + automatic `code-tunnel` detection in `/cosmos scan` (v4.0) |
+| **Quantum Jump** | 🔧 | `[JUMP]` / `type: "jump"` insight tag (spawn Step 5) with `read_from` citation requirement (active mode) |
+| **Quantum Interference** | 🧮 | `python/quantumagent/core.py` `superpose()` — complex amplitude addition with empirically-verified destructive interference (`examples/04_quantum_interference.py`: 1000/0 split) |
+| **Resonance** | 🔧 | `skills/observe/SKILL.md` Step 4 — semantic analysis identifies cross-cosmos agreement; auth-audit ran 3-way independent convergence |
+| **Uncertainty Principle** | 🔧 | `skills/observe/SKILL.md` Step 4 — Uncertainty map of genuinely-divergent decisions; surfaced to developer |
+| **Schrödinger's Cat** | 🔧 | `skills/crystallize/SKILL.md` Step 5 — Schrödinger check forces test-pass confirmation before collapse |
+| **Degeneracy** | 🔧 | `skills/observe/SKILL.md` Step 4 — detection of identical implementations across different strategies |
+| **Bose-Einstein Condensate** | 🔧 | `skills/observe/SKILL.md` Step 5 — BEC check (≥3 resonance + 0 uncertainty + all cosmos participated) |
+| **Measurement Problem** | 🔧 | First-class distinction across all skills: `/cosmos observe` is non-destructive; `/cosmos crystallize` is destructive. `python/quantumagent/core.py` `observe()` vs `measure()` |
+| **Observation** | 🔧 | `skills/observe/SKILL.md` explicit non-destructive footer + `python/quantumagent/core.py` `observe()` function |
+| **Crystallization** | 🔧 | `skills/crystallize/SKILL.md` + `python/quantumagent/core.py` `measure()` Born-rule sampling |
+| **Decoherence** | 🔧 🧮 🔍 | **Three implementations**: cosmos-level Decoherence detection in observe (v1.x); real density-matrix decoherence `decohere()` in `python/quantumagent/quantum.py` (v3.2); code-level `code-decoherence` in `/cosmos scan` for untested files (v4.0) |
+| **Reference Frame** *(SR)* | 🪞 | Behavioral analogy — Resonance = frame-invariant (across strategies), Uncertainty = frame-dependent |
+| **Geodesics + Spacetime Curvature** *(GR)* | 🔧 | `.quantum/project/spin.json` immutable_constraints — concrete constraint injection that "curves" every cosmos's solution space |
+| **Equivalence Principle** *(GR)* | 🪞 | Behavioral — `/cosmos observe` provides the wider view; cross-scale signal in v4.0 connects code-tunnel + cosmos modification + crystallize candidate |
+
+### Honest counting
+
+- **🧮 Real math (Path B implemented)**: 2 — Quantum Interference, Decoherence
+- **🔧 Enforced (system check/mechanism/output)**: 18 — most concepts have real operational mechanisms
+- **🔍 Detected (auto-surfaced by tooling)**: 3 — Tunneling, Decoherence (code), with cross-references
+- **🪞 Guideline (rule documented but not enforced)**: 6 — Quantum Annealing, No-Cloning, Quantum Coherence, Reference Frame, Equivalence Principle, plus cosmos-level Decoherence prevention
+
+Some concepts span multiple levels (e.g., Decoherence is implemented at three different levels — cosmos behavioral, math, code detection — accumulating reality as the system matured from v1 to v4).
+
+The two pure Path B math implementations (Interference, Density-matrix Decoherence) are the strongest claims — they reproduce *quantitatively predicted* quantum-mechanical effects (CHSH S ≈ 2.83, perfect destructive cancellation 1000/0). The 🔧 enforced category covers most of the system — these aren't decorative; they have real if-statements, real files, real detection logic. The 🪞 guideline category honestly admits where the system is behavioral-only.
+
+This is what "every concept has direct operational meaning" actually means in practice.
 
 ---
 

@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "QuantumAgent marketplace — 4-scale quantum architecture for Claude Code",
-    "version": "4.0.0"
+    "version": "4.1.0"
   },
   "plugins": [
     {
@@ -15,8 +15,8 @@
         "source": "github",
         "repo": "hyuniiiv/quantum-agent"
       },
-      "description": "4-scale quantum architecture for AI-assisted development. v4.0 completes the original vision by adding the micro (code) scale: /cosmos scan detects code-tunnel (type-system bypasses), code-decoherence (untested files), code-superposition (feature flags), code-jump (high churn). Plus the existing cosmos scale (CLI + YAML DSL), project scale (spin + singularities), and Python primitives layer with canonical quantum mechanics (CHSH, gates, density matrices, decoherence).",
-      "version": "4.0.0",
+      "description": "4-scale quantum architecture for AI-assisted development. v4.1 makes the claim 'every concept has direct operational meaning' verifiable — each of 26 quantum concepts now cites the exact file/skill/function where it's implemented, classified as real math (Path B) / enforced (system check) / detected (tooling) / guideline (documented rule). v4.0 ships the micro (code) scale: /cosmos scan detects code-tunnel, code-decoherence, code-superposition, code-jump.",
+      "version": "4.1.0",
       "category": "agents",
       "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference", "chsh", "quantum-gates", "density-matrix", "decoherence", "interop", "model-diversity", "scan", "code-scale", "static-analysis"],
       "author": {

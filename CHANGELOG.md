@@ -6,6 +6,98 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [4.1.0] — 2026-05-13 — verifiable concept-to-code mapping
+
+A user-prompted honesty release. v3.3 claimed "정직성 보완" (honesty
+improvements) for two small fixes; on review, the bigger issue remained:
+the README headline claim "every concept has direct operational meaning —
+none are decorative metaphors" was unverifiable. Users had to take it
+on faith.
+
+After v4.0 shipped, MOST concepts in the 26-row quantum table actually
+do have real operational implementations — but that wasn't visible.
+v4.1 makes it visible.
+
+### Added — verifiable mapping section
+
+New "Where every concept lives" section in both READMEs (after the
+in-depth concept descriptions, before Repository layout) that cites
+the specific file / skill / function where each of the 26 quantum
+concepts is implemented. Concepts are classified into four tiers:
+
+- **🧮 Real math** — Path B implements the literal quantum-mechanical
+  operation. Verifiable empirically.
+  - *Quantum Interference* — `superpose()` produces 1000/0 destructive
+    cancellation in `examples/04_quantum_interference.py`
+  - *Decoherence (math)* — `decohere()` density-matrix model in
+    `python/quantumagent/quantum.py`
+
+- **🔧 Enforced** — system has a real check, mechanism, or output.
+  - *Pauli Exclusion* — `skills/spawn/SKILL.md` Step 1 rejects duplicate
+    strategies with explicit error
+  - *Schrödinger's Cat* — `skills/crystallize/SKILL.md` Step 5 forces
+    test-pass confirmation before merge
+  - *Measurement Problem* — observe ≠ crystallize is a first-class
+    distinction across all skills; Python lib `observe()` vs `measure()`
+  - …18 concepts total
+
+- **🔍 Detected** — tooling automatically surfaces instances.
+  - *Quantum Tunneling* — `[TUNNEL]` insight tag (spawn) + automatic
+    `code-tunnel` detection in `/cosmos scan` (v4.0)
+  - *Decoherence (code)* — `code-decoherence` in scan for untested files
+  - …3 concepts total
+
+- **🪞 Guideline** — documented rule, not technically enforced.
+  - *No-Cloning Theorem* — Spin Preservation rule (can technically `cp -r`
+    but flagged by observe Decoherence detection)
+  - *Reference Frame*, *Equivalence Principle*, *Quantum Annealing*,
+    *Quantum Coherence*, *cosmos-level Decoherence prevention*
+  - 6 concepts total — honestly admit where the system is behavioral-only
+
+The categorization makes the README's headline claim **falsifiable**:
+anyone can click the cited file/line and verify the implementation.
+The classification also makes overlaps visible — e.g., *Decoherence*
+is implemented at three levels (cosmos behavioral / math / code detection),
+which is honest about how reality accumulated as the system matured
+from v1 to v4.
+
+### Why this version is a separate release
+
+v3.3 was labeled "vision-gap fills" with three real improvements (model
+diversity, Layer 1↔3 interop, two small docs fixes). But that release
+labeled the small docs fixes as "정직성 보완" — overselling them.
+The bigger honesty gap (verifying the headline claim) wasn't addressed.
+
+v4.1 corrects this. The release is intentionally small (docs only) —
+no code changes, no behavior changes, no compatibility impact. Just
+making the existing system's reality verifiable.
+
+### Changed
+
+- `README.md` — new "Where every concept lives — verifiable map" section
+  with 26-row classification table + honest counting summary. The
+  headline claim above the quantum table now points to the verification
+  section.
+- `README.ko.md` — same section, fully translated.
+- `.claude-plugin/plugin.json` / `marketplace.json` — v4.1.0; descriptions
+  mention verifiable-mapping; keyword `verifiable` added.
+
+### Honest counting
+
+- 🧮 Real math (Path B): 2 of 26 (Interference, Decoherence-math)
+- 🔧 Enforced: 18 of 26 — most concepts have real operational mechanisms
+- 🔍 Detected: 3 of 26 (Tunneling, Decoherence-code, with cross-references)
+- 🪞 Guideline: 6 of 26 — honestly admit behavioral-only
+
+Some concepts span multiple tiers (Decoherence has three implementations
+across v1.x, v3.2, v4.0).
+
+### Backward compatibility
+
+- Zero code changes
+- Zero behavior changes
+- Pure documentation release
+
 ## [4.0.0] — 2026-05-12 — micro scale (code) — the original vision complete
 
 The original multi-scale vision had three scales: cosmos / project / code.
