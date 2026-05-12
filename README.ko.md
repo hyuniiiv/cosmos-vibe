@@ -195,7 +195,11 @@ graph LR
 
 ### 5. 실제 실행 사례 보기
 
-실제 cosmos 실행 결과(spawn 명령 + 원본 `.quantum/*.jsonl` + observe + crystallize)는 [`examples/`](examples/) 에 모입니다. 의도적으로 가짜 예시를 넣지 않습니다 — 디렉토리는 실제 기여자가 진짜 실행 결과를 추가하기 전까지 비어있습니다. 의미 있는 cosmos 실행을 해보셨다면 [기여](examples/README.md#contributing-a-run)해 주세요.
+실제 cosmos 실행 결과(spawn 명령 + 원본 `.quantum/*.jsonl` + observe + crystallize)는 [`examples/`](examples/) 에 모입니다. 의도적으로 가짜 예시를 넣지 않습니다 — 개발자가 실제 코드에서 돌린 세션만 수록합니다.
+
+**대표 사례: [`examples/auth-audit/`](examples/auth-audit/)** — 프로덕션 Electron+Next.js 결제 단말 코드베이스에 대한 3-cosmos 보안 감사. 세 가지 상보적 렌즈(취약점 헌터, 아키텍처 감사관, 클라이언트 데이터플로우)가 독립적으로 같은 결론에 도달했습니다 — *"이 토큰에는 만료가 없다"* (3-way 공명). 그리고 한 cosmos는 보안 감사 경계를 **터널링**하여 인접 영역으로 진입 — 토큰 저장소 드리프트로 인해 오프라인 결제 큐가 영구적으로 플러시되지 않는다는 사실을 발견했습니다. 보안 감사가 찾아낸 돈 문제입니다. 원본 `.jsonl` 인사이트가 편집 없이 그대로 포함되어 있습니다.
+
+의미 있는 cosmos 실행을 해보셨다면 [기여](examples/README.md#contributing-a-run)해 주세요.
 
 ---
 

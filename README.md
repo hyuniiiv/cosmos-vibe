@@ -201,7 +201,11 @@ branches**, preserved for reference or follow-up crystallization.
 
 ### 5. See a real run
 
-Real cosmos run outputs (spawn command + raw `.quantum/*.jsonl` + observe + crystallize) are collected in [`examples/`](examples/). We deliberately don't ship fabricated examples — the directory ships empty until contributors add real runs. If you've done a meaningful cosmos run, [contribute it](examples/README.md#contributing-a-run).
+Real cosmos run outputs (spawn command + raw `.quantum/*.jsonl` + observe + crystallize) are collected in [`examples/`](examples/). We deliberately don't ship fabricated examples — only sessions a developer actually ran on real code.
+
+**Featured: [`examples/auth-audit/`](examples/auth-audit/)** — a 3-cosmos security audit of a production Electron+Next.js payment terminal. Three complementary lenses (vulnerability-hunter, architecture-auditor, client-dataflow) independently converged on a systemic JWT flaw (3-way resonance: *"the token has no expiration"*), and one cosmos **tunneled** out of the security audit into an adjacent territory — discovering that the offline payment queue silently never flushes due to a token-storage drift. A money bug found by a security audit. Raw `.jsonl` insights are included unedited.
+
+If you've done a meaningful cosmos run, [contribute it](examples/README.md#contributing-a-run).
 
 ---
 

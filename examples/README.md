@@ -8,7 +8,11 @@ The README and INTEGRATIONS docs explain *how* QuantumAgent works in the abstrac
 
 ## Status
 
-No real runs collected yet. We deliberately do **not** ship fabricated examples — the difference between "this is what the framework looks like" (covered by the README's visualization section) and "this is what *a real session produced*" matters for credibility.
+One real run collected:
+
+- **[`auth-audit/`](auth-audit/)** — 3-cosmos security audit of a production Electron+Next.js payment terminal codebase. Produced 3-way resonance on a systemic JWT flaw and a tunneling-class find that exposed a separate revenue bug. Insights are raw and unedited; only company-identifying strings were masked.
+
+We deliberately do **not** ship fabricated examples — the difference between "this is what the framework looks like" (covered by the README's visualization section) and "this is what *a real session produced*" matters for credibility.
 
 If you've run cosmos on a goal and the result is worth sharing, contributions are welcome. See [`_template/`](_template/) and the contribution guide below.
 
