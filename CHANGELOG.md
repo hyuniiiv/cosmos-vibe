@@ -6,6 +6,18 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+### Added — visualization in README
+- New "🔭 Visualizing a cosmos run" section in README.md with three
+  Mermaid diagrams (spawn / observe / crystallize) and a quantum-signal
+  reference table.
+- Sample `/cosmos:observe` output box demonstrating the format defined
+  in `skills/observe/SKILL.md`: superposition snapshot, resonance /
+  uncertainty / tunneling / jump / blockers, all with the same emoji
+  vocabulary used in the actual workflow output.
+- Diagrams use the styling that renders cleanly on GitHub dark mode.
+- Marked the sample output as "structure is fixed, content varies" so
+  readers don't mistake the illustrative content for a real run.
+
 ### Added — two-convention framing
 - INTEGRATIONS.md now opens with an explicit framing: the ecosystem is
   converging on **two install conventions**, and QuantumAgent's repository

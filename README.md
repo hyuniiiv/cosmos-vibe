@@ -99,6 +99,108 @@ influence without convergence.
 
 ---
 
+## 🔭 Visualizing a cosmos run
+
+### 1. Spawn — superposition forms
+
+One goal, multiple parallel cosmos, each in an isolated git worktree:
+
+```mermaid
+graph TD
+    G[🎯 Goal: implement rate limiting]
+    G --> A[🌌 cosmos: alpha<br/>strategy: token-bucket<br/>worktree: cosmos/alpha/]
+    G --> B[🌌 cosmos: beta<br/>strategy: sliding-window<br/>worktree: cosmos/beta/]
+    G --> C[🌌 cosmos: gamma<br/>strategy: fixed-window<br/>worktree: cosmos/gamma/]
+    A -.entangle via .quantum.- B
+    B -.entangle via .quantum.- C
+    C -.entangle via .quantum.- A
+
+    style A fill:#1e3a5f,stroke:#4a9eff,color:#fff
+    style B fill:#1e3a5f,stroke:#4a9eff,color:#fff
+    style C fill:#1e3a5f,stroke:#4a9eff,color:#fff
+    style G fill:#2d1b4e,stroke:#b975e8,color:#fff
+```
+
+Each cosmos writes append-only insights to its own `.quantum/<name>/insights.jsonl`.
+All cosmos read every other cosmos's insights between major steps. This is the
+**entanglement channel** — no shared mutable state, no merge conflicts, just a
+broadcast log on disk.
+
+### 2. Observe — read the superposition without collapsing it
+
+`/cosmos:observe` is the non-destructive measurement. It prints the live state of
+all cosmos plus the quantum signal map:
+
+```
+🌌 Superposition Snapshot
+═══════════════════════════════════════════════════════════════════
+
+cosmos:alpha   (token-bucket)    ●●●●●●●●●  9 insights
+  └ {"type":"tunnel","content":"Redis sorted sets eliminate the rate-limit table entirely"}
+  └ {"type":"decision","content":"Millisecond precision is sufficient for SLA buckets"}
+
+cosmos:beta    (sliding-window)  ●●●●●●●●●● 10 insights
+  └ {"type":"jump","content":"Switched to event-sourcing after reading alpha's audit insight"}
+  └ {"type":"decision","content":"Millisecond precision is sufficient for SLA buckets"}
+
+cosmos:gamma   (fixed-window)    ●●●●●●     6 insights
+  └ {"type":"decision","content":"Millisecond precision is sufficient for SLA buckets"}
+  └ {"type":"blocker","content":"Boundary-second double-counting under burst load"}
+
+⚡ Resonance ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   "millisecond precision" — 3 cosmos converged → trust this
+
+🌀 Uncertainty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   data structure: sorted-set (alpha) vs ring-buffer (beta) vs hash (gamma)
+   → real tradeoff, developer chooses
+
+✨ Tunneling ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   alpha: Redis sorted sets replace the separate rate-limit table
+
+⚡ Quantum Jump ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   beta ← alpha: switched to event-sourcing mid-implementation
+
+🚧 Unresolved Blockers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   gamma: boundary-second double-counting under burst load
+```
+
+> The output above is the format defined in [`skills/observe/SKILL.md`](skills/observe/SKILL.md). A real run produces actual content; the structure and signal categories are fixed.
+
+### 3. Crystallize — collapse one cosmos into the deliverable
+
+```mermaid
+graph LR
+    S[🌌 Superposition<br/>3 cosmos parallel]
+    S -->|observe<br/>(non-destructive)| O[📊 Resonance / Uncertainty map<br/>+ tunneling / jumps / blockers]
+    O -->|/cosmos:crystallize alpha| C[💎 alpha<br/>merged → main]
+    O -.preserved as branch.-> Ba[cosmos/beta]
+    O -.preserved as branch.-> Ga[cosmos/gamma]
+    C --> R[✅ Production code<br/>with full audit trail in .quantum/]
+
+    style S fill:#2d1b4e,stroke:#b975e8,color:#fff
+    style O fill:#1e3a5f,stroke:#4a9eff,color:#fff
+    style C fill:#0a3a1e,stroke:#4ade80,color:#fff
+    style R fill:#0a3a1e,stroke:#4ade80,color:#fff
+```
+
+`/cosmos:crystallize alpha` is the measurement that collapses one cosmos into a
+definite result and merges its branch. **Other cosmos remain on their own
+branches**, preserved for reference or follow-up crystallization.
+
+### 4. Quantum signals — what to look for
+
+| Signal | Meaning | Action |
+|---|---|---|
+| ⚡ **Resonance** | N cosmos independently reached the same conclusion | Ship with confidence |
+| 🌀 **Uncertainty** | Cosmos diverged on a decision | Real tradeoff — you choose |
+| 🔁 **Degeneracy** | Different strategies, identical implementations | Single natural solution exists |
+| ⚠️ **Decoherence** | A cosmos lost its strategy by copying another | Flag — not a true sample |
+| ✨ **Tunneling** (`type: "tunnel"`) | A cosmos bypassed an assumed hard constraint | Unexpected solution path |
+| ⚡ **Quantum Jump** (`type: "jump"`) | A single entanglement read caused a discontinuous shift | Non-obvious architectural leap |
+| 🧊 **Bose-Einstein Condensate** | Zero uncertainty + ≥3 resonant decisions + all cosmos participated | The goal was deterministic — ship any cosmos |
+
+---
+
 ## Install
 
 QuantumAgent ships as a self-marketplace Claude Code plugin. Inside Claude Code:
