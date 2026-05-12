@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "bin": {
-    "quantum-agent-mcp": "./index.js"
+    "quantum-agent-mcp": "index.js"
   },
   "files": [
     "index.js",

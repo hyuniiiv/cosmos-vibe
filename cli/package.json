@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "bin": {
-    "quantum-agent": "./index.js",
-    "qagent": "./index.js"
+    "quantum-agent": "index.js",
+    "qagent": "index.js"
   },
   "files": [
     "index.js"
