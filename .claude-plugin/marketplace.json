@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "QuantumAgent marketplace — three-layer quantum exploration architecture for Claude Code",
-    "version": "3.2.0"
+    "version": "3.3.0"
   },
   "plugins": [
     {
@@ -15,10 +15,10 @@
         "source": "github",
         "repo": "hyuniiiv/quantum-agent"
       },
-      "description": "Three-layer architecture for quantum-inspired AI exploration: CLI, YAML DSL, and Python primitives. v3.2 completes Path B with canonical quantum mechanics — CHSH Bell-inequality test (S ≈ 2.83), full quantum gate library (Pauli/Hadamard/CNOT/CZ/SWAP/Rx/Ry/Rz), density matrices + decoherence model, partial trace. Multi-scale macro layer with project spin + singularities. Four entanglement modes including verifiable heartbeat protocol.",
-      "version": "3.2.0",
+      "description": "Three-layer architecture for quantum-inspired AI exploration: CLI, YAML DSL, and Python primitives. v3.3 adds cosmos-level model diversity (--models flag, per-cosmos model in YAML) for asymmetric token economics + blind-spot mitigation, plus from_cosmos() Layer-1↔3 interop. v3.2 ships canonical quantum mechanics (CHSH, gates, density matrices, decoherence). Multi-scale macro layer with project spin + singularities. Four entanglement modes including verifiable heartbeat protocol.",
+      "version": "3.3.0",
       "category": "agents",
-      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference", "chsh", "quantum-gates", "density-matrix", "decoherence"],
+      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference", "chsh", "quantum-gates", "density-matrix", "decoherence", "interop", "model-diversity"],
       "author": {
         "name": "hyuniiiv",
         "url": "https://github.com/hyuniiiv"

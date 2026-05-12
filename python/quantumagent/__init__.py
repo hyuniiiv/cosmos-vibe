@@ -50,6 +50,10 @@ from .quantum import (
     decohere,
     partial_trace,
 )
+from .interop import (
+    CosmosRun,
+    from_cosmos,
+)
 
 # Greek alias for fans of the notation
 ψ = psi  # noqa: PLC2401 - intentional non-ASCII alias
@@ -79,6 +83,9 @@ __all__ = [
     "density",
     "decohere",
     "partial_trace",
+    # Layer 1 ↔ Layer 3 interop (v3.3)
+    "CosmosRun",
+    "from_cosmos",
 ]
 
-__version__ = "3.2.0"
+__version__ = "3.3.0"

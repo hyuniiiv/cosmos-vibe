@@ -1132,6 +1132,17 @@ A false positive dilutes the signal. A false negative just means the insight run
 
 ## How entanglement works
 
+QuantumAgent's entanglement has **two layers** — and being honest about both is how the system actually delivers value:
+
+| Layer | Mechanism | Strength |
+|-------|-----------|----------|
+| **Live entanglement** | Each agent reads `.quantum/*/insights.jsonl` between steps (best-effort, prompt-based) | Depends on agent compliance — varies by run |
+| **Post-hoc convergence** | `/cosmos observe` performs semantic analysis across all insight files | **Always works** — independent of whether live reads happened |
+
+**The post-hoc layer is the actual value engine.** Even if a cosmos finishes before reading another's late-stage insight, `/cosmos observe` will still surface independent convergence as Resonance. The auth-audit example demonstrates this: three cosmos found the same JWT-no-expiration bug independently — that's resonance, regardless of who read whom.
+
+The `--entanglement strict` mode (v1.3) adds *verifiable* live entanglement via the heartbeat protocol when proof of live communication matters (race conditions, distributed-system design, compliance). For most architecture exploration, the default `passive` mode (best-effort live + always-on post-hoc) is the right balance.
+
 Each agent reads all `.quantum/*/insights.jsonl` files between every major
 implementation step — and once more as a mandatory final read before completing.
 

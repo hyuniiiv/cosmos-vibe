@@ -6,6 +6,118 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [3.3.0] — 2026-05-12 — vision gap fills
+
+After v3.2 completed Path B, a final audit against the strategic vision
+document identified three significant gaps. This release closes them.
+
+### Added — cosmos-level model diversity
+
+Solves the **asymmetric token economics** and **blind-spot mitigation**
+items from the vision document. Different cosmos can now use different
+LLM models within a single spawn.
+
+- `spawn` skill `--models <m1,m2,…>` flag — list of model names, length
+  matching `--strategies`. Each cosmos uses its assigned model.
+  - Example: `--strategies "jwt,session,oauth" --models "haiku,sonnet,opus"`
+- YAML DSL extension — two new forms in `experiment.qa.yaml`:
+  - **Form A (simple)**: `spawn.strategies: […]` + optional `spawn.models: […]`
+  - **Form B (verbose)**: `spawn.cosmos: [{strategy, model}, …]`
+- spawn Step 7 launch report shows assigned model per cosmos.
+- Step 6 dispatch passes `model:` parameter to each parallel Agent call.
+
+**Why this matters:** mitigates Resonance becoming a *false consensus* when
+all cosmos share the same model's biases. Mixing Haiku (cheap exploration)
++ Sonnet (default) + Opus (capable synthesis) is now a first-class pattern.
+
+### Added — Layer 1 ↔ Layer 3 interop
+
+Solves the **Python lib ↔ cosmos disconnection** gap. The Python primitives
+layer can now read existing cosmos output from disk and expose it as a
+first-class `Wavefunction`.
+
+- `from_cosmos(repo_path, weights="by-insight-count"|"uniform")` — reads
+  `.quantum/<name>/insights.jsonl` files into a Python `CosmosRun`
+  containing:
+  - `psi`: Wavefunction over cosmos names (weighted by insight count or uniform)
+  - `insights`: per-cosmos insight dictionaries
+  - `resonance` / `uncertainty`: heuristic token-overlap signals
+  - `spin`: project spin (if `.quantum/project/spin.json` exists)
+  - `singularities`: macro events (if `.quantum/singularities/events.jsonl` exists)
+- New `CosmosRun` dataclass with rich `__repr__`.
+- New `python/quantumagent/interop.py` module (~180 LOC).
+- Example `python/examples/09_cosmos_interop.py` — demonstrates loading
+  the JWT-test data and composing the wavefunction with quantum primitives.
+
+The token-overlap heuristic is intentionally crude; for semantic-quality
+Resonance/Uncertainty, run `/cosmos observe`. The Python heuristic gives
+a quick statistical view without an LLM call.
+
+### Documented — micro-scale (code) as v4.0 roadmap
+
+The third scale of the original multi-scale vision was deferred but
+unclear which release. v3.3 makes it explicit: **micro-scale is v4.0**.
+
+- `.quantum/code/<symbol>/` with static-analysis integration
+- Automatic `[TUNNEL]` detection for type-system bypasses
+  (`as unknown as`, `@ts-ignore`, `Object.defineProperty(window, …)`)
+- Code-level decoherence model (untested code = lost coherence signal)
+- Cross-scale interactions (function-level → module-level → cosmos-level)
+
+This is a separate major track from the Python lib evolution.
+
+### Tightened — JUMP definition + post-hoc honesty in docs
+
+Smaller vision-audit follow-ups:
+
+- `spawn/SKILL.md` Block C — JUMP now has explicit ✅/❌ examples:
+  - ✅ Requires `read_from` citation for the triggering insight
+  - ❌ Borrowing a helper function (use `discovery`)
+  - ❌ Refactoring without citation (use `decision`)
+  - ❌ Mid-implementation approach change without source (not a jump)
+- `README.md` / `README.ko.md` "How entanglement works" section now opens
+  with the **two-layer table**: live entanglement (best-effort, prompt-
+  based) + post-hoc convergence (always works, semantic analysis). The
+  post-hoc layer is the *actual value engine* — being explicit avoids
+  overselling the live mechanism.
+
+### Changed
+
+- `python/quantumagent/__init__.py` — exports `CosmosRun`, `from_cosmos`; version 3.3.0.
+- `python/README.md` — quantum-mode capability table updated to show v3.3
+  (interop) and v4.0 (micro-scale) as separate tracks; eight examples → nine.
+- `.claude-plugin/plugin.json` / `marketplace.json` — v3.3.0; descriptions
+  mention model diversity, interop; keywords add `interop`, `model-diversity`.
+- `experiments/_template.qa.yaml` — documents both Form A and Form B with
+  model-diversity rationale.
+
+### Backward compatibility
+
+- All v3.0 / v3.1 / v3.2 code continues to work unchanged.
+- New features are purely additive:
+  - `--models` flag is optional
+  - YAML Form B (`cosmos:`) is alternative to Form A — pick one
+  - `from_cosmos()` is opt-in
+- Existing classical-mode and quantum-mode Python code unaffected.
+
+### Vision-audit status after v3.3
+
+| Vision item | Status |
+|-------------|--------|
+| Q1/Q2 격차 진단 | ✅ Complete |
+| Q3 거시 스케일 | ✅ Complete (v1.2) |
+| Q3 4-mode entanglement | ✅ Complete (v1.3) |
+| **Q3 미시(code) 스케일** | ⏳ **v4.0 track (explicit)** |
+| Q4 Layer 2 YAML DSL | ✅ Complete (v2.0) |
+| Q4 Layer 3 Python lib | ✅ Complete (v3.0) |
+| Path B Phases 1-4 | ✅ Complete (v3.1 + v3.2) |
+| Asymmetric token economics | ✅ Complete (v3.3) |
+| Layer 1↔3 interop | ✅ Complete (v3.3) |
+| Live + post-hoc honesty | ✅ Complete (v3.3 docs) |
+| TUNNEL/JUMP tightening | ✅ Complete (v3.3) |
+| Agent backend (ψ.spawn LLM) | ⏳ Future v3.x (optional anthropic SDK) |
+| Visualization | ⏳ Future v3.x |
+
 ## [3.2.0] — 2026-05-12 — Path B complete
 
 The final release of the QuantumAgent Path B journey. v3.1 introduced complex

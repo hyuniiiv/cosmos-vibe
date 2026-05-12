@@ -98,7 +98,7 @@ All three layers share concepts (ψ, entanglement, observe vs measure, constrain
 
 ## Skills (Layer 1 + 2)
 
-- `/cosmos spawn --goal "<goal>" --strategies "<s1,s2,s3>" [--entanglement <mode>]` — launch cosmos
+- `/cosmos spawn --goal "<goal>" --strategies "<s1,s2,s3>" [--entanglement <mode>] [--models <m1,m2,m3>]` — launch cosmos (v3.3: per-cosmos model)
 - `/cosmos observe` — superposition snapshot + resonance/uncertainty map + macro context + entanglement quality
 - `/cosmos crystallize <id>` — collapse one cosmos into a result
 - `/cosmos stop` — remove all worktrees and branches
@@ -133,4 +133,9 @@ maximally-entangled Bell states, multi-basis measurement with CHSH violation
 matrices with exponential decoherence model, partial trace = entanglement
 signature. All verified empirically against theoretical predictions.
 
-See `python/README.md` for the full reference and eight runnable examples.
+**v3.3 adds Layer 1↔Layer 3 interop**:
+- `from_cosmos(repo_path)` — reads `.quantum/` cosmos output into a Python
+  `CosmosRun` (Wavefunction + insights + heuristic resonance/uncertainty).
+  First bridge between agent-backed (Layers 1-2) and math-backed (Layer 3).
+
+See `python/README.md` for the full reference and nine runnable examples.

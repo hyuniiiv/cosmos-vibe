@@ -198,7 +198,7 @@ Classical mode remains the default and is unchanged from v3.0. Quantum mode is o
 
 ## Examples
 
-Eight runnable examples in `examples/`:
+Nine runnable examples in `examples/`:
 
 **Classical mode (v3.0):**
 - **`01_basic_psi.py`** — declare, observe, measure with seed
@@ -213,6 +213,9 @@ Eight runnable examples in `examples/`:
 - **`06_chsh_test.py`** — CHSH Bell-inequality test: |Φ+⟩ achieves S ≈ 2.83, violating the classical |S| ≤ 2 bound (genuine quantum entanglement)
 - **`07_quantum_gates.py`** — build a Bell state from gates: |00⟩ → H₀ → CNOT → |Φ+⟩, plus parametric Ry rotations and inverse circuits
 - **`08_decoherence.py`** — pure→mixed via exponential decay of off-diagonals, plus partial trace = I/2 (entanglement signature)
+
+**Layer interop (v3.3):**
+- **`09_cosmos_interop.py`** — read a cosmos run's `.quantum/` output into a Python `CosmosRun` and compose with quantum primitives
 
 Run them:
 
@@ -282,14 +285,28 @@ Implemented (v3.2, Path B Phases 2-4 — **complete**):
 - ✓ Density matrices (`density`, `DensityMatrix`) — pure ↔ mixed states
 - ✓ Exponential decoherence model (`decohere`) — off-diagonals decay
 - ✓ Partial trace (`partial_trace`) — entanglement signature via reduced purity
-- ✓ All examples verified empirically with theoretical agreement
 
-**Path B is now complete.** Three remaining future-direction items:
+Implemented (v3.3, vision-gap fills):
+- ✓ **`from_cosmos(repo_path)`** — Layer 1 ↔ Layer 3 bridge. Reads `.quantum/`
+  cosmos output into a `CosmosRun` (Wavefunction + insights + heuristic
+  resonance/uncertainty + macro context).
+- ✓ Heuristic resonance/uncertainty via token overlap (cheap signal — for
+  semantic quality use `/cosmos observe`)
 
-Roadmap (out-of-scope for Path B):
-- **Agent backend** — `ψ.spawn()` to invoke real cosmos via Claude Code (bridges Layer 3 to Layers 1/2)
-- **`.quantum/` interop** — read existing cosmos insights as a Python wavefunction
-- **Visualization** — render a wavefunction / entanglement graph as ASCII or HTML
+**Path B is complete.** v3.3 fills the largest remaining vision gaps
+(model diversity in CLI/DSL, .quantum/ interop). The micro-scale layer
+remains the one untaken vision branch — see below.
+
+Roadmap:
+- **v4.0 (planned) — Micro-scale (code) layer** — `.quantum/code/<symbol>/`
+  with static-analysis integration. Function-level quantum state tracking,
+  automatic `[TUNNEL]` detection for type-system bypasses (`as unknown as`,
+  `@ts-ignore`, etc.), code-level decoherence (untested code = lost
+  coherence). This is the third scale of the original vision; major work,
+  separate track from the Python lib.
+- **Agent backend** — `ψ.spawn(use_agent=True)` to invoke real LLMs from
+  Python. Requires optional `anthropic` SDK dependency. Future v3.x release.
+- **Visualization** — render wavefunctions / entanglement graphs.
 
 ---
 

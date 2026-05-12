@@ -34,6 +34,20 @@ Example: `--strategies "jwt,session,oauth2"` → alpha=jwt, beta=session, gamma=
    No two cosmos can occupy the same state. Each strategy must be distinct.
 ```
 
+**Model diversity (v3.3):** Parse `--models <m1,m2,...>` if present. The list must have the same length as `--strategies`. Each cosmos uses its corresponding model — this enables *asymmetric token economics* (cheap model for exploration, expensive for analysis) and *blind-spot mitigation* (different models reduce shared bias).
+
+Allowed model names depend on your Claude Code installation; common values:
+- `claude-haiku-4-5` — fastest, cheapest, good for fan-out exploration
+- `claude-sonnet-4-6` — balanced (default if `--models` omitted)
+- `claude-opus-4-7` — most capable, best for final synthesis
+
+Example: `--strategies "jwt,session,oauth" --models "haiku,sonnet,opus"` assigns alpha=haiku, beta=sonnet, gamma=opus.
+
+If `--models` is omitted, all cosmos use the inherited default model. Length mismatch is rejected:
+```
+❌ --models length (N) must match --strategies length (M).
+```
+
 **Entanglement mode:** Parse `--entanglement <mode>` if present. Capture as `<entanglement_mode>` for use in Steps 5 and 6. Allowed values:
 
 | Mode | Behavior |
@@ -236,6 +250,11 @@ Use these tags sparingly — only when the condition genuinely applies.
 In a SINGLE response, make N Agent tool calls — one per cosmos. All run in
 true parallel. Do NOT await one before starting the next.
 
+**If `--models` was supplied (v3.3+):** Pass `model: <name>` to each Agent
+tool call, using the model assigned to that cosmos in Step 1. Different cosmos
+can use different models — this is the recommended way to mitigate the
+"shared blind spot" problem where all cosmos inherit the same model's biases.
+
 Construct each dispatch prompt by composing four blocks based on `<entanglement_mode>`:
 
 **Block A — Preamble (always):**
@@ -324,12 +343,25 @@ Your strategy: <strategy>
 **Block C — Rule 3 (always):**
 
 ```
-3. TAG quantum breakthrough insights via the `type` field:
-   "tunnel" — you bypassed a constraint you assumed was hard
-              (NOT: serendipity. NOT: a clever optimization. Bypass of an *assumed requirement*.)
-   "jump"   — another cosmos's insight caused a *discontinuous* architectural shift
-              (NOT: gradual adaptation. A sudden leap to a qualitatively different solution.)
-              In active mode, `jump` insights MUST include `read_from`.
+3. TAG quantum breakthrough insights via the `type` field. Use sparingly —
+   a false positive dilutes the signal.
+
+   "tunnel" — you bypassed a constraint you assumed was hard.
+       ✅ "Redis sorted sets eliminate the need for a separate rate-limit table"
+       ✅ "Token jti IS the revocation key — no separate table needed"
+       ❌ "Found an unrelated bug while doing X" (this is serendipity, use discovery)
+       ❌ "Optimized the inner loop" (this is optimization, use discovery)
+       ❌ "Used a clever data structure" (this is design, use decision)
+
+   "jump"   — another cosmos's insight caused a *discontinuous* architectural shift.
+              You MUST cite which cosmos and which ts (`read_from`) — otherwise
+              it's gradual adaptation, not a jump.
+       ✅ "[read alpha@T+0:14:32] Switched from polling to event-sourcing entirely
+            after seeing alpha's audit-trail requirement"
+       ✅ "[read gamma@T+0:18:05] Rebuilt offline queue around HMAC signing"
+       ❌ "Adopted alpha's helper function" (this is borrowing, use discovery)
+       ❌ "Refactored after reading another insight" (gradual, use decision)
+       ❌ "Changed approach mid-implementation" (no citation = not a jump)
 ```
 
 **Block D — Final closing, varies by mode:**
@@ -375,9 +407,9 @@ Immediately before dispatching agents, output:
 ```
 🌌 Spawning <N> cosmos...
 
-  [alpha] cosmos/alpha  strategy: <strategy1>
-  [beta]  cosmos/beta   strategy: <strategy2>
-  [gamma] cosmos/gamma  strategy: <strategy3>
+  [alpha] cosmos/alpha  strategy: <strategy1>  model: <model1>
+  [beta]  cosmos/beta   strategy: <strategy2>  model: <model2>
+  [gamma] cosmos/gamma  strategy: <strategy3>  model: <model3>
 
 ⚛️  Quantum Memory: .quantum/
 🔗 Entanglement mode: <entanglement_mode>
@@ -387,7 +419,7 @@ Immediately before dispatching agents, output:
 Agents running. Superposition snapshot when complete.
 ```
 
-If spin.json or events.jsonl were missing, omit those lines silently.
+The `model:` column appears for each cosmos. If `--models` was omitted, show `model: (inherited)` for all. If spin.json or events.jsonl were missing, omit those lines silently.
 
 ### Step 8 — Auto-observe on completion
 

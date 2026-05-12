@@ -43,10 +43,28 @@ singularities:
 
 spawn:
   goal: "describe what every cosmos should achieve"   # REQUIRED, string
-  strategies:                                          # REQUIRED, 2-5 unique entries
+
+  # Form A — simple list (uniform inherited model):
+  strategies:                                          # REQUIRED if no `cosmos:` block, 2-5 unique entries
     - approach-a
     - approach-b
     - approach-c
+
+  # Optional model assignment (Form A only):
+  models:                                              # optional, length must match strategies
+    - claude-haiku-4-5     # cheap fan-out exploration
+    - claude-sonnet-4-6    # balanced
+    - claude-opus-4-7      # capable synthesis
+  # Why differ models? Two reasons (v3.3+):
+  #   1. Asymmetric token economics — cheap models explore, expensive ones synthesize.
+  #   2. Blind-spot mitigation — different models reduce shared bias in Resonance.
+
+  # Form B — verbose per-cosmos (alternative to strategies + models):
+  # cosmos:
+  #   - { strategy: approach-a, model: claude-haiku-4-5 }
+  #   - { strategy: approach-b, model: claude-sonnet-4-6 }
+  #   - { strategy: approach-c, model: claude-opus-4-7 }
+
   entanglement: passive                                # optional: none | passive | active | strict
                                                        # default: passive
 

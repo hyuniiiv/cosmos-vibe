@@ -53,21 +53,36 @@ singularities:                          # optional block, list
 # Required: the spawn configuration
 spawn:                                  # required block
   goal: <string>                        # required
-  strategies:                           # required list, 2-5 items
+
+  # Two forms — pick ONE. Cannot use both.
+  #
+  # Form A — simple list (uniform model):
+  strategies:                           # 2-5 unique entries
     - <strategy>
     - <strategy>
+
+  # Form B — verbose (per-cosmos model, v3.3+):
+  cosmos:                               # 2-5 unique entries
+    - { strategy: <strategy>, model: <model-name> }
+    - { strategy: <strategy>, model: <model-name> }
+
   entanglement: <mode>                  # optional: none|passive|active|strict
                                         # default: passive
+  models:                               # optional list, only with strategies form
+    - <model-name>                      # length must match strategies
+    - <model-name>
 ```
 
 **Validation rules:**
 - Top-level keys: `experiment`, `version`, `spin`, `singularities`, `spawn`. Reject unknown keys.
 - `experiment` must be present and a non-empty string.
-- `spawn` must be present with `goal` (string) and `strategies` (list of 2-5 unique strings).
+- `spawn` must be present with `goal` (string) and EITHER `strategies` (list of 2-5 unique strings) OR `cosmos` (list of 2-5 unique entries with `strategy` field) — not both.
 - `spawn.entanglement` if present must be one of `none`, `passive`, `active`, `strict`.
+- `spawn.models` (optional, only with `strategies` form) must match `strategies` length.
+- `spawn.cosmos` entries each require `strategy`; `model` is optional per entry.
 - `spin.name` required if `spin` block exists.
 - Each `singularities[]` entry needs `name` and `invalidates`.
-- `strategies` uniqueness check enforces Pauli Exclusion at the declaration layer.
+- Strategy uniqueness (across forms) check enforces Pauli Exclusion at the declaration layer.
 
 ## Execution Steps
 
@@ -157,6 +172,9 @@ Build the equivalent `/cosmos spawn` arguments from the `spawn:` block:
 - `--goal "<goal>"`
 - `--strategies "<comma-joined strategies>"`
 - `--entanglement <mode>` (if not default)
+- `--models "<comma-joined>"` (if either Form A `models:` or Form B `cosmos[].model` is present)
+
+For **Form B (cosmos verbose form)**: extract `strategy` and `model` from each entry into parallel lists for the underlying spawn call.
 
 Then invoke the same execution flow as `/cosmos spawn` (Steps 2 through 8 of `skills/spawn/SKILL.md`).
 
