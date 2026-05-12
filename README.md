@@ -599,6 +599,48 @@ See [Multi-scale: the macro layer](#multi-scale-the-macro-layer) for the full me
 
 ---
 
+### `/cosmos run` *(new in v2.0)*
+
+```
+/cosmos run <path-to-yaml>
+```
+
+Executes a **declarative quantum experiment** from a YAML file. Quantum exploration as code — version-controlled, reproducible, CI/CD-ready.
+
+```bash
+/cosmos run experiments/rate-limiting.qa.yaml
+```
+
+The YAML can declare project spin, singularities, and the spawn configuration in a single file:
+
+```yaml
+experiment: rate-limiting-design
+version: 1
+
+spin:                                   # optional — apply project identity
+  name: my-api
+  constraints: [redis-only, p99-under-50ms]
+
+singularities:                          # optional — declare macro events
+  - name: api-v2-migration
+    invalidates: [v1-routes]
+
+spawn:                                  # required — the exploration itself
+  goal: "rate limiting middleware"
+  strategies: [token-bucket, sliding-window, fixed-window]
+  entanglement: passive
+```
+
+Execution order: validate → apply spin → apply singularities → spawn (with provenance tagged into every cosmos's first insight) → auto-observe on completion.
+
+See [`experiments/_template.qa.yaml`](experiments/_template.qa.yaml) for the annotated template and [`experiments/rate-limiting.example.qa.yaml`](experiments/rate-limiting.example.qa.yaml) for a runnable example.
+
+**Why declarative?** Same YAML = same configuration, always. Experiments become reviewable in pull requests. Quarterly audits run on cron. The exploration outputs still depend on agent runs, but the *design* is fixed and traceable.
+
+See [Declarative experiments — the YAML DSL](#declarative-experiments--the-yaml-dsl) for the full mental model and CI/CD integration.
+
+---
+
 ### `/cosmos singularity` *(new in v1.2)*
 
 ```
@@ -689,6 +731,85 @@ Each singularity:
 Without macro context, every `/cosmos spawn` starts from the same baseline. An audit cosmos exploring authentication today would weigh 6-month-old insights about cookie-based sessions equally with current JWT-only practice. **Singularities establish temporal coherence across agentic runs** — cosmos know which era they're in without manual context-pasting.
 
 This is the General Relativity analog: constraints curve the solution space, and singularities mark phase transitions in that curvature.
+
+---
+
+## Declarative experiments — the YAML DSL *(new in v2.0)*
+
+QuantumAgent v2.0 adds a **declarative layer** on top of the CLI. Experiments become YAML files — version-controlled, reviewable, re-executable.
+
+### The shift — imperative vs declarative
+
+```bash
+# v1.x — imperative (commands invoked one at a time)
+/cosmos spin --name "..." --constraints "..."
+/cosmos singularity --name "..." --invalidates "..."
+/cosmos spawn --goal "..." --strategies "..." --entanglement passive
+```
+
+```yaml
+# v2.0 — declarative (one YAML, one command)
+experiment: rate-limiting-design
+version: 1
+
+spin:
+  name: my-api
+  constraints: [redis-only, p99-under-50ms]
+
+singularities:
+  - name: api-v2-migration
+    invalidates: [v1-routes]
+
+spawn:
+  goal: "rate limiting middleware"
+  strategies: [token-bucket, sliding-window, fixed-window]
+  entanglement: passive
+```
+
+```bash
+/cosmos run experiments/rate-limiting.qa.yaml
+```
+
+### Why this matters
+
+**Reproducibility** — Same YAML = same configuration. Agent outputs vary (that's the point), but the *experiment design* is fixed and version-controlled.
+
+**Review** — Experiment files can be reviewed in pull requests. "Why are we testing these three strategies?" becomes a documented decision in git, not a Slack thread.
+
+**Re-execution** — `/cosmos run experiments/security-audit.qa.yaml` always means the same thing. Useful for periodic explorations.
+
+**CI/CD-grade** — Quantum experiments can run on a schedule, in response to triggers, or as part of release gates:
+
+```yaml
+# .github/workflows/quarterly-audit.yml (sketch)
+on:
+  schedule:
+    - cron: '0 0 1 */3 *'   # first day of each quarter
+steps:
+  - uses: actions/checkout@v4
+  - run: claude /cosmos run experiments/security-audit.qa.yaml
+  - uses: actions/upload-artifact@v4
+    with:
+      name: quantum-memory-${{ github.run_id }}
+      path: .quantum/
+```
+
+**Provenance** — Every cosmos's first insight in a `/cosmos run` is a `type: "run"` entry citing the experiment file and schema version. Auditors can answer "which experiment produced this insight?" by reading the first line of any insights.jsonl.
+
+### YAML schema (v1)
+
+The full schema, validation rules, and execution flow are documented in [`skills/run/SKILL.md`](skills/run/SKILL.md). Annotated template at [`experiments/_template.qa.yaml`](experiments/_template.qa.yaml).
+
+### When to use `/cosmos run` vs `/cosmos spawn`
+
+| Use `/cosmos spawn` | Use `/cosmos run` |
+|---------------------|-------------------|
+| Quick one-off exploration | The experiment will be repeated |
+| Strategies are still being chosen | Strategies are stable |
+| You're prototyping the question | The question is well-defined |
+| No need for audit trail beyond `.quantum/` | Provenance ("which experiment produced this?") matters |
+
+Both call the same underlying spawn logic — `/cosmos run` is `/cosmos spawn` with a declarative façade and macro-layer integration.
 
 ---
 
@@ -1281,6 +1402,10 @@ skills/
   stop/SKILL.md            — /cosmos stop
   singularity/SKILL.md     — /cosmos singularity        (v1.2)
   spin/SKILL.md            — /cosmos spin               (v1.3)
+  run/SKILL.md             — /cosmos run                (v2.0)
+experiments/               — declarative experiments     (v2.0)
+  _template.qa.yaml        — annotated schema template
+  *.example.qa.yaml        — runnable examples
 .claude-plugin/
   plugin.json              — plugin manifest
   marketplace.json         — marketplace registration

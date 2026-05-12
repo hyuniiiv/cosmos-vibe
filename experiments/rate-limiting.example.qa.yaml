@@ -1,0 +1,32 @@
+# Example QuantumAgent experiment — rate limiting middleware design
+# Run with:  /cosmos run experiments/rate-limiting.example.qa.yaml
+#
+# This is a real, runnable experiment file. It declares no spin (assumes the
+# project already has one) and no singularities (no recent paradigm shifts).
+# It just defines a 3-strategy exploration of rate limiting algorithms.
+
+experiment: rate-limiting-design
+version: 1
+
+spawn:
+  goal: |
+    Implement a rate limiting middleware that returns 429 Too Many Requests
+    with appropriate headers (X-RateLimit-*, Retry-After). Must handle
+    concurrent requests safely. Production target: 10k RPS per instance.
+
+  strategies:
+    - token-bucket       # smooth burst handling, classic algorithm
+    - sliding-window     # accurate counts, higher memory per user
+    - fixed-window       # simplest, has boundary 2x burst edge case
+
+  entanglement: passive  # default — let cosmos influence each other organically
+
+
+# Expected output after /cosmos observe:
+#   Resonance (likely):  429 + Retry-After header pattern, Redis Lua/pipeline for atomicity,
+#                        X-RateLimit-* header convention
+#   Uncertainty (likely): burst handling, memory per user (O(1) counter vs O(N) log),
+#                         clock skew handling
+#
+# Pick the winning cosmos with:
+#   /cosmos crystallize <name>

@@ -1,0 +1,65 @@
+# QuantumAgent experiment — schema v1
+# Run with:  /cosmos run experiments/_template.qa.yaml
+#
+# This template documents every supported field. Required fields are marked;
+# everything else is optional. Remove the comments and any blocks you don't need.
+
+experiment: my-experiment-name        # REQUIRED — kebab-case identifier
+version: 1                            # optional, defaults to 1
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# MACRO LAYER (optional) — applied BEFORE spawn
+# These declare/update project-scale state that every cosmos inherits.
+# ─────────────────────────────────────────────────────────────────────────
+
+# Project Spin — the immutable identity every cosmos inherits as invariant constraints.
+# Equivalent to running /cosmos spin with these arguments.
+# If your project already has a spin and you don't want to change it, omit this block.
+spin:
+  name: my-project                              # required if spin block present
+  type: claude-code-plugin                      # optional; e.g. web-app, cli-tool, library
+  description: One-line project description.    # optional
+  constraints:                                  # optional list of invariants
+    - no external runtime dependencies
+    - git-native control plane
+
+
+# Singularities — project-level events declared at this experiment's start.
+# Equivalent to running /cosmos singularity for each entry.
+# Each entry is appended to .quantum/singularities/events.jsonl with the current timestamp.
+singularities:
+  - name: api-v2-migration                      # required
+    invalidates:                                # required list of patterns
+      - v1-routes
+      - pre-migration-cookie-policy
+    trigger: compliance-2026-Q3                 # optional
+    description: All v1 routes retired.         # optional
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# SPAWN (required) — the parallel exploration itself
+# ─────────────────────────────────────────────────────────────────────────
+
+spawn:
+  goal: "describe what every cosmos should achieve"   # REQUIRED, string
+  strategies:                                          # REQUIRED, 2-5 unique entries
+    - approach-a
+    - approach-b
+    - approach-c
+  entanglement: passive                                # optional: none | passive | active | strict
+                                                       # default: passive
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# That's it. Run with:
+#   /cosmos run experiments/<this-filename>.qa.yaml
+#
+# Execution order:
+#   1. Validate this file
+#   2. Apply spin (if declared)
+#   3. Apply each singularity (if declared)
+#   4. Spawn cosmos with the declared goal/strategies/entanglement
+#   5. Tag each cosmos's insights with experiment provenance
+#   6. Auto-observe on completion
+# ─────────────────────────────────────────────────────────────────────────

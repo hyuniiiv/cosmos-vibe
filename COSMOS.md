@@ -86,3 +86,4 @@ append는 안전. 같은 insights 파일에 동시 쓰기 시 `flock` 또는 임
 - `/cosmos stop` — 모든 워크트리/브랜치 제거
 - `/cosmos singularity --name "<이벤트>" --invalidates "<패턴>"` *(v1.2)* — 향후 모든 spawn 컨텍스트를 재구성하는 프로젝트 레벨 이벤트 선언
 - `/cosmos spin --name "<이름>" [--type "<타입>"] [--constraints "<c1,c2,c3>"]` *(v1.3)* — 프로젝트의 불변 정체성 선언 또는 갱신; 향후 모든 spawn에 자동 주입
+- `/cosmos run <path-to-yaml>` *(v2.0)* — YAML로 선언된 양자 실험 실행; spin + singularity + spawn을 한 커맨드로 오케스트레이션, 재현 가능한 CI/CD 등급 실행

@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "QuantumAgent marketplace — parallel cosmos exploration harness for Claude Code",
-    "version": "1.3.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
@@ -15,10 +15,10 @@
         "source": "github",
         "repo": "hyuniiiv/quantum-agent"
       },
-      "description": "Run multiple AI agents in parallel with multi-scale quantum mechanics — project spin (immutable identity), singularities (macro events), and four entanglement modes (none/passive/active/strict) including verifiable heartbeat protocol.",
-      "version": "1.3.0",
+      "description": "Multi-scale quantum exploration harness with declarative YAML experiments. Run reproducible cosmos runs as code: spin + singularities + spawn in one /cosmos run command. Four entanglement modes including verifiable heartbeat protocol. CI/CD-ready.",
+      "version": "2.0.0",
       "category": "agents",
-      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin"],
+      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative"],
       "author": {
         "name": "hyuniiiv",
         "url": "https://github.com/hyuniiiv"

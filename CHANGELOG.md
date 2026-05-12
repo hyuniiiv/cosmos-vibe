@@ -6,6 +6,93 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [2.0.0] — 2026-05-12
+
+### Added — declarative quantum experiments (YAML DSL)
+
+QuantumAgent now offers a declarative layer on top of the imperative CLI.
+Experiments become version-controlled YAML files — reproducible, reviewable,
+and CI/CD-friendly. This is the **first programmable layer** of the
+QuantumAgent vision: quantum exploration as code.
+
+- **`/cosmos run <path-to-yaml>`** — new skill. Executes a declarative
+  experiment defined in `experiment.qa.yaml`. Parses, validates, then
+  orchestrates the workflow: apply spin (if declared) → apply singularities
+  (if declared) → spawn with provenance tagging → auto-observe.
+
+- **YAML schema v1** — declarative experiment format:
+  ```yaml
+  experiment: <kebab-case-id>
+  version: 1
+
+  spin:                       # optional macro-layer setup
+    name: <project-name>
+    constraints: [...]
+
+  singularities:              # optional list of project-level events
+    - name: <event>
+      invalidates: [...]
+
+  spawn:                      # required
+    goal: "<goal>"
+    strategies: [<s1>, <s2>, ...]
+    entanglement: <mode>
+  ```
+
+- **Validation rules**:
+  - Top-level keys restricted to `experiment`, `version`, `spin`, `singularities`, `spawn` (unknown keys rejected)
+  - `experiment` and `spawn` required; `spawn.goal` and `spawn.strategies` required
+  - `strategies` must be 2-5 unique entries (Pauli Exclusion at declaration time)
+  - `entanglement` if present must be one of `none|passive|active|strict`
+  - `spin.name` required if `spin` block present
+  - Each singularity entry needs `name` and `invalidates`
+
+- **Provenance tagging** — every cosmos's first insight in a `/cosmos run`
+  is a `type: "run"` entry citing the experiment file and schema version:
+  ```json
+  {"type":"run","experiment":"...","schema_version":1,"yaml_path":"...","ts":"..."}
+  ```
+  Auditors can answer "which experiment produced this insight?" by reading
+  the first line of any `insights.jsonl`.
+
+- **`experiments/` directory** — new top-level directory for declarative
+  experiments:
+  - `experiments/_template.qa.yaml` — annotated schema template
+  - `experiments/rate-limiting.example.qa.yaml` — runnable real example
+  - `experiments/README.md` — directory guide, naming conventions,
+    CI/CD integration sketch
+
+### Why the major version bump
+
+v2.0 introduces the first **programmable layer** of QuantumAgent — the
+shift from imperative CLI to declarative experiment-as-code. This is a
+paradigm-level addition, not a bug fix or minor feature. Adopting the
+DSL changes how teams think about exploration (one-off question vs.
+reproducible experiment).
+
+The CLI layer (v1.x) is fully preserved and continues to work identically.
+
+### Changed
+
+- `CLAUDE.md` / `COSMOS.md` — Skills list includes `/cosmos run`.
+- `.claude-plugin/plugin.json` — version 2.0.0; description and keywords
+  updated to mention YAML DSL, declarative experiments.
+- `.claude-plugin/marketplace.json` — version 2.0.0; updated description
+  and tags.
+- `README.md` / `README.ko.md` — new "Declarative experiments — the YAML
+  DSL" section with full mental model, CLI vs DSL comparison, CI/CD
+  workflow sketch, and `/cosmos run` vs `/cosmos spawn` decision table.
+  Commands section includes `/cosmos run` with example. Repository
+  layout reflects new `experiments/` directory and `skills/run/`.
+
+### Backward compatibility
+
+All v1.x features (`/cosmos spawn`, `/cosmos observe`, `/cosmos crystallize`,
+`/cosmos stop`, `/cosmos spin`, `/cosmos singularity`) continue to work
+identically. The DSL is purely additive — projects that don't adopt it
+notice no change. v2.0 is a major version bump because the DSL represents
+a paradigm shift (imperative → declarative), not because anything broke.
+
 ## [1.3.0] — 2026-05-12
 
 ### Added — verifiable live entanglement (strict mode)
