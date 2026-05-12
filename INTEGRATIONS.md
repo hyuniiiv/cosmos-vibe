@@ -15,6 +15,21 @@ No Claude-specific APIs. No proprietary runtime. Any agent that can:
 
 … can run QuantumAgent.
 
+### Two emerging conventions
+
+Across the agent ecosystem, two install conventions are converging — and QuantumAgent already speaks both:
+
+| Convention | Format | Examples | Install path |
+|---|---|---|---|
+| **agentskills.io** (a.k.a. AgentSkills) | One directory per skill, each with `SKILL.md` + YAML frontmatter (`name`, `description`) | Claude Code, OpenClaw, Hermes Agent | Copy `skills/*` into the agent's skills directory |
+| **Single-file rules / instructions** | One markdown file at a known path | Cursor (`.cursor/rules/*.mdc`), Windsurf (`.windsurfrules`), Aider (`CONVENTIONS.md`), Gemini CLI (`GEMINI.md`), Copilot (`.github/copilot-instructions.md`), OpenCode / Crush (`AGENTS.md`) | Curl `bundle/cosmos-instructions.md` to the agent's instructions file |
+
+QuantumAgent's repository layout serves both:
+- Our `skills/*/SKILL.md` files are valid AgentSkills entries → drop into any agentskills.io-compatible agent's skills directory.
+- Our `bundle/cosmos-instructions.md` consolidates all four skills into a single markdown file → drop into any single-file convention.
+
+If your agent adopts either convention later, it works without any change on our side.
+
 ## Compatibility matrix
 
 | Environment | Mechanism | Trigger |
@@ -36,7 +51,9 @@ No Claude-specific APIs. No proprietary runtime. Any agent that can:
 | **OpenHands** | Microagent file in `.openhands/microagents/` | Natural language |
 | **Goose** (Block) | Goose hints file / profile | Natural language |
 | **OpenClaw** | Drop `skills/` into `~/.openclaw/skills/` (AgentSkills-compatible) | "run cosmos spawn ..." |
+| **Hermes Agent** (Nous Research) | Drop `skills/` into `~/.hermes/skills/` (AgentSkills-compatible) | "run cosmos spawn ..." |
 | **Any AGENTS.md-aware agent** | `AGENTS.md` in repo root | Natural language |
+| **Any agentskills.io-compatible agent** | Drop `skills/` into the agent's skills directory | Agent-specific |
 
 Every entry is the same workflow — paste `bundle/cosmos-instructions.md` (or a curl-fetched copy) into the agent's instructions surface. No code, no install step, no dependencies.
 
@@ -188,6 +205,29 @@ cp -r /tmp/quantum-agent/skills/* <workspace>/skills/
 OpenClaw picks them up automatically. Trigger via any connected messaging channel: "run cosmos spawn for X with strategies Y, Z, W".
 
 > Per OpenClaw docs (`docs.openclaw.ai/skills`): each skill needs its own directory containing `SKILL.md` with `name` + `description` in YAML frontmatter — exactly what our `skills/*/SKILL.md` already provides.
+
+### Hermes Agent (Nous Research)
+
+Hermes Agent is compatible with the **agentskills.io open standard** — the same convention as OpenClaw and QuantumAgent's own skill format. Install directly:
+
+```bash
+git clone https://github.com/hyuniiiv/quantum-agent /tmp/quantum-agent
+mkdir -p ~/.hermes/skills
+cp -r /tmp/quantum-agent/skills/spawn       ~/.hermes/skills/cosmos-spawn
+cp -r /tmp/quantum-agent/skills/observe     ~/.hermes/skills/cosmos-observe
+cp -r /tmp/quantum-agent/skills/crystallize ~/.hermes/skills/cosmos-crystallize
+cp -r /tmp/quantum-agent/skills/stop        ~/.hermes/skills/cosmos-stop
+```
+
+Or, if you already installed in OpenClaw, use Hermes' built-in migration:
+```bash
+hermes claw migrate
+```
+This imports OpenClaw-installed skills into `~/.hermes/skills/openclaw-imports/`.
+
+Trigger via any of Hermes' configured surfaces: "run cosmos spawn for X with strategies Y, Z, W".
+
+> Per Hermes docs, skills live under `~/.hermes/skills/`. The `agentskills.io` compatibility statement is in the project README.
 
 ### Goose (Block)
 

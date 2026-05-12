@@ -136,7 +136,9 @@ QuantumAgent's core is platform-neutral markdown. The same workflows run in **an
 | OpenHands | `.openhands/microagents/cosmos.md` |
 | Goose (Block) | `.goosehints` |
 | OpenClaw | `~/.openclaw/skills/cosmos-*/SKILL.md` (AgentSkills format) |
+| Hermes Agent (Nous Research) | `~/.hermes/skills/cosmos-*/SKILL.md` (AgentSkills format) |
 | Any AGENTS.md-aware agent | `AGENTS.md` |
+| Any agentskills.io-compatible agent | Drop `skills/*` into the agent's skills directory |
 
 The same `.quantum/` memory works across agents — spawn in Cursor, observe in Claude Code, crystallize in Aider. See **[INTEGRATIONS.md](INTEGRATIONS.md)** for per-platform setup and the universal **[`bundle/cosmos-instructions.md`](bundle/cosmos-instructions.md)** drop-in file.
 

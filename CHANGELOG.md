@@ -6,12 +6,32 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+### Added — two-convention framing
+- INTEGRATIONS.md now opens with an explicit framing: the ecosystem is
+  converging on **two install conventions**, and QuantumAgent's repository
+  layout natively serves both:
+  1. **agentskills.io** — `skills/<name>/SKILL.md` with `name`/`description`
+     YAML frontmatter (Claude Code, OpenClaw, Hermes).
+  2. **Single-file rules/instructions** — one markdown file at a known path
+     (Cursor, Windsurf, Aider, Gemini CLI, Copilot, OpenCode, Crush,
+     anything that reads `AGENTS.md`).
+  Our `skills/*/SKILL.md` covers (1); our `bundle/cosmos-instructions.md`
+  covers (2). Any future agent that adopts either convention works
+  without a code change on our side.
+
 ### Added — broader agent ecosystem coverage
 - **Gemini CLI** integration via `GEMINI.md` (Google's repo-root instructions file).
 - **OpenCode** (sst) integration via `AGENTS.md`.
 - **Crush** (Charm) integration via `AGENTS.md` / `CRUSH.md`.
 - **OpenHands** (formerly OpenDevin) integration via `.openhands/microagents/cosmos.md`.
 - **Goose** (Block) integration via `.goosehints`.
+- **Hermes Agent (Nous Research)** integration — also agentskills.io-compatible,
+  installs identically to OpenClaw (`~/.hermes/skills/cosmos-*/SKILL.md`). Also
+  documents the `hermes claw migrate` path for users coming from OpenClaw.
+- Added a generic **"any agentskills.io-compatible agent"** row to the
+  compatibility matrix — three documented agents (Claude Code, OpenClaw,
+  Hermes) now converge on the same SKILL.md + YAML frontmatter standard,
+  so any future adopter of the standard works out-of-the-box.
 - **OpenClaw** integration — uses AgentSkills-compatible SKILL.md format
   identical to QuantumAgent's own. Install path is a direct copy of
   `skills/*` into `~/.openclaw/skills/` (or `<workspace>/skills/` for
