@@ -1,0 +1,32 @@
+{
+  "name": "@hyuniiiv/quantum-agent-cli",
+  "version": "1.0.0",
+  "description": "QuantumAgent CLI — non-LLM execution of cosmos worktree setup, observe, crystallize, and stop operations. Manage the filesystem contract directly.",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "quantum-agent": "./index.js",
+    "qagent": "./index.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["quantum-agent", "cosmos", "cli", "git-worktree", "parallel-agents"],
+  "author": {
+    "name": "hyuniiiv",
+    "url": "https://github.com/hyuniiiv"
+  },
+  "homepage": "https://github.com/hyuniiiv/quantum-agent",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyuniiiv/quantum-agent.git",
+    "directory": "cli"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}

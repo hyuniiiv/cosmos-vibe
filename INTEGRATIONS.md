@@ -20,7 +20,7 @@ No Claude-specific APIs. No proprietary runtime. Any agent that can:
 | Environment | Mechanism | Status | Trigger |
 |---|---|---|---|
 | **Claude Code** | Native plugin | ✅ First-class | `/cosmos:spawn`, etc. |
-| **Claude Desktop / claude.ai** | MCP server *(coming)* | 🚧 Planned | Natural language |
+| **Claude Desktop / claude.ai** | MCP server | ✅ Available | Natural language |
 | **Cursor** | `.cursor/rules/*.mdc` | ✅ Drop-in | Auto-attach by glob |
 | **Windsurf** | `.windsurfrules` | ✅ Drop-in | Always-on rule |
 | **Cline (VS Code)** | Custom Instructions / MCP | ✅ Drop-in | "run cosmos spawn …" |
@@ -45,11 +45,11 @@ For agents that don't have a plugin system, we ship a single consolidated instru
 
 ```bash
 mkdir -p .cursor/rules
-curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md \
+curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/presets/cursor/cosmos.mdc \
   -o .cursor/rules/cosmos.mdc
 ```
 
-Cursor auto-loads `.mdc` files. Trigger by typing `cosmos spawn ...` or asking "spawn parallel cosmos for X".
+The preset includes a `globs: ["**/*"]` header so Cursor auto-attaches the rule when working in any file. Trigger by typing "cosmos spawn ..." or "spawn parallel cosmos for X".
 
 ### Windsurf
 
@@ -64,13 +64,13 @@ Windsurf treats `.windsurfrules` as always-on context.
 
 Open Cline settings → **Custom Instructions** → paste the contents of `bundle/cosmos-instructions.md`.
 
-Or use MCP (when the server ships): add to `cline_mcp_settings.json`:
+Or use MCP — add to `cline_mcp_settings.json`:
 ```json
 {
   "mcpServers": {
     "quantum-agent": {
       "command": "npx",
-      "args": ["@hyuniiiv/quantum-agent-mcp"]
+      "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
     }
   }
 }
@@ -115,14 +115,26 @@ Add to your Zed assistant config (Settings → Assistant → Custom System Promp
 @import bundle/cosmos-instructions.md
 ```
 
-### Claude Desktop / claude.ai (via MCP — planned)
+### Claude Desktop / claude.ai (via MCP)
 
-When the MCP server ships, install with:
-```bash
-claude mcp add quantum-agent npx @hyuniiiv/quantum-agent-mcp
+Edit `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "quantum-agent": {
+      "command": "npx",
+      "args": ["-y", "@hyuniiiv/quantum-agent-mcp"]
+    }
+  }
+}
 ```
 
-The MCP server exposes the four `cosmos_*` tools to any MCP-compatible host.
+Or via CLI:
+```bash
+claude mcp add quantum-agent npx -y @hyuniiiv/quantum-agent-mcp
+```
+
+The MCP server exposes four prompts (`cosmos_spawn`, `cosmos_observe`, `cosmos_crystallize`, `cosmos_stop`) to any MCP-compatible host. See [`mcp/README.md`](mcp/README.md) for details.
 
 ## Cross-agent invariants
 
@@ -140,9 +152,9 @@ This means **you can spawn cosmos in Cursor, observe in Claude Code, and crystal
 - [x] Claude Code plugin (`/cosmos:*`)
 - [x] Universal markdown bundle
 - [x] Documentation for 10+ environments
-- [ ] MCP server (`@hyuniiiv/quantum-agent-mcp`)
-- [ ] Cursor-specific rules pack with `.mdc` glob hints
-- [ ] CLI wrapper (`npx quantum-agent spawn ...`) for non-LLM execution
-- [ ] Conformance tests verifying each integration honors the filesystem contract
+- [x] MCP server (`@hyuniiiv/quantum-agent-mcp`) — see `mcp/`
+- [x] Cursor `.mdc` preset with glob hints — see `presets/cursor/cosmos.mdc`
+- [x] CLI wrapper (`@hyuniiiv/quantum-agent-cli`) for non-LLM execution — see `cli/`
+- [x] Conformance tests verifying each integration honors the filesystem contract — see `tests/conformance.sh` (16 checks, all pass against the local CLI)
 
 Contributions adding support for additional environments are welcome — open a PR adding a section to this file plus any platform-specific shim.

@@ -114,9 +114,22 @@ QuantumAgent's core is platform-neutral markdown + bash. It runs in **10+ enviro
 | OpenAI Codex CLI | `--prompt-file` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Zed AI | Assistant custom prompt |
-| Claude Desktop / claude.ai | MCP server *(planned)* |
+| Claude Desktop / claude.ai | MCP server (`@hyuniiiv/quantum-agent-mcp`) |
 
 The same `.quantum/` memory works across agents — spawn in Cursor, observe in Claude Code, crystallize in Aider. See **[INTEGRATIONS.md](INTEGRATIONS.md)** for per-platform setup and the universal **[`bundle/cosmos-instructions.md`](bundle/cosmos-instructions.md)** drop-in file.
+
+#### Non-LLM CLI
+
+For scripted environments without any AI agent, use the deterministic CLI:
+
+```bash
+npx -y @hyuniiiv/quantum-agent-cli init alpha
+npx -y @hyuniiiv/quantum-agent-cli insight alpha "discovery text"
+npx -y @hyuniiiv/quantum-agent-cli observe
+npx -y @hyuniiiv/quantum-agent-cli stop --purge
+```
+
+The CLI manages worktrees and `.quantum/` memory directly. Pair it with any LLM agent that follows the same filesystem contract. Verified by 16-check conformance suite (`tests/conformance.sh`).
 
 ### Troubleshooting
 

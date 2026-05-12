@@ -1,0 +1,62 @@
+---
+description: QuantumAgent — run cosmos:spawn / observe / crystallize / stop workflows in Cursor. Spawn parallel agents in git worktrees, share discoveries via .quantum/*.jsonl, collapse the best cosmos into a deliverable.
+globs: ["**/*"]
+alwaysApply: false
+---
+
+# QuantumAgent — Cosmos Workflow (Cursor)
+
+You have access to the **QuantumAgent multiverse harness**. When the user says
+"cosmos spawn", "spawn parallel cosmos", "run cosmos with N strategies", or
+similar, follow the workflows below.
+
+## Trigger phrases
+
+- "cosmos spawn", "spawn cosmos with strategies X, Y, Z" → cosmos:spawn
+- "cosmos observe", "show cosmos status" → cosmos:observe
+- "cosmos crystallize <name>", "ship cosmos <name>" → cosmos:crystallize
+- "cosmos stop", "tear down cosmos" → cosmos:stop
+
+## Filesystem contract
+
+All cosmos workflows share this on-disk protocol — interoperable across
+Claude Code, Cursor, Aider, Cline, etc.:
+
+- `cosmos/<name>/` — git worktree per cosmos
+- `cosmos/<name>` branch — tracks the worktree
+- `.quantum/<name>/insights.jsonl` — append-only insights (one JSON per line)
+- `.gitignore` excludes `cosmos/` and `.quantum/`
+
+## Cosmos rules
+
+- Each cosmos runs independently in its own `cosmos/<name>/` worktree
+- Do NOT directly copy code from another cosmos
+- Record every significant discovery to `.quantum/<name>/insights.jsonl`
+- After each major implementation step, read `.quantum/*/insights.jsonl`
+- Resonance (convergence) = trust the signal. Decoherence (wholesale copying) = forbidden.
+- Entanglement means influence, not convergence — preserve your strategy
+
+## Quantum signals to record
+
+- **Resonance** — multiple cosmos independently reach the same conclusion → ship with confidence
+- **Uncertainty** — cosmos diverge on a decision → conscious tradeoff
+- **Degeneracy** — different strategies, identical implementations → single natural solution
+- **Decoherence** — cosmos loses its strategy by copying others → flag
+- **Quantum Tunneling** (`[TUNNEL]`) — bypass an assumed hard constraint
+- **Quantum Jump** (`[JUMP]`) — single entanglement read causes discontinuous architectural shift
+- **Bose-Einstein Condensate** — zero uncertainty + ≥3 resonant decisions + all cosmos participated → goal was deterministic
+
+## Detailed workflows
+
+For the full step-by-step bash commands for each workflow, fetch:
+
+- https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/skills/spawn/SKILL.md
+- https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/skills/observe/SKILL.md
+- https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/skills/crystallize/SKILL.md
+- https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/skills/stop/SKILL.md
+
+Or paste the consolidated [`bundle/cosmos-instructions.md`](https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/cosmos-instructions.md) into this rule.
+
+---
+
+> Install: `curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/presets/cursor/cosmos.mdc -o .cursor/rules/cosmos.mdc`
