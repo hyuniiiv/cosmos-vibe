@@ -19,7 +19,9 @@ All notable changes to QuantumAgent are documented here. Format follows
   wildcard injection in `main.js` that the 1st round missed entirely.
   Includes verbatim auto-observe output (both rounds), raw `.jsonl`
   insights from each cosmos, and the spawn command. Only
-  company-identifying strings masked (`BIZPOS` → `EXAMPLE_SYSTEM`).
+  company-identifying strings masked to `EXAMPLE_SYSTEM`; all file
+  paths, line numbers, function/library names, and severity grades
+  are verbatim.
 - README.md and README.ko.md both feature the auth-audit example
   prominently — stats row (3 cosmos × 2 rounds × 5 CRITICALs × 1
   [TUNNEL]), two pull-quote callouts (3-way resonance + tunneling

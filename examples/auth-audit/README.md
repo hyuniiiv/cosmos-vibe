@@ -109,8 +109,8 @@ branch. `crystallize` exists for the build case — not every cosmos run
 needs to end with it. The output of cosmos is *signal*, and signal is
 useful whether or not it ends in a merge.
 
-**Sanitization scope.** Company-identifying strings were replaced
-(`BIZPOS` → `EXAMPLE_SYSTEM`, `bizpos-settings` → `example-system-settings`).
-All file paths, line numbers, function names, library names
-(`jose`, `bcryptjs`, `Zustand`), severity grades, and architectural
-decisions are verbatim from the source codebase.
+**Sanitization scope.** Company-identifying strings were masked to
+`EXAMPLE_SYSTEM` / `example-system-settings`. All file paths, line
+numbers, function names, library names (`jose`, `bcryptjs`, `Zustand`),
+severity grades, and architectural decisions are verbatim from the
+source codebase.

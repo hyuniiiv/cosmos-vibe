@@ -10,10 +10,10 @@
 > surfaced an additional **CRITICAL** (Electron CORS wildcard injection)
 > and account-takeover write paths that the 1st run missed.
 >
-> Only company-identifying strings (`BIZPOS` → `EXAMPLE_SYSTEM`,
-> `bizpos-settings` → `example-system-settings`) were masked. All file
-> paths, line numbers, function names, library names, and severity
-> grades are verbatim.
+> Company-identifying strings have been masked to `EXAMPLE_SYSTEM` /
+> `example-system-settings`. All file paths, line numbers, function
+> names, library names, and severity grades are verbatim from the
+> source codebase.
 
 ---
 
