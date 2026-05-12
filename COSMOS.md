@@ -29,18 +29,43 @@ QuantumAgent는 2-계층 구조를 따릅니다:
 
 ## Quantum Memory
 
-- 위치: 저장소 루트의 `.quantum/` (git 제외)
+QuantumAgent의 양자 메모리는 세 스케일에서 작동 (v1.2+):
+
+```
+.quantum/
+  <name>/insights.jsonl        — cosmos 스케일 (에이전트별 인사이트)
+  project/spin.json            — 거시 스케일: 프로젝트 정체성 (v1.2)
+  singularities/events.jsonl   — 거시 스케일: 프로젝트 레벨 이벤트 (v1.2)
+```
+
+**Cosmos 스케일 (insights):**
 - 각 cosmos는 자기 네임스페이스에만 씁니다: `.quantum/<name>/insights.jsonl`
 - 모든 cosmos는 모든 네임스페이스를 읽을 수 있습니다
-- 형식: 한 줄당 JSON 객체 —
-  `{"type": "<타입>", "content": "...", "ts": "<ISO 8601>"}`
+- 형식: 한 줄당 JSON 객체 — `{"type": "<타입>", "content": "...", "ts": "<ISO 8601>"}`
 - `type` 어휘: `discovery` (기본값), `decision`, `blocker`, `tunnel`,
   `jump`, `resonance`, `complete`, `crystallize`
 - 레거시 항목(`type` 없거나 `[TUNNEL]`/`[JUMP]` 접두사)도 그대로 읽힙니다.
-  `type` 누락 시 `discovery`로 취급.
-- 동시성: POSIX에서 PIPE_BUF 미만 append는 원자적입니다. 단일 에이전트의
-  순차 append는 안전. 같은 insights 파일에 동시 쓰기가 가능한 서브
-  에이전트를 띄울 경우 `flock` 또는 임시파일+`mv`로 감싸세요.
+
+**거시 스케일 (v1.2 — 프로젝트 스핀 + 특이점):**
+- `project/spin.json` — 선택사항. 프로젝트의 불변 정체성. 매 spawn마다
+  CLAUDE.md에 불변 제약으로 자동 주입.
+- `singularities/events.jsonl` — append-only 프로젝트 레벨 이벤트 로그
+  (마이그레이션, 패러다임 전환, 컴플라이언스 변경). 각 spawn이 이를 읽고
+  `invalidates` 패턴에 매칭되는 특이점 이전 인사이트를 stale로 처리.
+- 두 파일 모두 선택. 없으면 "자유" 멀티버스로 실행 — 그린필드 작업에 유용.
+
+**동시성:** POSIX에서 PIPE_BUF 미만 append는 원자적. 단일 에이전트의 순차
+append는 안전. 같은 insights 파일에 동시 쓰기 시 `flock` 또는 임시파일+`mv`.
+
+## Entanglement 모드 (v1.2)
+
+`/cosmos spawn`은 `--entanglement <mode>` 수용:
+
+- `none` — cosmos가 다른 cosmos 인사이트를 읽지 않음 (순수 독립)
+- `passive` *(기본)* — 매 주요 단계 사이 인사이트 읽음 (기존 동작)
+- `active` — 읽고 + 다른 cosmos 패턴 채택 시 `read_from: cosmos:<source>` 기록 필수 (추적성)
+
+진짜 통계적 독립이 필요하면 `none`, 감사 추적성이 중요하면 `active` 선택.
 
 ## Quantum Signals
 
@@ -54,7 +79,8 @@ QuantumAgent는 2-계층 구조를 따릅니다:
 
 ## Skills
 
-- `/cosmos spawn --goal "<목표>" --strategies "<s1,s2,s3>"` — cosmos 발진
-- `/cosmos observe` — 중첩 스냅샷 + 공명/불확실성 맵
+- `/cosmos spawn --goal "<목표>" --strategies "<s1,s2,s3>" [--entanglement <mode>]` — cosmos 발진
+- `/cosmos observe` — 중첩 스냅샷 + 공명/불확실성 맵 + 거시 컨텍스트
 - `/cosmos crystallize <id>` — 한 cosmos를 결과로 붕괴
 - `/cosmos stop` — 모든 워크트리/브랜치 제거
+- `/cosmos singularity --name "<이벤트>" --invalidates "<패턴>"` *(v1.2)* — 향후 모든 spawn 컨텍스트를 재구성하는 프로젝트 레벨 이벤트 선언

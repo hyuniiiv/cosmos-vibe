@@ -484,7 +484,7 @@ Final Answer:
 ### `/cosmos spawn`
 
 ```
-/cosmos spawn --goal "<goal>" --strategies "<s1,s2,...>"
+/cosmos spawn --goal "<goal>" --strategies "<s1,s2,...>" [--entanglement <mode>]
 ```
 
 Launches one cosmos per strategy. Names assigned alphabetically: `alpha`, `beta`,
@@ -494,6 +494,7 @@ Launches one cosmos per strategy. Names assigned alphabetically: `alpha`, `beta`
 - A dedicated branch `cosmos/<name>`
 - A quantum memory file `.quantum/<name>/insights.jsonl`
 - A `CLAUDE.md` with goal, strategy, entanglement rules, and quantum tag instructions
+- Auto-injected **project spin** and **active singularities** (if defined — see Macro-scale section)
 
 **Pauli Exclusion check:** Duplicate strategies are rejected immediately.
 
@@ -508,6 +509,15 @@ Agents run in parallel. When all finish, `/cosmos observe` runs automatically.
 |------|-------------|
 | `--goal` | The task every cosmos works toward |
 | `--strategies` | Comma-separated list — one cosmos per strategy |
+| `--entanglement` | `none` / `passive` *(default)* / `active` — see below |
+
+**Entanglement modes** *(new in v1.2)*:
+
+| Mode | Behavior | When to use |
+|------|---------|-------------|
+| `none` | Cosmos do NOT read other cosmos insights. Pure independent exploration. | When you want true independence — agentic A/B testing, statistical sampling |
+| `passive` *(default)* | Cosmos read other insights between major implementation steps. | Default — most architecture/implementation tasks |
+| `active` | Cosmos read AND must record `read_from: cosmos:<source>` when adopting another's pattern. | When traceability matters — security audit, compliance, debugging |
 
 ---
 
@@ -545,6 +555,99 @@ Other cosmos are unaffected. Superposition holds for remaining cosmos until `/co
 
 Removes all cosmos worktrees and branches. Offers to wipe `.quantum/`
 (insights are preserved by default — you may want them for retrospectives).
+
+---
+
+### `/cosmos singularity` *(new in v1.2)*
+
+```
+/cosmos singularity --name "<event>" --invalidates "<patterns>" [--trigger "<reason>"] [--description "<text>"]
+```
+
+Declares a **macro-scale event** that reshapes project context. Singularities are project-level events (migrations, paradigm shifts, compliance changes) that:
+
+- Are appended to `.quantum/singularities/events.jsonl` (append-only, audit-grade)
+- Are automatically loaded as context by every future `/cosmos spawn`
+- Mark a "current era" — patterns matching `invalidates` from before the singularity are treated as stale
+
+Example:
+
+```
+/cosmos singularity --name "auth-migration-v2" \
+  --trigger "compliance-2026-Q3" \
+  --invalidates "session-based-auth,pre-2026-cookie-policy" \
+  --description "All session-based auth retired. JWT-only going forward."
+```
+
+Output:
+
+```
+☄️  Singularity declared
+
+   Name:        auth-migration-v2
+   Timestamp:   2026-05-12T14:32:00Z
+   Trigger:     compliance-2026-Q3
+   Invalidates: session-based-auth, pre-2026-cookie-policy
+
+🌌 All future /cosmos spawn calls will inherit this singularity as macro context.
+   Insights matching invalidated patterns will be treated as pre-singularity (stale).
+```
+
+See [Multi-scale: the macro layer](#multi-scale-the-macro-layer) for the full mental model.
+
+---
+
+## Multi-scale: the macro layer *(new in v1.2)*
+
+QuantumAgent operates at three scales:
+
+```
+🌌 Cosmos scale  — /cosmos spawn (N parallel strategies)
+🌍 Project scale — /cosmos singularity + .quantum/project/spin.json  ← v1.2
+⚛️  Code scale    — (v2.0 roadmap)
+```
+
+The macro layer adds two files that every spawn reads automatically:
+
+### Project Spin — `.quantum/project/spin.json`
+
+The project's **immutable identity**. Optional but recommended for any project past prototyping.
+
+```json
+{
+  "name": "QuantumAgent",
+  "type": "claude-code-plugin",
+  "description": "Parallel cosmos exploration harness",
+  "immutable_constraints": [
+    "no external runtime dependencies",
+    "git-native control plane",
+    "claude code compatible"
+  ],
+  "established": "2026-05-11T00:00:00Z"
+}
+```
+
+When defined, every cosmos automatically inherits these as **invariant constraints** — a strategy that violates a spin constraint isn't exploring the goal, it's exploring a different problem.
+
+### Singularities — `.quantum/singularities/events.jsonl`
+
+**Project-level quantum events** — append-only log of phase transitions:
+
+```json
+{"name":"auth-migration-v2","ts":"2026-05-12T14:32:00Z","trigger":"compliance-2026-Q3","invalidates":["session-based-auth"],"description":"..."}
+{"name":"framework-upgrade-next15","ts":"2026-06-01T09:00:00Z","trigger":"performance","invalidates":["pages-router"],"description":"..."}
+```
+
+Each singularity:
+- Defines a **current era** — everything before the most recent singularity may be stale
+- Auto-injects into every future cosmos via spawn
+- Is **append-only** — audit-grade history, never edited
+
+### Why this matters in agentic environments
+
+Without macro context, every `/cosmos spawn` starts from the same baseline. An audit cosmos exploring authentication today would weigh 6-month-old insights about cookie-based sessions equally with current JWT-only practice. **Singularities establish temporal coherence across agentic runs** — cosmos know which era they're in without manual context-pasting.
+
+This is the General Relativity analog: constraints curve the solution space, and singularities mark phase transitions in that curvature.
 
 ---
 
@@ -1122,14 +1225,19 @@ dressed as a proper design.
 
 ```
 skills/
-  spawn/SKILL.md        — /cosmos spawn
-  observe/SKILL.md      — /cosmos observe
-  crystallize/SKILL.md  — /cosmos crystallize
-  stop/SKILL.md         — /cosmos stop
+  spawn/SKILL.md           — /cosmos spawn
+  observe/SKILL.md         — /cosmos observe
+  crystallize/SKILL.md     — /cosmos crystallize
+  stop/SKILL.md            — /cosmos stop
+  singularity/SKILL.md     — /cosmos singularity        (v1.2)
 .claude-plugin/
-  plugin.json           — plugin manifest
-cosmos/                 — runtime git worktrees (git-ignored)
-.quantum/               — runtime insight files (git-ignored)
+  plugin.json              — plugin manifest
+  marketplace.json         — marketplace registration
+cosmos/                    — runtime git worktrees (git-ignored)
+.quantum/                  — runtime quantum memory (git-ignored)
+  <name>/insights.jsonl    — per-cosmos insights (micro/universe scale)
+  project/spin.json        — project identity     (macro scale, v1.2)
+  singularities/events.jsonl — macro events       (macro scale, v1.2)
 ```
 
 ---

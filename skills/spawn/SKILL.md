@@ -34,6 +34,20 @@ Example: `--strategies "jwt,session,oauth2"` → alpha=jwt, beta=session, gamma=
    No two cosmos can occupy the same state. Each strategy must be distinct.
 ```
 
+**Entanglement mode:** Parse `--entanglement <mode>` if present. Capture as `<entanglement_mode>` for use in Steps 5 and 6. Allowed values:
+
+| Mode | Behavior |
+|------|---------|
+| `none` | Cosmos do NOT read other cosmos insights. Pure independent exploration. |
+| `passive` *(default)* | Cosmos read other insights between major implementation steps. Current behavior. |
+| `active` | Cosmos read AND must record `read_from: cosmos:<source>` when adopting another cosmos's pattern. |
+
+If `--entanglement` is omitted, default to `passive`. Reject unknown values:
+```
+❌ Unknown entanglement mode: "<mode>".
+   Allowed: none | passive (default) | active
+```
+
 ### Step 2 — Detect repo root
 
 Run:
@@ -42,6 +56,24 @@ git rev-parse --show-toplevel
 ```
 
 Store the output as `<repo_root>`. All absolute paths below use this.
+
+### Step 2.5 — Load macro-scale context (optional)
+
+**Project Spin** — read if exists:
+```bash
+[ -f <repo_root>/.quantum/project/spin.json ] && cat <repo_root>/.quantum/project/spin.json
+```
+
+If present, parse as JSON and capture: `name`, `type`, `description`, `immutable_constraints`. These define the project's quantum identity — every cosmos inherits them as invariant constraints. A strategy that violates a project spin constraint is not exploring the goal; it is exploring a different problem.
+
+**Active Singularities** — read if exists:
+```bash
+[ -f <repo_root>/.quantum/singularities/events.jsonl ] && cat <repo_root>/.quantum/singularities/events.jsonl
+```
+
+Parse each line as JSON: `{name, ts, trigger, invalidates, description}`. Sort by `ts` ascending. These are project-level events that reshape the solution space — patterns from before a singularity's `ts` may be stale. Cosmos must operate in the post-singularity era.
+
+If neither file exists: continue silently. Macro context is optional. A project without declared spin or singularities runs as a "free" multiverse with no inherited constraints — useful for greenfield exploration.
 
 ### Step 3 — Create quantum memory directories
 
@@ -80,6 +112,32 @@ For each cosmos `<name>` with strategy `<strategy>`, write the following to
 
 ## Strategy
 <strategy>
+
+## Project Spin (if spin.json defined)
+This project's immutable quantum identity — your strategy must operate within these:
+- **Name:** <name>
+- **Type:** <type>
+- **Description:** <description>
+- **Immutable constraints:**
+  - <constraint 1>
+  - <constraint 2>
+
+You cannot violate these. They are not optional tradeoffs. If your strategy requires violating a project spin constraint, you are exploring the wrong problem.
+
+## Active Singularities (if events.jsonl had any)
+The following project-level events have reshaped current context:
+- **<name>** (<ts>) — <description>
+  - Trigger: <trigger>
+  - Invalidates: <invalidates>
+
+Insights or patterns from before these singularities may be stale. Treat with caution. The "current era" is defined by the most recent singularity.
+
+## Entanglement Mode: <entanglement_mode>
+
+**Mode-specific behavior:**
+- `none` — You are in independent mode. Do NOT read other cosmos insight files. Pure parallel exploration without cross-influence. Skip the "Entanglement" subsection below.
+- `passive` *(default)* — Read other cosmos insights between major implementation steps. Adopt patterns through your own strategic lens. This is the standard quantum behavior.
+- `active` — Read other cosmos insights AND record citation in any derived insight. Whenever you adopt or react to another cosmos's finding, your insight MUST include `read_from: cosmos:<source>` and reference the originating ts. Used when traceability matters (security, compliance, debugging).
 
 ## Quantum Memory Rules
 
@@ -170,7 +228,9 @@ Use these tags sparingly — only when the condition genuinely applies.
 In a SINGLE response, make N Agent tool calls — one per cosmos. All run in
 true parallel. Do NOT await one before starting the next.
 
-For each cosmos `<name>` with strategy `<strategy>`, dispatch this prompt:
+Construct each dispatch prompt by composing four blocks based on `<entanglement_mode>`:
+
+**Block A — Preamble (always):**
 
 ```
 You are cosmos:<name> in a QuantumAgent multiverse exploration.
@@ -181,43 +241,84 @@ Working directory: <repo_root>/cosmos/<name>
 Goal: <goal>
 Your strategy: <strategy>
 
+<project_spin_summary>   (only if spin.json existed — 3-5 lines)
+<active_singularities>   (only if events.jsonl had any — list active events)
+
 ━━━ QUANTUM MEMORY — follow these rules throughout ━━━
 
 1. WRITE insights after every major step. Append to:
      <repo_root>/.quantum/<name>/insights.jsonl
-   
+
    One JSON line per insight:
-   {"content": "<insight>", "ts": "<ISO timestamp>"}
-   
+   {"type":"<type>","content":"<insight>","ts":"<ISO timestamp>"}
+
    Bash append only:
-   echo '{"content": "...", "ts": "2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
-
-2. READ all cosmos insights after each major step:
-     <repo_root>/.quantum/alpha/insights.jsonl   (skip if missing)
-     <repo_root>/.quantum/beta/insights.jsonl    (skip if missing)
-     <repo_root>/.quantum/gamma/insights.jsonl   (skip if missing)
-     <repo_root>/.quantum/delta/insights.jsonl   (skip if missing)
-     <repo_root>/.quantum/epsilon/insights.jsonl (skip if missing)
-   
-   Resonance: if multiple cosmos independently reach the same conclusion — trust it.
-   Spin/Decoherence: your strategy is your spin — immutable. You may adopt patterns from
-   other cosmos (entanglement), but wholesale copying loses your independence. Influence
-   without convergence.
-
-3. TAG quantum breakthrough insights:
-   [TUNNEL] — prefix your insight when you bypass a constraint you assumed was hard
-   [JUMP]   — prefix your insight when another cosmos's insight causes a discontinuous
-              architectural shift (not gradual — a sudden leap to a different solution level)
-
-━━━ Now implement the goal using your strategy. Work autonomously until complete.
-
-   BEFORE MARKING YOURSELF DONE — mandatory final entanglement read:
-   Read all cosmos insight files one last time (same paths as rule 2 above).
-   If any other cosmos recorded a bug fix, edge case, or security finding after
-   your last read, apply it to your implementation and write a final insight.
-   Only then stop.
-━━━
+   echo '{"type":"discovery","content":"...","ts":"2026-05-12T12:00:00Z"}' >> <repo_root>/.quantum/<name>/insights.jsonl
 ```
+
+**Block B — Rule 2, varies by `<entanglement_mode>`:**
+
+- **`none`** — emit:
+  ```
+  2. INDEPENDENT MODE: do NOT read other cosmos insight files.
+     This run uses pure parallel exploration — no cross-influence allowed.
+     Resonance/Uncertainty will be computed post-hoc by /cosmos observe.
+  ```
+
+- **`passive`** *(default)* — emit:
+  ```
+  2. READ all cosmos insights after each major step:
+       <repo_root>/.quantum/alpha/insights.jsonl   (skip if missing)
+       <repo_root>/.quantum/beta/insights.jsonl    (skip if missing)
+       <repo_root>/.quantum/gamma/insights.jsonl   (skip if missing)
+       <repo_root>/.quantum/delta/insights.jsonl   (skip if missing)
+       <repo_root>/.quantum/epsilon/insights.jsonl (skip if missing)
+
+     Resonance: if multiple cosmos independently reach the same conclusion — trust it.
+     Spin/Decoherence: your strategy is your spin — immutable. You may adopt patterns from
+     other cosmos (entanglement), but wholesale copying loses your independence. Influence
+     without convergence.
+  ```
+
+- **`active`** — emit the `passive` rule 2 plus:
+  ```
+     ACTIVE MODE ADDITION: whenever you adopt or react to another cosmos's insight,
+     your insight MUST include a `read_from` field citing the source:
+       {"type":"...","content":"...","read_from":"cosmos:beta@2026-05-12T10:31:00Z","ts":"..."}
+     This produces a traceable entanglement graph — required for security, compliance,
+     and debugging use cases.
+  ```
+
+**Block C — Rule 3 (always):**
+
+```
+3. TAG quantum breakthrough insights via the `type` field:
+   "tunnel" — you bypassed a constraint you assumed was hard
+              (NOT: serendipity. NOT: a clever optimization. Bypass of an *assumed requirement*.)
+   "jump"   — another cosmos's insight caused a *discontinuous* architectural shift
+              (NOT: gradual adaptation. A sudden leap to a qualitatively different solution.)
+              In active mode, `jump` insights MUST include `read_from`.
+```
+
+**Block D — Final closing, varies by mode:**
+
+- For **`none`** mode, emit:
+  ```
+  ━━━ Now implement the goal using your strategy. Work autonomously until complete.
+      No entanglement reads required (independent mode). ━━━
+  ```
+
+- For **`passive`** or **`active`** mode, emit:
+  ```
+  ━━━ Now implement the goal using your strategy. Work autonomously until complete.
+
+     BEFORE MARKING YOURSELF DONE — mandatory final entanglement read:
+     Read all cosmos insight files one last time (same paths as rule 2 above).
+     If any other cosmos recorded a bug fix, edge case, or security finding after
+     your last read, apply it to your implementation and write a final insight.
+     Only then stop.
+  ━━━
+  ```
 
 ### Step 7 — Report launch status
 
@@ -231,9 +332,14 @@ Immediately before dispatching agents, output:
   [gamma] cosmos/gamma  strategy: <strategy3>
 
 ⚛️  Quantum Memory: .quantum/
+🔗 Entanglement mode: <entanglement_mode>
+🌍 Project spin: <name>  (if loaded)
+☄️  Active singularities: <count>  (if any)
 
 Agents running. Superposition snapshot when complete.
 ```
+
+If spin.json or events.jsonl were missing, omit those lines silently.
 
 ### Step 8 — Auto-observe on completion
 

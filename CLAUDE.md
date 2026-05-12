@@ -31,7 +31,16 @@ file and run `git worktree` can participate.
 
 ## Quantum Memory
 
-- Location: `.quantum/` at repo root (excluded from git)
+QuantumAgent's quantum memory operates at three scales (v1.2+):
+
+```
+.quantum/
+  <name>/insights.jsonl        — cosmos scale (per-agent insights)
+  project/spin.json            — macro scale: project identity (v1.2)
+  singularities/events.jsonl   — macro scale: project-level events (v1.2)
+```
+
+**Cosmos scale (insights):**
 - Each cosmos writes ONLY to its own namespace: `.quantum/<name>/insights.jsonl`
 - All cosmos may READ all namespaces
 - Format: one JSON object per line:
@@ -40,10 +49,31 @@ file and run `git worktree` can participate.
   `tunnel`, `jump`, `resonance`, `complete`, `crystallize`
 - Legacy entries without `type` (or with `[TUNNEL]`/`[JUMP]` content
   prefixes) remain readable; treat missing `type` as `discovery`.
-- Concurrency: append is atomic on POSIX for sub-PIPE_BUF writes.
+
+**Macro scale (v1.2 — project spin + singularities):**
+- `project/spin.json` — optional, declares project's immutable identity.
+  Auto-injected into every cosmos's CLAUDE.md as invariant constraints.
+- `singularities/events.jsonl` — append-only log of project-level events
+  (migrations, paradigm shifts, compliance changes). Each spawn reads
+  this and treats pre-singularity insights matching `invalidates` patterns
+  as stale.
+- Both files are optional. A project without them runs as a "free"
+  multiverse with no inherited constraints — useful for greenfield work.
+
+**Concurrency:** append is atomic on POSIX for sub-PIPE_BUF writes.
   Sequential single-agent appends are safe. If you spawn sub-agents that
   may write to the SAME insights file concurrently, wrap appends with
   `flock` or write-then-rename.
+
+## Entanglement Modes (v1.2)
+
+`/cosmos spawn` accepts `--entanglement <mode>`:
+
+- `none` — cosmos do not read other cosmos insights (pure independent exploration)
+- `passive` *(default)* — cosmos read insights between major steps (current behavior)
+- `active` — cosmos read AND record `read_from: cosmos:<source>` when adopting another's pattern (traceability)
+
+The mode chosen for a run determines how strictly entanglement is enforced. `none` is appropriate when you want true statistical independence; `active` is appropriate when audit traceability matters.
 
 ## Quantum Signals
 
@@ -57,7 +87,8 @@ file and run `git worktree` can participate.
 
 ## Skills
 
-- `/cosmos spawn --goal "<goal>" --strategies "<s1,s2,s3>"` — launch cosmos
-- `/cosmos observe` — superposition snapshot + resonance/uncertainty map
+- `/cosmos spawn --goal "<goal>" --strategies "<s1,s2,s3>" [--entanglement <mode>]` — launch cosmos
+- `/cosmos observe` — superposition snapshot + resonance/uncertainty map + macro context
 - `/cosmos crystallize <id>` — collapse one cosmos into a result
 - `/cosmos stop` — remove all worktrees and branches
+- `/cosmos singularity --name "<event>" --invalidates "<patterns>"` *(v1.2)* — declare a project-level event that reshapes context for all future spawns

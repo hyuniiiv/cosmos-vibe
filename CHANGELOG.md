@@ -6,6 +6,77 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [1.2.0] — 2026-05-12
+
+### Added — multi-scale macro layer
+
+QuantumAgent now operates at three scales: cosmos (parallel agents),
+**macro (project + singularities)** *(new)*, and code (v2.0 roadmap).
+
+- **`.quantum/project/spin.json`** — optional project identity file.
+  Declares the project's `name`, `type`, `description`, and
+  `immutable_constraints`. Auto-injected into every cosmos's CLAUDE.md as
+  invariant constraints. A strategy that violates a spin constraint is
+  not exploring the goal; it is exploring a different problem.
+- **`.quantum/singularities/events.jsonl`** — append-only log of
+  project-level quantum events (migrations, paradigm shifts, compliance
+  changes). Each entry has `name`, `ts`, `trigger`, `invalidates[]`,
+  `description`. Every `/cosmos spawn` reads this file and treats
+  pre-singularity insights matching `invalidates` patterns as stale.
+- **`/cosmos singularity`** — new skill. Declares a singularity event.
+  Trigger: `/cosmos singularity --name "<event>" --invalidates "<patterns>"
+  [--trigger "<reason>"] [--description "<text>"]`. Appends to
+  `events.jsonl` with ISO 8601 timestamp. Warns if active cosmos exist
+  (singularities apply to future spawns, not running cosmos).
+
+### Added — entanglement modes
+
+`/cosmos spawn` now accepts `--entanglement <mode>` with three values:
+
+- `none` — cosmos do not read other cosmos insights. Pure independent
+  exploration. Use for true statistical independence (agentic A/B testing,
+  sampling). The dispatch prompt's rule 2 (READ all cosmos insights)
+  becomes "Do NOT read other cosmos insight files."
+- `passive` *(default)* — cosmos read other insights between major
+  implementation steps. Current behavior preserved.
+- `active` — cosmos read AND record `read_from: cosmos:<source>` when
+  adopting another cosmos's pattern. Produces a traceable entanglement
+  graph for security, compliance, and debugging use cases.
+
+Default is `passive` — existing usage continues unchanged.
+
+### Changed
+
+- `skills/spawn/SKILL.md` — added Step 2.5 to load macro context
+  (spin.json + events.jsonl) before creating worktrees. CLAUDE.md
+  template now includes Project Spin, Active Singularities, and
+  Entanglement Mode sections. Step 6 dispatch prompt composed from
+  blocks (A: preamble, B: rule 2 by mode, C: rule 3, D: closing).
+  Step 7 launch report shows entanglement mode and macro context if loaded.
+- `skills/observe/SKILL.md` — added Step 2 to load macro context.
+  Output template includes Project Spin and Active Singularities sections
+  when macro files exist.
+- `CLAUDE.md` / `COSMOS.md` — updated Quantum Memory section to document
+  three scales. Added Entanglement Modes section. Skills list now
+  includes `/cosmos singularity`.
+- `.claude-plugin/plugin.json` — version 1.2.0; description and keywords
+  updated to reflect multi-scale architecture.
+- `.claude-plugin/marketplace.json` — version 1.2.0; plugin description
+  and tags updated.
+- `README.md` / `README.ko.md` — added Multi-scale macro layer section
+  documenting spin.json, events.jsonl, and the agentic-context rationale.
+  Commands section updated with `/cosmos singularity` and entanglement
+  modes. Repository layout reflects new directories.
+
+### Backward compatibility
+
+All v1.2 additions are optional and backward-compatible:
+
+- Projects without `spin.json` or `events.jsonl` run as before.
+- Spawn without `--entanglement` defaults to `passive` = pre-1.2 behavior.
+- Existing `.quantum/<name>/insights.jsonl` schemas unchanged.
+- Existing cosmos workflows (spawn/observe/crystallize/stop) work identically.
+
 ## [1.1.0] — 2026-05-12
 
 ### Added — first real cosmos run in `examples/`

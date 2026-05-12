@@ -24,7 +24,25 @@ git rev-parse --show-toplevel
 
 Store as `<repo_root>`.
 
-### Step 2 — Read all insights
+### Step 2 — Read macro-scale context (optional)
+
+**Project Spin** — read if exists:
+```bash
+[ -f <repo_root>/.quantum/project/spin.json ] && cat <repo_root>/.quantum/project/spin.json
+```
+
+Capture: `name`, `type`, `description`, `immutable_constraints`.
+
+**Active Singularities** — read if exists:
+```bash
+[ -f <repo_root>/.quantum/singularities/events.jsonl ] && cat <repo_root>/.quantum/singularities/events.jsonl
+```
+
+Parse each line. The most recent singularity (by `ts`) defines the current era. Earlier singularities are historical context.
+
+If neither exists: skip silently. Continue to insight reading.
+
+### Step 2.5 — Read all insights
 
 Read every file matching `<repo_root>/.quantum/*/insights.jsonl`.
 
@@ -94,6 +112,26 @@ it came from.
 that addresses them). Surface these — they need developer attention.
 
 ### Step 5 — Output quantum map
+
+**Macro context block (only if Step 2 loaded any):**
+
+```
+🌍 Project Spin — <name> (<type>)
+   <description>
+   Immutable constraints:
+     • <constraint 1>
+     • <constraint 2>
+
+☄️  Active Singularities — <count> event(s):
+   <ts>  <name>: <description>
+                  Invalidates: <invalidates>
+   <ts>  <name>: <description>
+                  Invalidates: <invalidates>
+
+   Current era: post-<most-recent-singularity-name> (since <ts>)
+```
+
+Then the standard quantum map:
 
 ```
 ⚡ Resonance — trust these (all strategies converged):
