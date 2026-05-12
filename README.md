@@ -734,6 +734,49 @@ This is the General Relativity analog: constraints curve the solution space, and
 
 ---
 
+## Micro scale — `/cosmos scan` *(new in v4.0)*
+
+The third and final scale of QuantumAgent's multi-scale architecture: **code-level quantum phenomena**. While `/cosmos spawn` operates at the cosmos scale (parallel implementations) and `/cosmos singularity` at the project scale (macro events), `/cosmos scan` operates at the function/file/symbol scale.
+
+```bash
+/cosmos scan [--paths "src/,lib/"] [--languages "ts,py"] [--include-tests] [--git-churn-threshold 50]
+```
+
+Four detection types:
+
+| Type | Quantum analog | What it detects |
+|------|---------------|----------------|
+| **`code-tunnel`** | Particle bypasses classically-forbidden barrier | Type-system bypass: `as unknown as`, `@ts-ignore`, `# type: ignore`, `eval`, dynamic property assignment, `unsafe`, `transmute` |
+| **`code-decoherence`** | Phase information lost to environment | Source file with no corresponding test — state never "observed" via tests |
+| **`code-superposition`** | System exists in multiple states simultaneously | Feature flags + A/B branches: code runs in multiple states selected by environment |
+| **`code-jump`** *(optional)* | Discontinuous energy-level transition | High recent git churn — file recently restructured beyond a threshold |
+
+Findings append to `.quantum/code/findings.jsonl`:
+
+```json
+{"type":"code-tunnel","subtype":"as-unknown-as","file":"src/auth.ts","line":42,"evidence":"as unknown as User","ts":"..."}
+{"type":"code-decoherence","file":"src/payment.ts","reason":"no test file found","ts":"..."}
+{"type":"code-superposition","subtype":"env-feature-flag","file":"src/router.ts","line":15,"evidence":"if (process.env.FEATURE_NEW_UI)","ts":"..."}
+{"type":"code-jump","file":"src/store.ts","churn_lines":230,"window":"last-10-commits","ts":"..."}
+```
+
+`/cosmos observe` (v4.0+) automatically surfaces these in a new code-scale section, including **cross-scale signals** — when a cosmos modified a file that has a code-scale finding, that's a candidate for crystallize review.
+
+The Python `from_cosmos()` interop (v3.3+) now also exposes `CosmosRun.code_findings` and `code_summary()` — all four scales accessible as Python data in one call.
+
+### 4-scale architecture — the original vision complete
+
+```
+🌌 Cosmos scale   (v1.x) — /cosmos spawn — N parallel implementations
+🌍 Project scale  (v1.2) — /cosmos spin + /cosmos singularity — macro context
+⚛️  Code scale    (v4.0) — /cosmos scan — function/file/symbol quantum state
+🧮 Math layer     (v3.x) — Python primitives — canonical quantum mechanics
+```
+
+The Layer 1 (CLI) × 4 scales matrix is now complete. Layer 2 (YAML DSL) and Layer 3 (Python primitives) extend across the scales additively.
+
+---
+
 ## Declarative experiments — the YAML DSL *(new in v2.0)*
 
 QuantumAgent v2.0 adds a **declarative layer** on top of the CLI. Experiments become YAML files — version-controlled, reviewable, re-executable.
@@ -1524,6 +1567,7 @@ skills/                                          # Layer 1 — CLI (Claude Code 
   singularity/SKILL.md     — /cosmos singularity        (v1.2)
   spin/SKILL.md            — /cosmos spin               (v1.3)
   run/SKILL.md             — /cosmos run                (v2.0)
+  scan/SKILL.md            — /cosmos scan               (v4.0, micro scale)
 experiments/                                     # Layer 2 — YAML DSL  (v2.0)
   _template.qa.yaml        — annotated schema template
   *.example.qa.yaml        — runnable examples
@@ -1537,9 +1581,10 @@ python/                                          # Layer 3 — Python primitives
   marketplace.json         — marketplace registration
 cosmos/                    — runtime git worktrees (git-ignored)
 .quantum/                  — runtime quantum memory (git-ignored)
-  <name>/insights.jsonl    — per-cosmos insights (micro/universe scale)
+  <name>/insights.jsonl    — per-cosmos insights (cosmos scale)
   project/spin.json        — project identity     (macro scale, v1.2)
   singularities/events.jsonl — macro events       (macro scale, v1.2)
+  code/findings.jsonl      — code-level findings  (micro scale, v4.0)
 ```
 
 ---

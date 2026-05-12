@@ -5,8 +5,8 @@
     "url": "https://github.com/hyuniiiv"
   },
   "metadata": {
-    "description": "QuantumAgent marketplace — three-layer quantum exploration architecture for Claude Code",
-    "version": "3.3.0"
+    "description": "QuantumAgent marketplace — 4-scale quantum architecture for Claude Code",
+    "version": "4.0.0"
   },
   "plugins": [
     {
@@ -15,10 +15,10 @@
         "source": "github",
         "repo": "hyuniiiv/quantum-agent"
       },
-      "description": "Three-layer architecture for quantum-inspired AI exploration: CLI, YAML DSL, and Python primitives. v3.3 adds cosmos-level model diversity (--models flag, per-cosmos model in YAML) for asymmetric token economics + blind-spot mitigation, plus from_cosmos() Layer-1↔3 interop. v3.2 ships canonical quantum mechanics (CHSH, gates, density matrices, decoherence). Multi-scale macro layer with project spin + singularities. Four entanglement modes including verifiable heartbeat protocol.",
-      "version": "3.3.0",
+      "description": "4-scale quantum architecture for AI-assisted development. v4.0 completes the original vision by adding the micro (code) scale: /cosmos scan detects code-tunnel (type-system bypasses), code-decoherence (untested files), code-superposition (feature flags), code-jump (high churn). Plus the existing cosmos scale (CLI + YAML DSL), project scale (spin + singularities), and Python primitives layer with canonical quantum mechanics (CHSH, gates, density matrices, decoherence).",
+      "version": "4.0.0",
       "category": "agents",
-      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference", "chsh", "quantum-gates", "density-matrix", "decoherence", "interop", "model-diversity"],
+      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference", "chsh", "quantum-gates", "density-matrix", "decoherence", "interop", "model-diversity", "scan", "code-scale", "static-analysis"],
       "author": {
         "name": "hyuniiiv",
         "url": "https://github.com/hyuniiiv"

@@ -34,7 +34,7 @@ from .core import Wavefunction
 
 @dataclass
 class CosmosRun:
-    """A snapshot of a cosmos run read from disk.
+    """A snapshot of a cosmos run read from disk — all four scales.
 
     Attributes:
         names: cosmos names (e.g., ["alpha", "beta", "gamma"])
@@ -52,6 +52,10 @@ class CosmosRun:
             but not others.
         spin: project spin dict if ``.quantum/project/spin.json`` exists.
         singularities: list of singularity events if present.
+        code_findings: list of code-level quantum findings (v4.0+) from
+            ``.quantum/code/findings.jsonl``. Each entry is a parsed JSON
+            dict with at least ``type`` (one of ``code-tunnel``,
+            ``code-decoherence``, ``code-superposition``, ``code-jump``).
     """
 
     names: List[str]
@@ -61,6 +65,16 @@ class CosmosRun:
     uncertainty: List[str] = field(default_factory=list)
     spin: Optional[dict] = None
     singularities: List[dict] = field(default_factory=list)
+    code_findings: List[dict] = field(default_factory=list)
+
+    def code_summary(self) -> Dict[str, int]:
+        """Count code-scale findings by type. Returns dict like
+        ``{"code-tunnel": 12, "code-decoherence": 5, ...}``."""
+        out: Dict[str, int] = {}
+        for f in self.code_findings:
+            t = f.get("type", "unknown")
+            out[t] = out.get(t, 0) + 1
+        return out
 
     def __repr__(self) -> str:
         bits = [f"<CosmosRun {len(self.names)} cosmos: {', '.join(self.names)}"]
@@ -70,6 +84,8 @@ class CosmosRun:
             bits.append(f"singularities={len(self.singularities)}")
         bits.append(f"resonance={len(self.resonance)}")
         bits.append(f"uncertainty={len(self.uncertainty)}")
+        if self.code_findings:
+            bits.append(f"code-findings={len(self.code_findings)}")
         return " | ".join(bits) + ">"
 
 
@@ -149,6 +165,12 @@ def from_cosmos(
     if os.path.isfile(sing_path):
         singularities = _read_jsonl(sing_path)
 
+    # Code-scale findings (v4.0+)
+    code_findings: List[dict] = []
+    code_path = os.path.join(quantum_dir, "code", "findings.jsonl")
+    if os.path.isfile(code_path):
+        code_findings = _read_jsonl(code_path)
+
     # Heuristic resonance/uncertainty (token overlap)
     resonance, uncertainty = _compute_overlap_signals(names, insights)
 
@@ -160,6 +182,7 @@ def from_cosmos(
         uncertainty=uncertainty,
         spin=spin,
         singularities=singularities,
+        code_findings=code_findings,
     )
 
 

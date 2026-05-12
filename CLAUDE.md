@@ -105,6 +105,7 @@ All three layers share concepts (ψ, entanglement, observe vs measure, constrain
 - `/cosmos singularity --name "<event>" --invalidates "<patterns>"` *(v1.2)* — declare a project-level event that reshapes context for all future spawns
 - `/cosmos spin --name "<name>" [--type "<type>"] [--constraints "<c1,c2,c3>"]` *(v1.3)* — declare or update the project's immutable identity; auto-injected into every future spawn
 - `/cosmos run <path-to-yaml>` *(v2.0)* — execute a declarative quantum experiment defined in YAML; orchestrates spin + singularities + spawn in one command for reproducible CI/CD-grade runs
+- `/cosmos scan [--paths "..."] [--languages "..."] [--git-churn-threshold N]` *(v4.0)* — scan codebase for code-level quantum phenomena (type-system bypasses = tunnel, untested files = decoherence, feature flags = superposition, high churn = jump). Writes to `.quantum/code/findings.jsonl`. The micro scale.
 
 ## Python primitives (Layer 3, v3.0)
 

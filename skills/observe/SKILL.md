@@ -42,6 +42,21 @@ Parse each line. The most recent singularity (by `ts`) defines the current era. 
 
 If neither exists: skip silently. Continue to insight reading.
 
+**Code-scale findings (v4.0+)** — read if exists:
+```bash
+[ -f <repo_root>/.quantum/code/findings.jsonl ] && cat <repo_root>/.quantum/code/findings.jsonl
+```
+
+Parse each line. Schemas vary by `type` field:
+- `code-tunnel` — type-system bypass at (file, line)
+- `code-decoherence` — untested source file
+- `code-superposition` — feature flag / A/B branch
+- `code-jump` — high recent git churn
+
+Take the most recent scan's findings (group by closest timestamp cluster, or just the latest 200 lines if many). Earlier scans are historical.
+
+If file doesn't exist: skip silently. Continue to insight reading.
+
 ### Step 2.5 — Read all insights
 
 Read every file matching `<repo_root>/.quantum/*/insights.jsonl`.
@@ -146,6 +161,26 @@ For non-strict runs (none/passive/active), heartbeat audit is skipped. Optionall
                   Invalidates: <invalidates>
 
    Current era: post-<most-recent-singularity-name> (since <ts>)
+```
+
+**Code-scale block (v4.0, only if .quantum/code/findings.jsonl had any):**
+
+```
+⚛️  Code-scale findings (last scan):
+   Tunnels:        <N>  type-system bypasses
+   Decoherence:    <N>  source files without tests
+   Superposition:  <N>  feature flags / A/B branches
+   Jumps:          <N>  high-churn files  (if --git-churn-threshold was used)
+
+   Top tunnel hotspots (file:line — subtype):
+     <file>:<line>  <subtype>  "<evidence>"
+     <file>:<line>  <subtype>  "<evidence>"
+
+   Top decoherent files:
+     <file>  (no test found)
+
+   Cross-scale signal: (only if cosmos modified these files)
+     cosmos:<name> touched <file> which has code-tunnel — review at next crystallize
 ```
 
 Then the standard quantum map:
