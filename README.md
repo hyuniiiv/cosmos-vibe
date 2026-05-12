@@ -1,6 +1,8 @@
-# 🌌 Cosmos Vibe
+# 🌌 QuantumAgent
 
 > Before you commit to one approach, explore three in parallel.
+>
+> *Parallel cosmos exploration harness for Claude Code.*
 
 A Claude Code plugin that runs multiple AI agents simultaneously — each tackling
 the same goal with a different strategy. Agents share discoveries in real time
@@ -36,7 +38,7 @@ been cleaner.
 The problem isn't Claude — it's that a single agent exploring a single path cannot
 tell you what it didn't explore.
 
-**Cosmos Vibe runs the exploration before you commit.** Not as a theoretical
+**QuantumAgent runs the exploration before you commit.** Not as a theoretical
 comparison — as actual working implementations that discover real issues in real code.
 
 ---
@@ -84,9 +86,14 @@ influence without convergence.
 
 ## Install
 
-```bash
-claude plugins install https://github.com/hyuniiiv/cosmos-vibe
+QuantumAgent ships as a self-marketplace Claude Code plugin. Inside Claude Code:
+
 ```
+/plugin marketplace add hyuniiiv/quantum-agent
+/plugin install quantum-agent@quantum-agent
+```
+
+After install, the `/cosmos` slash commands are available immediately.
 
 No Python. No vector database. No subprocess. Pure markdown skills.
 Quantum Memory is plain JSON Lines files on disk.
@@ -213,7 +220,7 @@ Agents running. Superposition snapshot when complete.
 
 **The critical catch:** cosmos:gamma discovered that the standard dummy-hash anti-enumeration pattern was *silently broken* — a malformed literal string caused bcrypt to throw immediately in under 1ms, completely defeating the timing protection. This is the class of bug that shows up in security audits eighteen months after shipping. All three cosmos had the same vulnerable pattern; gamma caught it during smoke testing.
 
-Without Cosmos Vibe: three separate implementations, each written once, none cross-reviewed. The bug ships.
+Without QuantumAgent: three separate implementations, each written once, none cross-reviewed. The bug ships.
 
 ### Crystallize
 
@@ -601,7 +608,7 @@ Rules:
 
 ---
 
-## When to use Cosmos Vibe
+## When to use QuantumAgent
 
 ### High-value fit
 
@@ -822,7 +829,7 @@ exactly which decisions are robust and which are genuine tradeoffs.
 **Path Integral + Quantum Annealing**
 
 Feynman's path integral says a particle simultaneously takes every possible path.
-Cosmos Vibe runs every strategy simultaneously. The "most probable path" — the
+QuantumAgent runs every strategy simultaneously. The "most probable path" — the
 one that survives interference — is your Resonance output. Quantum annealing adds
 the optimization dimension: sequential decision-making gets trapped in local optima.
 Parallel cosmos escape them by exploring the full solution space at once.

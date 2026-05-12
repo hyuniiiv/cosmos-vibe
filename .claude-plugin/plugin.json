@@ -1,6 +1,6 @@
 {
-  "name": "cosmos-vibe",
-  "description": "Multiverse AI harness: parallel agents that observe and entangle",
+  "name": "quantum-agent",
+  "description": "QuantumAgent — parallel cosmos exploration harness: agents that observe and entangle",
   "version": "1.0.0",
-  "keywords": ["multiverse", "parallel-agents", "entanglement", "exploration"]
+  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse"]
 }

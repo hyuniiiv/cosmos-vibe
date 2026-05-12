@@ -1,6 +1,6 @@
-# COSMOS.md — Cosmos Vibe Harness Constitution
+# COSMOS.md — QuantumAgent Harness Constitution
 
-This repository is managed as a Cosmos Vibe multiverse harness.
+This repository is managed as a QuantumAgent multiverse harness (parallel cosmos exploration).
 
 ## Cosmos Rules
 

@@ -143,7 +143,7 @@ true parallel. Do NOT await one before starting the next.
 For each cosmos `<name>` with strategy `<strategy>`, dispatch this prompt:
 
 ```
-You are cosmos:<name> in a Cosmos Vibe multiverse exploration.
+You are cosmos:<name> in a QuantumAgent multiverse exploration.
 
 Working directory: <repo_root>/cosmos/<name>
 (This is a git worktree of the main repo.)

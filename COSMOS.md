@@ -1,8 +1,8 @@
-# COSMOS.md — Cosmos Vibe 하네스 헌법
+# COSMOS.md — QuantumAgent 하네스 헌법
 
 ## 이 프로젝트에서의 규칙
 
-이 저장소는 Cosmos Vibe 멀티유니버스 하네스로 관리됩니다.
+이 저장소는 QuantumAgent 멀티유니버스 하네스(평행 cosmos 탐색)로 관리됩니다.
 
 ## Universe 규칙
 - 각 Universe는 `universes/<name>/` 워크트리에서 독립적으로 실행됩니다
