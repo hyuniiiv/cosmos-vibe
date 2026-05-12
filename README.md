@@ -99,6 +99,25 @@ After install, the `/cosmos` slash commands are available immediately.
 No Python. No vector database. No subprocess. Pure markdown skills.
 Quantum Memory is plain JSON Lines files on disk.
 
+### Use in other AI agents
+
+QuantumAgent's core is platform-neutral markdown + bash. It runs in **10+ environments** beyond Claude Code:
+
+| Environment | Mechanism |
+|---|---|
+| Claude Code | Native plugin (above) |
+| Cursor | `.cursor/rules/cosmos.mdc` |
+| Windsurf | `.windsurfrules` |
+| Cline / Roo Code | Custom Instructions or MCP |
+| Continue.dev | `config.json` system message |
+| Aider | `CONVENTIONS.md` via `--read` |
+| OpenAI Codex CLI | `--prompt-file` |
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Zed AI | Assistant custom prompt |
+| Claude Desktop / claude.ai | MCP server *(planned)* |
+
+The same `.quantum/` memory works across agents — spawn in Cursor, observe in Claude Code, crystallize in Aider. See **[INTEGRATIONS.md](INTEGRATIONS.md)** for per-platform setup and the universal **[`bundle/cosmos-instructions.md`](bundle/cosmos-instructions.md)** drop-in file.
+
 ### Troubleshooting
 
 **`git@github.com: Permission denied (publickey)` during install**
