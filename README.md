@@ -199,6 +199,10 @@ branches**, preserved for reference or follow-up crystallization.
 | ⚡ **Quantum Jump** (`type: "jump"`) | A single entanglement read caused a discontinuous shift | Non-obvious architectural leap |
 | 🧊 **Bose-Einstein Condensate** | Zero uncertainty + ≥3 resonant decisions + all cosmos participated | The goal was deterministic — ship any cosmos |
 
+### 5. See a real run
+
+Real cosmos run outputs (spawn command + raw `.quantum/*.jsonl` + observe + crystallize) are collected in [`examples/`](examples/). We deliberately don't ship fabricated examples — the directory ships empty until contributors add real runs. If you've done a meaningful cosmos run, [contribute it](examples/README.md#contributing-a-run).
+
 ---
 
 ## Install

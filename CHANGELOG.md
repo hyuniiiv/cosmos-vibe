@@ -6,6 +6,28 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+### Added — examples scaffold for real cosmos runs
+- New `examples/` directory with index `examples/README.md` documenting
+  the contribution path for real cosmos run artifacts.
+- `examples/_template/` with placeholder files (`README.md`,
+  `spawn-command.md`, `insights/{alpha,beta,gamma}.jsonl`,
+  `observe-snapshot.md`, `crystallize-report.md`) so contributors can
+  fork the template and fill in their real run output without writing
+  scaffolding.
+- Both `README.md` and `README.ko.md` now point to `examples/` and
+  explicitly state we don't ship fabricated examples — real
+  contributions only.
+
+### Updated — README.ko parity pass
+- Synced Korean README to match English. Now contains:
+  - "Architecture — Git-Native Orchestration" section
+  - "🔭 Cosmos 실행 시각화" section with the same three Mermaid diagrams,
+    the observe-output sample (translated to Korean), and the quantum
+    signals reference table
+  - Updated install command (`/plugin install cosmos@quantum-agent`)
+  - 17-environment compatibility matrix
+  - "두 가지 수렴 표준" framing (agentskills.io + single-file convention)
+
 ### Added — visualization in README
 - New "🔭 Visualizing a cosmos run" section in README.md with three
   Mermaid diagrams (spawn / observe / crystallize) and a quantum-signal
