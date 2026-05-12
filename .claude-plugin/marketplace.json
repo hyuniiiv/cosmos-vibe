@@ -11,7 +11,10 @@
   "plugins": [
     {
       "name": "quantum-agent",
-      "source": ".",
+      "source": {
+        "source": "github",
+        "repo": "hyuniiiv/quantum-agent"
+      },
       "description": "Run multiple AI agents in parallel — each tackles the same goal with a different strategy, sharing discoveries through Quantum Memory.",
       "version": "1.0.0",
       "category": "agents",
