@@ -12,6 +12,10 @@ All notable changes to QuantumAgent are documented here. Format follows
 - **Crush** (Charm) integration via `AGENTS.md` / `CRUSH.md`.
 - **OpenHands** (formerly OpenDevin) integration via `.openhands/microagents/cosmos.md`.
 - **Goose** (Block) integration via `.goosehints`.
+- **OpenClaw** integration — uses AgentSkills-compatible SKILL.md format
+  identical to QuantumAgent's own. Install path is a direct copy of
+  `skills/*` into `~/.openclaw/skills/` (or `<workspace>/skills/` for
+  workspace scope). No bundle/curl needed; the existing files work as-is.
 - **Generic AGENTS.md** section — one-line install for any agent following
   the de-facto `AGENTS.md` repo convention. README and INTEGRATIONS.md
   compatibility matrices updated.

@@ -35,6 +35,7 @@ No Claude-specific APIs. No proprietary runtime. Any agent that can:
 | **Crush** (Charm) | `AGENTS.md` / `CRUSH.md` | Natural language |
 | **OpenHands** | Microagent file in `.openhands/microagents/` | Natural language |
 | **Goose** (Block) | Goose hints file / profile | Natural language |
+| **OpenClaw** | Drop `skills/` into `~/.openclaw/skills/` (AgentSkills-compatible) | "run cosmos spawn ..." |
 | **Any AGENTS.md-aware agent** | `AGENTS.md` in repo root | Natural language |
 
 Every entry is the same workflow — paste `bundle/cosmos-instructions.md` (or a curl-fetched copy) into the agent's instructions surface. No code, no install step, no dependencies.
@@ -163,6 +164,30 @@ curl -L https://raw.githubusercontent.com/hyuniiiv/quantum-agent/master/bundle/c
 ```
 
 Then in OpenHands: "spawn parallel cosmos for X with strategies Y, Z".
+
+### OpenClaw
+
+OpenClaw uses the **AgentSkills-compatible** SKILL.md format — the same convention QuantumAgent already follows. Install our skills directly:
+
+```bash
+git clone https://github.com/hyuniiiv/quantum-agent /tmp/quantum-agent
+mkdir -p ~/.openclaw/skills
+cp -r /tmp/quantum-agent/skills/spawn       ~/.openclaw/skills/cosmos-spawn
+cp -r /tmp/quantum-agent/skills/observe     ~/.openclaw/skills/cosmos-observe
+cp -r /tmp/quantum-agent/skills/crystallize ~/.openclaw/skills/cosmos-crystallize
+cp -r /tmp/quantum-agent/skills/stop        ~/.openclaw/skills/cosmos-stop
+```
+
+Or workspace-scoped (highest precedence — overrides managed/bundled skills in that workspace):
+
+```bash
+mkdir -p <workspace>/skills
+cp -r /tmp/quantum-agent/skills/* <workspace>/skills/
+```
+
+OpenClaw picks them up automatically. Trigger via any connected messaging channel: "run cosmos spawn for X with strategies Y, Z, W".
+
+> Per OpenClaw docs (`docs.openclaw.ai/skills`): each skill needs its own directory containing `SKILL.md` with `name` + `description` in YAML frontmatter — exactly what our `skills/*/SKILL.md` already provides.
 
 ### Goose (Block)
 
