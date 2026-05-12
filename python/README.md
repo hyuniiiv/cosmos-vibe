@@ -136,29 +136,64 @@ QuantumAgent makes the distinction first-class:
 
 This matters when LLM agents are expensive: you want to look at the state, *think about* what to do, and then decide — without paying the cost of every intermediate "check" forcing a fresh decision.
 
-### Why probability distributions (not complex amplitudes) — for now
+### Two modes — classical and quantum *(quantum: Path B, v3.1+)*
 
-This MVP uses real-valued probability weights. Measurement is Born-rule-flavored: sample proportional to weight. Constraints adjust weights additively/multiplicatively.
+The library auto-detects which mode you want from the constructor arguments to `psi()`:
 
-**True quantum amplitudes** (complex numbers with phase, capable of interference) are reserved for **Path B** — a future release. The API is designed to be forward-compatible: `psi(states, weights)` will become `psi(states, amplitudes, quantum=True)` when Path B lands, and existing code will continue to work in classical-probability mode.
+| Mode | Constructor | Math |
+|------|------------|------|
+| **Classical** *(default)* | `psi(states, weights=[...])` or `psi(states)` | Real probability weights, normalized so Σ = 1 |
+| **Quantum** *(v3.1+)* | `psi(states, amplitudes=[...])` | Complex amplitudes, normalized so Σ\|c\|² = 1 |
 
-Why defer? Complex amplitudes require:
-- A Hilbert space implementation (not just a probability simplex)
-- Hermitian operators for constraints (linear algebra)
-- True interference patterns between entangled wavefunctions
-- Bell-test demonstrations to prove the quantum behavior
+In quantum mode:
+- **True Born rule**: `P(i) = |amplitude_i|²`
+- **Phase is preserved** — amplitudes have direction in the complex plane
+- **Interference is real** — combining wavefunctions via `superpose()` adds amplitudes (not probabilities), producing constructive or destructive patterns
+- **Entanglement via `bell_state()`** — maximally-entangled 2-qubit states for genuine quantum correlations
 
-That's a substantial separate effort. The classical-probability MVP delivers most of the value (observe/measure distinction, entanglement, constraint curvature) and is shipping today.
+```python
+from quantumagent import psi, superpose, bell_state, observe, measure
+
+# Two equal sources, OPPOSITE phase — classical impossible
+slit_a = psi(["screen-A", "screen-B"], amplitudes=[1,  1])   # |+⟩
+slit_b = psi(["screen-A", "screen-B"], amplitudes=[1, -1])   # |-⟩
+mixed = superpose(slit_a, slit_b)
+print(observe(mixed))    # → {'screen-A': 1.0, 'screen-B': 0.0}
+                         # DESTRUCTIVE INTERFERENCE — classical theory cannot
+                         # produce 100/0 from two 50/50 sources.
+
+# Bell state — maximally entangled
+bell = bell_state("phi+")          # (|00⟩ + |11⟩) / √2
+outcomes = [measure(bell_state("phi+"), seed=i) for i in range(1000)]
+# Every outcome is ('0','0') or ('1','1'). Never mixed.
+# Each qubit alone is 50/50; the PAIR is 100% correlated.
+```
+
+Run `examples/04_quantum_interference.py` and `examples/05_bell_state.py` to see this in action.
+
+### What's NOT yet in quantum mode (roadmap)
+
+- **Hermitian operators as constraints**: `constraint(...) @ psi` raises `NotImplementedError` for quantum wavefunctions. Adjusting weights bypasses phase; true quantum constraints need Hermitian operators on the amplitude space. v3.2 target.
+- **CHSH/Bell inequality test**: measurement in arbitrary bases (rotation operators) needed. v3.2 target. The current `bell_state` family lets you observe perfect correlation in the computational basis — distinguishing the four Bell states statistically requires multiple-basis measurement.
+- **Unitary evolution operators**: time evolution, gate composition. Path B Phase 2.
+- **Density matrices / decoherence**: mixed states, environmental coupling model. Path B Phase 3.
+
+Classical mode remains the default and is unchanged from v3.0. Quantum mode is opt-in via `amplitudes=`.
 
 ---
 
 ## Examples
 
-Three runnable examples in `examples/`:
+Five runnable examples in `examples/`:
 
+**Classical mode (v3.0):**
 - **`01_basic_psi.py`** — declare, observe, measure with seed
 - **`02_entanglement.py`** — auth × storage compatibility, entanglement propagation
 - **`03_constraint_curvature.py`** — composing filter / boost / suppress constraints
+
+**Quantum mode (v3.1+, Path B):**
+- **`04_quantum_interference.py`** — destructive interference: two 50/50 sources produce 100/0 outcome (impossible classically)
+- **`05_bell_state.py`** — maximally-entangled 2-qubit Bell states with perfect correlation
 
 Run them:
 
@@ -168,6 +203,8 @@ pip install -e .
 python examples/01_basic_psi.py
 python examples/02_entanglement.py
 python examples/03_constraint_curvature.py
+python examples/04_quantum_interference.py
+python examples/05_bell_state.py
 ```
 
 Each example prints its execution so you can read what happened.
@@ -216,9 +253,19 @@ Implemented (v3.0):
 - ✓ Born-rule-flavored measure + non-destructive observe
 - ✓ Pure-Python, zero runtime dependencies
 
+Implemented (v3.1, Path B Phase 1):
+- ✓ Complex amplitudes via `psi(states, amplitudes=…)`
+- ✓ True Born rule `P(i) = |c|²`
+- ✓ `superpose(a, b)` — amplitudes add → real interference (constructive/destructive)
+- ✓ `bell_state(kind)` — four maximally-entangled 2-qubit states
+- ✓ Two new examples demonstrating quantum-impossible-classically behavior
+
 Roadmap:
+- **CHSH / Bell inequality test** — rotation operators + multi-basis measurement (v3.2)
+- **Hermitian operators as quantum constraints** (v3.2)
+- **Unitary evolution / quantum gates** (v3.3, Path B Phase 2)
+- **Density matrices / decoherence model** (v3.4, Path B Phase 3)
 - **Agent backend** — `ψ.spawn()` to invoke real cosmos via Claude Code
-- **Quantum mode** — complex amplitudes with phase, true interference, Bell-test demonstrations (Path B)
 - **`.quantum/` interop** — read existing cosmos insights as a Python wavefunction
 - **Visualization** — render a wavefunction / entanglement graph as ASCII or HTML
 

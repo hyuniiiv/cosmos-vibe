@@ -826,11 +826,51 @@ Python 3.9+. 런타임 의존성 없음 — 순수 stdlib.
 | `entangle(a, b, correlation)` | 두 결정을 연결, 하나의 측정이 다른 하나를 조건화 |
 | `constraint(name, boost=…, suppress=…, where=…) @ psi` | 분포를 휘는 연산자 적용 |
 
-### 왜 확률 분포 (지금은)
+### 두 모드 — 클래식과 양자 *(v3.1 — Path B Phase 1)*
 
-v3.0 MVP는 실수 확률 가중치 + 본 규칙 유사 샘플링. **복소 진폭** (진짜 양자 간섭, Bell test 검증 가능)은 향후 **Path B** 릴리스로 예약 — 별도의 큰 작업. API는 향후 호환되도록 설계되어 Path B 도입 시 기존 코드 그대로 작동.
+라이브러리가 이제 **고전 확률 분포와 진짜 양자 진폭 모두** 지원. 모드는 `psi()` 인자에서 자동 감지:
 
-전체 가이드, 실행 가능한 예제 3개, 로드맵은 [`python/README.md`](python/README.md) 참조.
+```python
+classical = psi(["A", "B"], weights=[0.6, 0.4])           # 실수 확률
+quantum   = psi(["A", "B"], amplitudes=[1, -1])           # 복소 진폭 (|-⟩ 상태)
+```
+
+양자 모드 (v3.1+)가 여는 것:
+
+- **진짜 본 규칙** — `P(i) = |amplitude_i|²`
+- **진짜 간섭** — `superpose(a, b)`는 진폭을 *더함* (확률이 아님). 위상이 중요.
+- **최대 얽힘** — `bell_state("phi+"|"phi-"|"psi+"|"psi-")`로 2-qubit Bell 상태 생성.
+
+```python
+from quantumagent import psi, superpose, bell_state, measure, observe
+
+# 두 동일 소스, 반대 위상
+slit_a = psi(["screen-A", "screen-B"], amplitudes=[1,  1])
+slit_b = psi(["screen-A", "screen-B"], amplitudes=[1, -1])
+mixed = superpose(slit_a, slit_b)
+print(observe(mixed))    # → {'screen-A': 1.0, 'screen-B': 0.0}
+                         # 상쇄 간섭 — 고전적으로 불가능.
+
+# 최대 얽힘된 2-qubit 쌍
+bell = bell_state("phi+")
+# 2000번 측정 → 항상 ('0','0') 또는 ('1','1'), 절대 섞이지 않음.
+# 완벽 상관, 각 큐빗 단독으로는 50/50으로 보이지만.
+```
+
+`python/examples/04_quantum_interference.py`와 `05_bell_state.py`에서 전체 시연 — 둘 다 이론 예측대로 정확히 작동 검증됨 (상쇄 간섭 1000:0, Bell 상태 2000:0:0:2000 분할).
+
+### Path B 로드맵
+
+| 단계 | 상태 | 기능 |
+|------|------|------|
+| Phase 1 (v3.1) | ✓ 출시 | 복소 진폭, 간섭, Bell 상태 |
+| Phase 2 (v3.2) | 계획 | CHSH/Bell 부등식 검정, 회전 연산자, 에르미트 제약 |
+| Phase 3 (v3.3) | 계획 | 유니터리 진화, 양자 게이트 |
+| Phase 4 (v3.4) | 계획 | 밀도 행렬, 결깨짐 모델 |
+
+향후 호환 API 설계로 기존 v3.0 고전 모드 코드는 그대로 작동. 양자 모드는 순수 추가 — `weights=` 대신 `amplitudes=` 전달로 옵트인.
+
+전체 가이드, 실행 가능한 예제 5개 (3개 고전 + 2개 양자), 자세한 로드맵은 [`python/README.md`](python/README.md) 참조.
 
 ---
 

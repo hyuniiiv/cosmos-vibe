@@ -36,6 +36,8 @@ from .core import (
     constraint,
     Constraint,
     Operator,
+    superpose,
+    bell_state,
 )
 
 # Greek alias for fans of the notation
@@ -51,6 +53,9 @@ __all__ = [
     "constraint",
     "Constraint",
     "Operator",
+    # Path B (quantum mode, v3.1+)
+    "superpose",
+    "bell_state",
 ]
 
-__version__ = "3.0.0"
+__version__ = "3.1.0"

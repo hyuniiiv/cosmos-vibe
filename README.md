@@ -869,11 +869,51 @@ Python 3.9+. No runtime dependencies — pure stdlib.
 | `entangle(a, b, correlation)` | Link two decisions so measurement of one conditions the other |
 | `constraint(name, boost=…, suppress=…, where=…) @ psi` | Apply an operator that curves the distribution |
 
-### Why probability distributions (for now)
+### Two modes — classical and quantum *(v3.1 — Path B Phase 1)*
 
-The v3.0 MVP uses real-valued probability weights with Born-rule-flavored sampling. **Complex amplitudes** (true quantum interference, Bell-test demonstrable) are reserved for a future **Path B** release — a substantial separate effort. The API is designed forward-compatible so existing code will continue to work when Path B lands.
+The library now supports **both classical probability distributions and true quantum amplitudes**. Mode is auto-detected from `psi()` arguments:
 
-See [`python/README.md`](python/README.md) for the full guide, three runnable examples, and roadmap.
+```python
+classical = psi(["A", "B"], weights=[0.6, 0.4])           # real probabilities
+quantum   = psi(["A", "B"], amplitudes=[1, -1])           # complex amplitudes (|-⟩ state)
+```
+
+Quantum mode (v3.1+) unlocks:
+
+- **True Born rule** — `P(i) = |amplitude_i|²`
+- **Real interference** — `superpose(a, b)` ADDS amplitudes (not probabilities). Phase matters.
+- **Maximal entanglement** — `bell_state("phi+"|"phi-"|"psi+"|"psi-")` constructs 2-qubit Bell states.
+
+```python
+from quantumagent import psi, superpose, bell_state, measure, observe
+
+# Two equal sources, OPPOSITE phase
+slit_a = psi(["screen-A", "screen-B"], amplitudes=[1,  1])
+slit_b = psi(["screen-A", "screen-B"], amplitudes=[1, -1])
+mixed = superpose(slit_a, slit_b)
+print(observe(mixed))    # → {'screen-A': 1.0, 'screen-B': 0.0}
+                         # DESTRUCTIVE INTERFERENCE — classical impossible.
+
+# Maximally-entangled 2-qubit pair
+bell = bell_state("phi+")
+# 2000 measurements → always ('0','0') or ('1','1'), never mixed.
+# Perfect correlation, despite each qubit alone looking 50/50.
+```
+
+See `python/examples/04_quantum_interference.py` and `05_bell_state.py` for the full demonstrations — both verified producing the theoretically-predicted outcomes (1000:0 on destructive interference, 2000:0:0:2000 split on Bell state).
+
+### Path B roadmap
+
+| Phase | Status | Features |
+|-------|--------|----------|
+| Phase 1 (v3.1) | ✓ Shipped | complex amplitudes, interference, Bell states |
+| Phase 2 (v3.2) | Planned | CHSH/Bell inequality test, rotation operators, Hermitian constraints |
+| Phase 3 (v3.3) | Planned | Unitary evolution, quantum gates |
+| Phase 4 (v3.4) | Planned | Density matrices, decoherence model |
+
+The forward-compatible API design means existing v3.0 classical-mode code continues to work unchanged. Quantum mode is purely additive — opt in by passing `amplitudes=` instead of `weights=`.
+
+See [`python/README.md`](python/README.md) for the full guide, five runnable examples (3 classical + 2 quantum), and detailed roadmap.
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "name": "cosmos",
-  "description": "QuantumAgent — three-layer architecture for quantum-inspired AI exploration: CLI (v1), declarative YAML experiments (v2), and Python primitives (v3 — psi/entangle/observe/measure/constraint)",
-  "version": "3.0.0",
-  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction"]
+  "description": "QuantumAgent — three-layer architecture for quantum-inspired AI exploration. v3.1 adds Path B Phase 1: complex amplitudes, real quantum interference, and maximally-entangled Bell states.",
+  "version": "3.1.0",
+  "keywords": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference"]
 }

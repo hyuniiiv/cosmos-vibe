@@ -114,10 +114,16 @@ All three layers share concepts (ψ, entanglement, observe vs measure, constrain
 from quantumagent import psi, entangle, observe, measure, constraint
 ```
 
-- `psi(states, weights, name)` — declare a wavefunction (alias `ψ`)
-- `observe(psi)` — non-destructive read of the distribution
+- `psi(states, weights=…)` — declare a wavefunction in classical mode (real probabilities)
+- `psi(states, amplitudes=…)` — *(v3.1)* declare a wavefunction in quantum mode (complex amplitudes)
+- `observe(psi)` — non-destructive read of the distribution (works for both modes)
 - `measure(psi, seed)` — Born-rule sampling, collapses + propagates to entangled
-- `entangle(a, b, correlation)` — link two wavefunctions
-- `constraint(name, boost=…, suppress=…, where=…)` — operator applied via `@`
+- `entangle(a, b, correlation)` — link two wavefunctions (classical-style soft entanglement)
+- `constraint(name, boost=…, suppress=…, where=…)` — operator applied via `@` (classical mode only in v3.1)
+- *(v3.1)* `superpose(a, b)` — quantum superposition; amplitudes add → interference
+- *(v3.1)* `bell_state(kind)` — construct a maximally-entangled 2-qubit Bell state
 
-The Python layer is pure math (no LLM in v3.0). Agent-backed mode planned for a future release. See `python/README.md`.
+The Python layer is pure math (no LLM in v3.x). Two modes coexist: classical
+probability distributions (v3.0) and complex amplitude wavefunctions with real
+quantum interference (v3.1, Path B Phase 1). Future Path B phases: CHSH test
+(v3.2), unitary gates (v3.3), density matrices (v3.4). See `python/README.md`.

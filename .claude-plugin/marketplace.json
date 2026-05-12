@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "QuantumAgent marketplace — three-layer quantum exploration architecture for Claude Code",
-    "version": "3.0.0"
+    "version": "3.1.0"
   },
   "plugins": [
     {
@@ -15,10 +15,10 @@
         "source": "github",
         "repo": "hyuniiiv/quantum-agent"
       },
-      "description": "Three-layer architecture for quantum-inspired AI exploration: CLI (spawn/observe/crystallize), YAML DSL (declarative experiments), and Python primitives (psi/entangle/observe/measure/constraint as a pip-installable library). Multi-scale macro layer with project spin + singularities. Four entanglement modes including verifiable heartbeat protocol.",
-      "version": "3.0.0",
+      "description": "Three-layer architecture for quantum-inspired AI exploration: CLI (spawn/observe/crystallize), YAML DSL (declarative experiments), and Python primitives (psi/entangle/observe/measure/constraint as a pip-installable library). v3.1 adds Path B Phase 1: complex amplitudes, real quantum interference, Bell states. Multi-scale macro layer with project spin + singularities. Four entanglement modes including verifiable heartbeat protocol.",
+      "version": "3.1.0",
       "category": "agents",
-      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction"],
+      "tags": ["quantum", "cosmos", "parallel-agents", "entanglement", "exploration", "multiverse", "singularity", "agentic", "heartbeat", "spin", "yaml", "dsl", "declarative", "python", "wavefunction", "amplitudes", "bell-state", "interference"],
       "author": {
         "name": "hyuniiiv",
         "url": "https://github.com/hyuniiiv"

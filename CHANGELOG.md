@@ -6,6 +6,90 @@ All notable changes to QuantumAgent are documented here. Format follows
 
 ## [Unreleased]
 
+## [3.1.0] — 2026-05-12
+
+### Added — Path B Phase 1: real quantum mechanics
+
+QuantumAgent's Python layer (Layer 3) gains **true quantum mode**. v3.0
+shipped with classical probability distributions and Born-rule-flavored
+sampling; v3.1 adds complex-amplitude wavefunctions with phase, real
+interference, and maximally-entangled Bell states.
+
+Mode is auto-detected from `psi()` arguments — both modes coexist behind
+the same API:
+
+```python
+classical = psi(["A", "B"], weights=[0.6, 0.4])      # real probabilities
+quantum   = psi(["A", "B"], amplitudes=[1, -1])      # complex amplitudes
+```
+
+In quantum mode:
+- **True Born rule**: `P(i) = |amplitude_i|²` (verified by Born-rule sampling in `measure`)
+- **Phase preserved** — amplitudes carry direction in the complex plane
+- **Interference** via `superpose(a, b)` — amplitudes ADD (not probabilities)
+- **Bell states** via `bell_state(kind)` — maximally-entangled 2-qubit states
+
+New primitives:
+- **`superpose(a, b, weight_a=1, weight_b=1, name=None)`** — quantum superposition.
+  Both inputs must be quantum-mode wavefunctions over the same set of states.
+  Amplitudes add: `result_i = weight_a · a_i + weight_b · b_i`, then renormalized.
+  Equal phase → constructive (amplification). Opposite phase → destructive
+  (cancellation). The defining quantum operation.
+- **`bell_state(kind)`** — construct one of four Bell states over 2-tuple states:
+  - `"phi+"`: `(|00⟩ + |11⟩) / √2`
+  - `"phi-"`: `(|00⟩ - |11⟩) / √2`
+  - `"psi+"`: `(|01⟩ + |10⟩) / √2`
+  - `"psi-"`: `(|01⟩ - |10⟩) / √2` (the singlet)
+
+Wavefunction changes:
+- New `amplitudes=` constructor parameter (mutually exclusive with `weights=`)
+- New `is_quantum` property — True for quantum-mode wavefunctions
+- New `amplitudes` attribute — list of complex numbers in quantum mode, `None` in classical
+- `__repr__` shows complex amplitudes in quantum mode
+- `weights` attribute always exposes `|c|²` probabilities for both modes
+  (so `observe()` works identically and idempotently)
+- Constraint operators (`constraint @ psi`) raise `NotImplementedError` on
+  quantum wavefunctions — Hermitian operators reserved for v3.2
+
+New examples:
+- **`examples/04_quantum_interference.py`** — destructive interference demo.
+  Two equal 50/50 amplitude sources combined in OPPOSITE phase produce 100/0
+  outcome (verified: 1000/1000 trials hit screen-A). Classical impossible.
+- **`examples/05_bell_state.py`** — Bell state correlations. 2000 trials show
+  exactly 0 anti-correlated outcomes (perfect correlation), while each qubit
+  alone looks like a fair coin. All four Bell state distributions displayed.
+
+### Roadmap — Path B remaining phases
+
+- **Phase 2 (v3.2)** — CHSH/Bell inequality test, rotation operators, Hermitian
+  constraints. Distinguishes the four Bell states statistically (currently they
+  look identical in the computational basis).
+- **Phase 3 (v3.3)** — Unitary evolution operators, quantum gates.
+- **Phase 4 (v3.4)** — Density matrices, decoherence model.
+
+### Changed
+
+- `python/quantumagent/core.py` — Wavefunction class extended (amplitudes
+  parameter, is_quantum property, complex repr); new `superpose`, `bell_state`
+  helpers; constraint guard against quantum mode.
+- `python/quantumagent/__init__.py` — exports `superpose`, `bell_state`;
+  version bumped to 3.1.0.
+- `python/README.md` — Two-modes section, quantum example callouts, expanded
+  roadmap with Phase 1–4 breakdown.
+- `README.md` / `README.ko.md` — "Two modes — classical and quantum" subsection
+  in the Python primitives section. Path B roadmap table.
+- `.claude-plugin/plugin.json` / `marketplace.json` — version 3.1.0;
+  descriptions mention Path B Phase 1; keywords add `amplitudes`, `bell-state`,
+  `interference`.
+
+### Backward compatibility
+
+- All classical-mode v3.0 code continues to work unchanged
+- `psi(states)` and `psi(states, weights=…)` behave identically to v3.0
+- `weights` attribute always present (`|c|²` in quantum mode)
+- `measure()` and `observe()` work for both modes via the same API
+- Quantum mode is purely opt-in via the `amplitudes=` parameter
+
 ## [3.0.0] — 2026-05-12
 
 ### Added — Layer 3: Python primitives (`quantumagent` package)
