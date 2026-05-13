@@ -561,6 +561,21 @@ Final Answer:
 
 ## Commands
 
+| Command | One-liner | When to use |
+|---------|-----------|-------------|
+| [`/cosmos spawn`](#cosmos-spawn) | Launch parallel cosmos | Start exploration — one agent per strategy |
+| [`/cosmos observe`](#cosmos-observe) | Non-destructive status read | Mid-run check — see resonance/uncertainty map |
+| [`/cosmos crystallize`](#cosmos-crystallize-id) | Collapse best cosmos to result | After exploration — merge the winning branch |
+| [`/cosmos stop`](#cosmos-stop) | Remove all worktrees & branches | Full teardown |
+| [`/cosmos spin`](#cosmos-spin) | Declare project's immutable identity | Auto-inject constraints into every spawn |
+| [`/cosmos singularity`](#cosmos-singularity) | Declare a project-level event | Migrations & paradigm shifts — invalidate stale insights |
+| [`/cosmos run`](#cosmos-run) | Execute a YAML experiment file | Reproducible, CI/CD-compatible automation |
+| [`/cosmos scan`](#cosmos-scan) | Scan codebase for quantum phenomena | Detect type bypasses, untested files, feature flags |
+
+**Typical flow:** `spin` → `spawn` → `observe` (repeat) → `crystallize` → `stop`
+
+---
+
 ### `/cosmos spawn`
 
 ```
