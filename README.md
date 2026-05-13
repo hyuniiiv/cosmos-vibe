@@ -559,6 +559,35 @@ Final Answer:
 
 ---
 
+## 🖥️ Live Dashboard
+
+On `/cosmos spawn`, the browser opens http://localhost:3141 automatically.
+
+| Panel | Contents |
+|-------|----------|
+| Left | Per-cosmos insight count + type bar + latest insight |
+| Center | All quantum signal cards (see below) |
+| Right | Full insight timeline (newest first, color-coded by type) |
+| Bottom | Mermaid graph — cosmos nodes + resonance/decoherence edges, live |
+
+**Signal cards (center panel):**
+
+| Signal | Description |
+|--------|-------------|
+| 🌡️ BEC | Banner when all decisions converge completely |
+| 🔗 Entanglement Quality | Heartbeat ACK ratio for strict-mode runs |
+| ⚡ Resonance | Conclusions 2+ cosmos reached independently |
+| 🌀 Uncertainty | Decisions where cosmos diverged — your tradeoff |
+| ⚠️ Decoherence | Cosmos pairs that lost strategic identity |
+| ⚛️ Tunneling | Solutions that bypassed assumed constraints |
+| ⚡ Jumps | Discontinuous leaps from a single entanglement read |
+| 🚧 Blockers | Unresolved blockers needing attention |
+| ⚛️ Code-Scale | `/cosmos scan` output (tunnel·decoherence·superposition·jump) |
+
+Manual start: `node tools/dashboard.js`
+
+---
+
 ## Commands
 
 | Command | One-liner | When to use |
