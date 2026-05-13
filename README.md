@@ -66,7 +66,7 @@ comparison — as actual working implementations that discover real issues in re
 Your goal (pure potential — the wave)
          │
          ▼
- /cosmos spawn --strategies "A,B,C"
+ /cosmos spawn --strategies "A,B,C" [--models h,s,o] [--entanglement strict]
          │
     ┌────┴──────────────────────────────────────┐
     │                                           │
@@ -82,12 +82,15 @@ strategy A      strategy B                strategy C
     └────────────────────────────────────────────┘
          │
          ▼
- /cosmos observe
+ /cosmos observe   ← non-destructive measurement + 7 quantum signals
          │
-         ├── ⚡ Resonance  — all strategies independently agreed → ship it
-         ├── 🌀 Uncertainty — strategies genuinely diverged → you choose
-         ├── ⚛️  Tunneling  — assumed-hard constraint bypassed → examine it
-         └── ⚡ Jump        — single insight caused discontinuous leap → trace it
+         ├── ⚡ Resonance     — N cosmos independently agreed → ship
+         ├── 🌀 Uncertainty   — strategies genuinely diverged → you choose
+         ├── ♊ Degeneracy    — different strategies, same impl → single natural solution
+         ├── ⚠️ Decoherence   — a cosmos lost its strategy → sample invalid
+         ├── ⚛️ Tunneling    — assumed-hard constraint bypassed → examine
+         ├── ⚡ Quantum Jump  — single entanglement read → discontinuous shift
+         └── 🧊 BEC          — zero uncertainty + ≥3 resonant + all participated → deterministic
          │
          ▼
  /cosmos crystallize <id>   →   Schrödinger check → merge or keep
@@ -98,6 +101,18 @@ The key: agents don't just share conclusions — they share **discoveries in rea
 If cosmos:gamma finds a security bug at step 7, cosmos:alpha reads it before step 8
 and applies the same fix, all while staying on its own strategy. That's entanglement:
 influence without convergence.
+
+### Multi-scale × multi-layer *(final shape as of v4.1)*
+
+The diagram above is the core loop at **cosmos scale, Layer 1 (CLI)**. The same quantum decision primitives extend across larger scales and deeper layers:
+
+| | ⌨️ Layer 1 — CLI skills | 📝 Layer 2 — YAML DSL *(v2.0)* | 🐍 Layer 3 — Python *(v3.0+)* |
+|---|---|---|---|
+| 🌍 **Macro** *(v1.2+)* | `/cosmos spin`<br/>`/cosmos singularity` | `experiments/*.qa.yaml`<br/>`spin:` / `singularities:` keys | `CosmosRun.spin`<br/>`CosmosRun.singularities` |
+| 🌌 **Cosmos** *(v1.0+)* | `/cosmos spawn`<br/>`/cosmos observe`<br/>`/cosmos crystallize` | `experiments/*.qa.yaml`<br/>`strategies:` block + CI/CD | `ψ`, `entangle`,<br/>`observe`, `measure` |
+| 🔬 **Micro** *(v4.0+)* | `/cosmos scan` — code-scale quantum phenomena<br/>(test decoherence, jump hotspots) | Same keys + `scan:` block | Same primitives + verifiable<br/>concept-to-code mapping *(v4.1)* |
+
+**Entanglement modes** *(v1.3)*: `--entanglement none|passive|active|strict`. `strict` turns live communication into verifiable evidence via a heartbeat protocol (the Bell-test analogue). See [`/cosmos spawn`](#cosmos-spawn) and [Declarative experiments — YAML DSL](#declarative-experiments--yaml-dsl) below for details.
 
 ---
 
@@ -149,21 +164,35 @@ cosmos:gamma   (fixed-window)    ●●●●●●     6 insights
   └ {"type":"decision","content":"Millisecond precision is sufficient for SLA buckets"}
   └ {"type":"blocker","content":"Boundary-second double-counting under burst load"}
 
-⚡ Resonance ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   "millisecond precision" — 3 cosmos converged → trust this
+⚡ Resonance — trust these (strategies converged) ━━━━━━━━━━━━━━━━
+   "millisecond precision is sufficient" — 3 cosmos independently converged
 
-🌀 Uncertainty ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   data structure: sorted-set (alpha) vs ring-buffer (beta) vs hash (gamma)
-   → real tradeoff, developer chooses
+🌀 Uncertainty — your call (strategies diverged) ━━━━━━━━━━━━━━━━━
+   data structure: sorted-set (alpha) | ring-buffer (beta) | hash (gamma)
 
-✨ Tunneling ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   alpha: Redis sorted sets replace the separate rate-limit table
+♊ Degeneracy — single natural solution ━━━━━━━━━━━━━━━━━━━━━━━━━━
+   cosmos:alpha and cosmos:gamma reached identical atomic-counter impl
+   despite different strategies
 
-⚡ Quantum Jump ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   beta ← alpha: switched to event-sourcing mid-implementation
+⚛️ Quantum Tunneling — assumed constraint bypassed ━━━━━━━━━━━━━━━
+   cosmos:alpha: "Redis sorted sets eliminate the rate-limit table entirely"
 
-🚧 Unresolved Blockers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   gamma: boundary-second double-counting under burst load
+⚡ Quantum Jump — single insight, discontinuous shift ━━━━━━━━━━━━
+   cosmos:beta ← alpha: switched to event-sourcing mid-implementation
+
+⚠️ Decoherence — sample-validity risk ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   (none detected in this run)
+
+🔗 Live entanglement quality: High   (v1.3+, --entanglement strict)
+   Strict run: 27/27 heartbeat ACKs (100%)
+
+🚧 Unresolved Blockers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   cosmos:gamma: boundary-second double-counting under burst load
+
+🧊 Bose-Einstein Condensate: (not met — 1 Uncertainty item present)
+
+🔬 Non-destructive observation — superposition intact.
+   Run /cosmos crystallize <id> to collapse a cosmos into a definite result.
 ```
 
 > The output above is the format defined in [`skills/observe/SKILL.md`](skills/observe/SKILL.md). A real run produces actual content; the structure and signal categories are fixed.
