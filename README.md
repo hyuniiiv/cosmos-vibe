@@ -572,7 +572,49 @@ Final Answer:
 | [`/cosmos run`](#cosmos-run) | Execute a YAML experiment file | Reproducible, CI/CD-compatible automation |
 | [`/cosmos scan`](#cosmos-scan) | Scan codebase for quantum phenomena | Detect type bypasses, untested files, feature flags |
 
-**Typical flow:** `spin` → `spawn` → `observe` (repeat) → `crystallize` → `stop`
+**Typical flow:**
+
+```mermaid
+flowchart TD
+    SI["`🌀 **/cosmos spin**
+    Declare immutable project identity
+    (optional, once)`"]
+    SG["`⚡ **/cosmos singularity**
+    Declare paradigm shift / migration
+    (optional, as needed)`"]
+    SP["`🚀 **/cosmos spawn**
+    Launch parallel cosmos per strategy`"]
+    SC["`🔬 **/cosmos scan**
+    Detect code-level quantum phenomena
+    (optional, run in parallel)`"]
+    OB["`🔭 **/cosmos observe**
+    Non-destructive resonance/uncertainty read`"]
+    CR["`💎 **/cosmos crystallize**
+    Collapse best cosmos to result`"]
+    ST["`🧹 **/cosmos stop**
+    Remove all worktrees & branches`"]
+    RU["`📄 **/cosmos run**
+    Run full flow from a YAML experiment file
+    (alternative to manual spawn)`"]
+
+    SI --> SP
+    SG --> SP
+    SP --> OB
+    OB -->|"explore more"| OB
+    OB --> CR
+    SC --> OB
+    CR --> ST
+    RU -.->|"spin + singularity + spawn in one shot"| SP
+
+    style SI fill:#1b3a2d,stroke:#4caf50,color:#fff
+    style SG fill:#3a1b1b,stroke:#ef5350,color:#fff
+    style SP fill:#2d1b4e,stroke:#b975e8,color:#fff
+    style SC fill:#1a2d3a,stroke:#29b6f6,color:#fff
+    style OB fill:#1e3a5f,stroke:#4a9eff,color:#fff
+    style CR fill:#3a2d00,stroke:#ffc107,color:#fff
+    style ST fill:#2a2a2a,stroke:#888,color:#fff
+    style RU fill:#1b2d1b,stroke:#81c784,color:#fff
+```
 
 ---
 
