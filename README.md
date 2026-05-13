@@ -102,17 +102,17 @@ If cosmos:gamma finds a security bug at step 7, cosmos:alpha reads it before ste
 and applies the same fix, all while staying on its own strategy. That's entanglement:
 influence without convergence.
 
-### Multi-scale × multi-layer *(final shape as of v4.1)*
+### Multi-scale × multi-layer
 
 The diagram above is the core loop at **cosmos scale, Layer 1 (CLI)**. The same quantum decision primitives extend across larger scales and deeper layers:
 
-| | ⌨️ Layer 1 — CLI skills | 📝 Layer 2 — YAML DSL *(v2.0)* | 🐍 Layer 3 — Python *(v3.0+)* |
+| | ⌨️ Layer 1 — CLI skills | 📝 Layer 2 — YAML DSL | 🐍 Layer 3 — Python |
 |---|---|---|---|
-| 🌍 **Macro** *(v1.2+)* | `/cosmos spin`<br/>`/cosmos singularity` | `experiments/*.qa.yaml`<br/>`spin:` / `singularities:` keys | `CosmosRun.spin`<br/>`CosmosRun.singularities` |
-| 🌌 **Cosmos** *(v1.0+)* | `/cosmos spawn`<br/>`/cosmos observe`<br/>`/cosmos crystallize` | `experiments/*.qa.yaml`<br/>`strategies:` block + CI/CD | `ψ`, `entangle`,<br/>`observe`, `measure` |
-| 🔬 **Micro** *(v4.0+)* | `/cosmos scan` — code-scale quantum phenomena<br/>(test decoherence, jump hotspots) | Same keys + `scan:` block | Same primitives + verifiable<br/>concept-to-code mapping *(v4.1)* |
+| 🌍 **Macro** | `/cosmos spin`<br/>`/cosmos singularity` | `experiments/*.qa.yaml`<br/>`spin:` / `singularities:` keys | `CosmosRun.spin`<br/>`CosmosRun.singularities` |
+| 🌌 **Cosmos** | `/cosmos spawn`<br/>`/cosmos observe`<br/>`/cosmos crystallize` | `experiments/*.qa.yaml`<br/>`strategies:` block + CI/CD | `ψ`, `entangle`,<br/>`observe`, `measure` |
+| 🔬 **Micro** | `/cosmos scan` — code-scale quantum phenomena<br/>(test decoherence, jump hotspots) | Same keys + `scan:` block | Same primitives + verifiable<br/>concept-to-code mapping |
 
-**Entanglement modes** *(v1.3)*: `--entanglement none|passive|active|strict`. `strict` turns live communication into verifiable evidence via a heartbeat protocol (the Bell-test analogue). See [`/cosmos spawn`](#cosmos-spawn) and [Declarative experiments — YAML DSL](#declarative-experiments--yaml-dsl) below for details.
+**Entanglement modes**: `--entanglement none|passive|active|strict`. `strict` turns live communication into verifiable evidence via a heartbeat protocol (the Bell-test analogue). See [`/cosmos spawn`](#cosmos-spawn) and [Declarative experiments — YAML DSL](#declarative-experiments--yaml-dsl) below for details.
 
 ---
 
@@ -183,7 +183,7 @@ cosmos:gamma   (fixed-window)    ●●●●●●     6 insights
 ⚠️ Decoherence — sample-validity risk ━━━━━━━━━━━━━━━━━━━━━━━━━━━
    (none detected in this run)
 
-🔗 Live entanglement quality: High   (v1.3+, --entanglement strict)
+🔗 Live entanglement quality: High
    Strict run: 27/27 heartbeat ACKs (100%)
 
 🚧 Unresolved Blockers ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -590,9 +590,9 @@ Agents run in parallel. When all finish, `/cosmos observe` runs automatically.
 | `--goal` | The task every cosmos works toward |
 | `--strategies` | Comma-separated list — one cosmos per strategy |
 | `--entanglement` | `none` / `passive` *(default)* / `active` / `strict` — see below |
-| `--models` *(v3.3)* | Comma-separated list of model names (length must match `--strategies`). Per-cosmos model assignment. See "Model diversity" below |
+| `--models` | Comma-separated list of model names (length must match `--strategies`). Per-cosmos model assignment. See "Model diversity" below |
 
-**Model diversity** *(v3.3)*:
+**Model diversity**:
 
 ```bash
 /cosmos spawn \
@@ -612,14 +612,14 @@ Why mix models?
 
 Common model identifiers: `claude-haiku-4-5` (fast/cheap), `claude-sonnet-4-6` (balanced, default), `claude-opus-4-7` (most capable). Exact names depend on your Claude Code installation.
 
-**Entanglement modes** *(v1.2, extended in v1.3)*:
+**Entanglement modes**:
 
 | Mode | Behavior | When to use |
 |------|---------|-------------|
 | `none` | Cosmos do NOT read other cosmos insights. Pure independent exploration. | When you want true independence — agentic A/B testing, statistical sampling |
 | `passive` *(default)* | Cosmos read other insights between major implementation steps. | Default — most architecture/implementation tasks |
 | `active` | Cosmos read AND must record `read_from: cosmos:<source>` when adopting another's pattern. | When traceability matters — security audit, compliance, debugging |
-| `strict` *(v1.3)* | Heartbeat protocol — each cosmos publishes `heartbeat` per step AND must write `heartbeat-ack` for every unACK'd heartbeat from others before its next step. Verifiable live entanglement. | When you need *proof* of live agent communication — race condition debugging, distributed system design, compliance audits |
+| `strict` | Heartbeat protocol — each cosmos publishes `heartbeat` per step AND must write `heartbeat-ack` for every unACK'd heartbeat from others before its next step. Verifiable live entanglement. | When you need *proof* of live agent communication — race condition debugging, distributed system design, compliance audits |
 
 ---
 
@@ -660,7 +660,7 @@ Removes all cosmos worktrees and branches. Offers to wipe `.quantum/`
 
 ---
 
-### `/cosmos spin` *(new in v1.3)*
+### `/cosmos spin`
 
 ```
 /cosmos spin --name "<name>" [--type "<type>"] [--description "<text>"] [--constraints "<c1,c2,c3>"]
@@ -700,7 +700,7 @@ See [Multi-scale: the macro layer](#multi-scale-the-macro-layer) for the full me
 
 ---
 
-### `/cosmos run` *(new in v2.0)*
+### `/cosmos run`
 
 ```
 /cosmos run <path-to-yaml>
@@ -731,11 +731,11 @@ singularities:                          # optional — declare macro events
 spawn:                                  # required — the exploration itself
   goal: "rate limiting middleware"
   strategies: [token-bucket, sliding-window, fixed-window]
-  models: [claude-haiku-4-5, claude-sonnet-4-6, claude-opus-4-7]   # optional, v3.3+
+  models: [claude-haiku-4-5, claude-sonnet-4-6, claude-opus-4-7]   # optional
   entanglement: passive                                              # optional
 ```
 
-**Form B — verbose per-cosmos (alternative to `strategies` + `models`, v3.3+):**
+**Form B — verbose per-cosmos (alternative to `strategies` + `models`):**
 
 ```yaml
 experiment: rate-limiting-design
@@ -762,7 +762,7 @@ See [Declarative experiments — the YAML DSL](#declarative-experiments--the-yam
 
 ---
 
-### `/cosmos singularity` *(new in v1.2)*
+### `/cosmos singularity`
 
 ```
 /cosmos singularity --name "<event>" --invalidates "<patterns>" [--trigger "<reason>"] [--description "<text>"]
@@ -801,7 +801,7 @@ See [Multi-scale: the macro layer](#multi-scale-the-macro-layer) for the full me
 
 ---
 
-### `/cosmos scan` *(new in v4.0)*
+### `/cosmos scan`
 
 ```
 /cosmos scan [--paths "<glob1,glob2,...>"] [--languages "<ts,py,go,...>"] [--include-tests] [--git-churn-threshold N]
@@ -843,20 +843,20 @@ Output (summary):
    Stored at: .quantum/code/findings.jsonl
 ```
 
-`/cosmos observe` (v4.0+) automatically surfaces code findings + cross-scale signals (cosmos that modified files with code findings = crystallize-review candidates).
+`/cosmos observe` automatically surfaces code findings + cross-scale signals (cosmos that modified files with code findings = crystallize-review candidates).
 
-See [Micro scale — `/cosmos scan`](#micro-scale--cosmos-scan-new-in-v40) for full pattern catalog.
+See [Micro scale — `/cosmos scan`](#micro-scale--cosmos-scan) for full pattern catalog.
 
 ---
 
-## Multi-scale: the macro layer *(new in v1.2)*
+## Multi-scale: the macro layer
 
 QuantumAgent operates at three scales:
 
 ```
 🌌 Cosmos scale  — /cosmos spawn (N parallel strategies)
-🌍 Project scale — /cosmos singularity + .quantum/project/spin.json  ← v1.2
-⚛️  Code scale    — /cosmos scan + .quantum/code/findings.jsonl       ← v4.0
+🌍 Project scale — /cosmos singularity + .quantum/project/spin.json
+⚛️  Code scale    — /cosmos scan + .quantum/code/findings.jsonl
 ```
 
 The macro layer adds two files that every spawn reads automatically:
@@ -903,7 +903,7 @@ This is the General Relativity analog: constraints curve the solution space, and
 
 ---
 
-## Micro scale — `/cosmos scan` *(new in v4.0)*
+## Micro scale — `/cosmos scan`
 
 The third and final scale of QuantumAgent's multi-scale architecture: **code-level quantum phenomena**. While `/cosmos spawn` operates at the cosmos scale (parallel implementations) and `/cosmos singularity` at the project scale (macro events), `/cosmos scan` operates at the function/file/symbol scale.
 
@@ -929,26 +929,26 @@ Findings append to `.quantum/code/findings.jsonl`:
 {"type":"code-jump","file":"src/store.ts","churn_lines":230,"window":"last-10-commits","ts":"..."}
 ```
 
-`/cosmos observe` (v4.0+) automatically surfaces these in a new code-scale section, including **cross-scale signals** — when a cosmos modified a file that has a code-scale finding, that's a candidate for crystallize review.
+`/cosmos observe` automatically surfaces these in a new code-scale section, including **cross-scale signals** — when a cosmos modified a file that has a code-scale finding, that's a candidate for crystallize review.
 
-The Python `from_cosmos()` interop (v3.3+) now also exposes `CosmosRun.code_findings` and `code_summary()` — all four scales accessible as Python data in one call.
+The Python `from_cosmos()` interop now also exposes `CosmosRun.code_findings` and `code_summary()` — all four scales accessible as Python data in one call.
 
 ### 4-scale architecture — the original vision complete
 
 ```
-🌌 Cosmos scale   (v1.x) — /cosmos spawn — N parallel implementations
-🌍 Project scale  (v1.2) — /cosmos spin + /cosmos singularity — macro context
-⚛️  Code scale    (v4.0) — /cosmos scan — function/file/symbol quantum state
-🧮 Math layer     (v3.x) — Python primitives — canonical quantum mechanics
+🌌 Cosmos scale — /cosmos spawn — N parallel implementations
+🌍 Project scale — /cosmos spin + /cosmos singularity — macro context
+⚛️  Code scale — /cosmos scan — function/file/symbol quantum state
+🧮 Math layer — Python primitives — canonical quantum mechanics
 ```
 
 The Layer 1 (CLI) × 4 scales matrix is now complete. Layer 2 (YAML DSL) and Layer 3 (Python primitives) extend across the scales additively.
 
 ---
 
-## Declarative experiments — the YAML DSL *(new in v2.0)*
+## Declarative experiments — the YAML DSL
 
-QuantumAgent v2.0 adds a **declarative layer** on top of the CLI. Experiments become YAML files — version-controlled, reviewable, re-executable.
+QuantumAgent adds a **declarative layer** on top of the CLI. Experiments become YAML files — version-controlled, reviewable, re-executable.
 
 ### The shift — imperative vs declarative
 
@@ -960,7 +960,7 @@ QuantumAgent v2.0 adds a **declarative layer** on top of the CLI. Experiments be
 ```
 
 ```yaml
-# v2.0 — declarative (one YAML, one command)
+# declarative (one YAML, one command)
 experiment: rate-limiting-design
 version: 1
 
@@ -1008,7 +1008,7 @@ steps:
 
 **Provenance** — Every cosmos's first insight in a `/cosmos run` is a `type: "run"` entry citing the experiment file and schema version. Auditors can answer "which experiment produced this insight?" by reading the first line of any insights.jsonl.
 
-### YAML schema (v1)
+### YAML schema
 
 The full schema, validation rules, and execution flow are documented in [`skills/run/SKILL.md`](skills/run/SKILL.md). Annotated template at [`experiments/_template.qa.yaml`](experiments/_template.qa.yaml).
 
@@ -1025,9 +1025,9 @@ Both call the same underlying spawn logic — `/cosmos run` is `/cosmos spawn` w
 
 ---
 
-## Python primitives — Layer 3 *(new in v3.0)*
+## Python primitives — Layer 3
 
-QuantumAgent v3.0 adds a **programmable layer**: a Python package that exposes the underlying quantum decision primitives directly in code. Layer 1 (CLI) and Layer 2 (YAML DSL) orchestrate AI agents; Layer 3 exposes the math that conceptually underlies them.
+QuantumAgent adds a **programmable layer**: a Python package that exposes the underlying quantum decision primitives directly in code. Layer 1 (CLI) and Layer 2 (YAML DSL) orchestrate AI agents; Layer 3 exposes the math that conceptually underlies them.
 
 ```python
 from quantumagent import psi, entangle, observe, measure, constraint
@@ -1051,7 +1051,7 @@ final = measure(cache)          # collapses to one state via Born-rule sampling
 ### Three layers, one philosophy
 
 ```
-Layer 1 (v1.x) — CLI                 Layer 2 (v2.0) — YAML DSL          Layer 3 (v3.0) — Python
+Layer 1 — CLI                 Layer 2 — YAML DSL          Layer 3 — Python
 ────────────────────────             ─────────────────────────          ────────────────────────
 /cosmos spawn --goal "..."           experiment: my-exp                 cache = psi(...)
 /cosmos observe                      spawn:                             entangle(cache, store, ...)
@@ -1073,45 +1073,45 @@ Python 3.9+. No runtime dependencies — pure stdlib.
 
 ### Primitives
 
-**Core (v3.0):**
+**Core:**
 
 | Primitive | Purpose |
 |-----------|---------|
 | `psi(states, weights=…)` | Declare a decision as a probability distribution (aka `ψ`) — classical mode |
-| `psi(states, amplitudes=…)` *(v3.1)* | Same constructor, quantum mode — complex amplitudes with phase |
+| `psi(states, amplitudes=…)` | Same constructor, quantum mode — complex amplitudes with phase |
 | `observe(psi)` | Read distribution without collapsing — non-destructive, idempotent |
 | `measure(psi, seed=None)` | Collapse to one state via Born-rule sampling — irreversible |
 | `entangle(a, b, correlation)` | Link two decisions so measurement of one conditions the other |
 | `constraint(name, boost=…, suppress=…, where=…) @ psi` | Apply an operator that curves the distribution (classical mode) |
 
-**Path B — quantum operations (v3.1, v3.2):**
+**Path B — quantum operations:**
 
 | Primitive | Purpose |
 |-----------|---------|
-| `superpose(a, b, weight_a=1, weight_b=1)` *(v3.1)* | Amplitude addition → interference (constructive/destructive) |
-| `bell_state(kind)` *(v3.1)* | Maximally-entangled 2-qubit Bell states (`phi+`/`phi-`/`psi+`/`psi-`) |
-| `gate(name, *params)` *(v3.2)* | Build a quantum gate: `I`, `X`, `Y`, `Z`, `H`, `S`, `T`, `CNOT`, `CZ`, `SWAP`, `Rx`/`Ry`/`Rz` |
-| `apply_gate(psi, gate, qubits=[...])` *(v3.2)* | Apply a gate to specified qubits of n-qubit state |
-| `measure_in_basis(psi, θ_a, θ_b)` *(v3.2)* | Rotate then measure — multi-basis observable measurement |
-| `chsh_test(psi, n_trials)` *(v3.2)* | Run CHSH protocol — verify Bell-inequality violation on entangled state |
-| `density(psi)` *(v3.2)* | Convert pure wavefunction to its density matrix `|ψ⟩⟨ψ|` |
-| `decohere(rho, rate)` *(v3.2)* | Exponential decay of off-diagonal coherences (decoherence model) |
-| `partial_trace(rho, qubit)` *(v3.2)* | Trace out one qubit — reduced state reveals entanglement |
+| `superpose(a, b, weight_a=1, weight_b=1)` | Amplitude addition → interference (constructive/destructive) |
+| `bell_state(kind)` | Maximally-entangled 2-qubit Bell states (`phi+`/`phi-`/`psi+`/`psi-`) |
+| `gate(name, *params)` | Build a quantum gate: `I`, `X`, `Y`, `Z`, `H`, `S`, `T`, `CNOT`, `CZ`, `SWAP`, `Rx`/`Ry`/`Rz` |
+| `apply_gate(psi, gate, qubits=[...])` | Apply a gate to specified qubits of n-qubit state |
+| `measure_in_basis(psi, θ_a, θ_b)` | Rotate then measure — multi-basis observable measurement |
+| `chsh_test(psi, n_trials)` | Run CHSH protocol — verify Bell-inequality violation on entangled state |
+| `density(psi)` | Convert pure wavefunction to its density matrix `|ψ⟩⟨ψ|` |
+| `decohere(rho, rate)` | Exponential decay of off-diagonal coherences (decoherence model) |
+| `partial_trace(rho, qubit)` | Trace out one qubit — reduced state reveals entanglement |
 
-**Layer 1 ↔ Layer 3 interop (v3.3, v4.0):**
+**Layer 1 ↔ Layer 3 interop:**
 
 | Primitive | Purpose |
 |-----------|---------|
-| `from_cosmos(repo_path, weights="by-insight-count")` *(v3.3)* | Read `.quantum/` cosmos output into a Python `CosmosRun` |
+| `from_cosmos(repo_path, weights="by-insight-count")` | Read `.quantum/` cosmos output into a Python `CosmosRun` |
 | `CosmosRun.psi` | Wavefunction over cosmos names (weighted by insight count or uniform) |
 | `CosmosRun.insights` | Per-cosmos parsed insight JSONL |
 | `CosmosRun.resonance` / `.uncertainty` | Heuristic token-overlap signals (for semantic quality use `/cosmos observe`) |
 | `CosmosRun.spin` / `.singularities` | Project-scale state if defined |
-| `CosmosRun.code_findings` / `.code_summary()` *(v4.0)* | Code-scale findings from `/cosmos scan` |
+| `CosmosRun.code_findings` / `.code_summary()` | Code-scale findings from `/cosmos scan` |
 
 All primitives composable — e.g., `cache = constraint("low-latency") @ psi(states, weights=…)` then `entangle(cache, store, ...)` then `measure(cache)`.
 
-### Two modes — classical and quantum *(v3.1 — Path B Phase 1)*
+### Two modes — classical and quantum
 
 The library now supports **both classical probability distributions and true quantum amplitudes**. Mode is auto-detected from `psi()` arguments:
 
@@ -1120,7 +1120,7 @@ classical = psi(["A", "B"], weights=[0.6, 0.4])           # real probabilities
 quantum   = psi(["A", "B"], amplitudes=[1, -1])           # complex amplitudes (|-⟩ state)
 ```
 
-Quantum mode (v3.1+) unlocks:
+Quantum mode unlocks:
 
 - **True Born rule** — `P(i) = |amplitude_i|²`
 - **Real interference** — `superpose(a, b)` ADDS amplitudes (not probabilities). Phase matters.
@@ -1144,14 +1144,14 @@ bell = bell_state("phi+")
 
 See `python/examples/04_quantum_interference.py` and `05_bell_state.py` for the full demonstrations — both verified producing the theoretically-predicted outcomes (1000:0 on destructive interference, 2000:0:0:2000 split on Bell state).
 
-### Path B status — **complete (v3.2)**
+### Path B status — **complete**
 
 | Phase | Status | Features |
 |-------|--------|----------|
-| Phase 1 (v3.1) | ✓ Shipped | complex amplitudes, interference, Bell states |
-| Phase 2 (v3.2) | ✓ Shipped | CHSH inequality test, multi-basis measurement |
-| Phase 3 (v3.2) | ✓ Shipped | full quantum gate library (Pauli, Hadamard, CNOT, CZ, SWAP, Rx/Ry/Rz), circuit composition |
-| Phase 4 (v3.2) | ✓ Shipped | density matrices, decoherence model, partial trace |
+| Phase 1 | ✓ Shipped | complex amplitudes, interference, Bell states |
+| Phase 2 | ✓ Shipped | CHSH inequality test, multi-basis measurement |
+| Phase 3 | ✓ Shipped | full quantum gate library (Pauli, Hadamard, CNOT, CZ, SWAP, Rx/Ry/Rz), circuit composition |
+| Phase 4 | ✓ Shipped | density matrices, decoherence model, partial trace |
 
 The library now implements canonical quantum mechanics end-to-end. Three decisive empirical demonstrations live in `python/examples/`:
 
@@ -1159,7 +1159,7 @@ The library now implements canonical quantum mechanics end-to-end. Three decisiv
 - **`07_quantum_gates.py`** — |00⟩ → H₀ → CNOT(0→1) constructs |Φ+⟩ exactly, matching hardcoded `bell_state("phi+")`. Inverse circuit recovers |00⟩.
 - **`08_decoherence.py`** — partial trace of Bell state gives the maximally mixed state I/2 (purity = 0.5), the strongest possible entanglement signature.
 
-The forward-compatible API design means existing v3.0 classical-mode code continues to work unchanged. Quantum mode is purely additive — opt in by passing `amplitudes=` instead of `weights=`.
+The forward-compatible API design means existing classical-mode code continues to work unchanged. Quantum mode is purely additive — opt in by passing `amplitudes=` instead of `weights=`.
 
 See [`python/README.md`](python/README.md) for the full guide, **nine runnable examples** (3 classical + 5 quantum across all four Path B phases + 1 cosmos interop), and primitive reference.
 
@@ -1383,7 +1383,7 @@ QuantumAgent's entanglement has **two layers** — and being honest about both i
 
 **The post-hoc layer is the actual value engine.** Even if a cosmos finishes before reading another's late-stage insight, `/cosmos observe` will still surface independent convergence as Resonance. The auth-audit example demonstrates this: three cosmos found the same JWT-no-expiration bug independently — that's resonance, regardless of who read whom.
 
-The `--entanglement strict` mode (v1.3) adds *verifiable* live entanglement via the heartbeat protocol when proof of live communication matters (race conditions, distributed-system design, compliance). For most architecture exploration, the default `passive` mode (best-effort live + always-on post-hoc) is the right balance.
+The `--entanglement strict` mode adds *verifiable* live entanglement via the heartbeat protocol when proof of live communication matters (race conditions, distributed-system design, compliance). For most architecture exploration, the default `passive` mode (best-effort live + always-on post-hoc) is the right balance.
 
 Each agent reads all `.quantum/*/insights.jsonl` files between every major
 implementation step — and once more as a mandatory final read before completing.
@@ -1408,7 +1408,7 @@ superposition is observed. The final read is built into the spawn prompt.
 - Git-ignored — insights don't pollute your history
 - Human-readable — debug the quantum memory by opening the files
 
-**Verifiable live entanglement — `strict` mode (v1.3):** The default `passive` mode *trusts* that agents read between steps. `strict` mode *proves* it via a heartbeat protocol:
+**Verifiable live entanglement — `strict` mode:** The default `passive` mode *trusts* that agents read between steps. `strict` mode *proves* it via a heartbeat protocol:
 
 ```jsonl
 {"type":"heartbeat","step":3,"content":"alpha at step 3","ts":"2026-05-12T11:00:00Z"}
@@ -1771,13 +1771,13 @@ The claim "every concept has direct operational meaning" is meaningless unless v
 | **Superposition** | 🔧 | `skills/spawn/SKILL.md` Step 6 — parallel Agent dispatch + co-existing git worktrees |
 | **Path Integral** | 🔧 | Same as Superposition — N parallel cosmos = sampling many implementation paths |
 | **Quantum Annealing** | 🪞 | Behavioral — parallel cosmos explore from different starting points, escape local optima |
-| **Entanglement** | 🔧 | `skills/spawn/SKILL.md` CLAUDE.md template — required reading of `.quantum/*/insights.jsonl` between steps + `--entanglement strict` heartbeat protocol (v1.3) |
+| **Entanglement** | 🔧 | `skills/spawn/SKILL.md` CLAUDE.md template — required reading of `.quantum/*/insights.jsonl` between steps + `--entanglement strict` heartbeat protocol |
 | **Quantum Teleportation** | 🔧 | `.quantum/` file I/O (classical channel) + entanglement reading rules (the "quantum" linkage) |
 | **No-Cloning Theorem** | 🪞 | Spawn CLAUDE.md "Spin Preservation" rule — behavioral guideline. **Not technically enforced** (you can `cp -r`). Violations flagged post-hoc by observe Decoherence detection. |
 | **Pauli Exclusion Principle** | 🔧 | `skills/spawn/SKILL.md` Step 1 — duplicate-strategy check rejects spawn with explicit error |
-| **Spin** | 🔧 | `.quantum/project/spin.json` (v1.2) + spawn CLAUDE.md "Spin Preservation" rule + `/cosmos spin` skill (v1.3) |
+| **Spin** | 🔧 | `.quantum/project/spin.json` + spawn CLAUDE.md "Spin Preservation" rule + `/cosmos spin` skill |
 | **Quantum Coherence** | 🪞 | Behavioral — strategy preservation throughout cosmos run; observable in observe |
-| **Quantum Tunneling** | 🔧 🔍 | `[TUNNEL]` / `type: "tunnel"` insight tag (spawn Step 5) + automatic `code-tunnel` detection in `/cosmos scan` (v4.0) |
+| **Quantum Tunneling** | 🔧 🔍 | `[TUNNEL]` / `type: "tunnel"` insight tag (spawn Step 5) + automatic `code-tunnel` detection in `/cosmos scan` |
 | **Quantum Jump** | 🔧 | `[JUMP]` / `type: "jump"` insight tag (spawn Step 5) with `read_from` citation requirement (active mode) |
 | **Quantum Interference** | 🧮 | `python/quantumagent/core.py` `superpose()` — complex amplitude addition with empirically-verified destructive interference (`examples/04_quantum_interference.py`: 1000/0 split) |
 | **Resonance** | 🔧 | `skills/observe/SKILL.md` Step 4 — semantic analysis identifies cross-cosmos agreement; auth-audit ran 3-way independent convergence |
@@ -1788,10 +1788,10 @@ The claim "every concept has direct operational meaning" is meaningless unless v
 | **Measurement Problem** | 🔧 | First-class distinction across all skills: `/cosmos observe` is non-destructive; `/cosmos crystallize` is destructive. `python/quantumagent/core.py` `observe()` vs `measure()` |
 | **Observation** | 🔧 | `skills/observe/SKILL.md` explicit non-destructive footer + `python/quantumagent/core.py` `observe()` function |
 | **Crystallization** | 🔧 | `skills/crystallize/SKILL.md` + `python/quantumagent/core.py` `measure()` Born-rule sampling |
-| **Decoherence** | 🔧 🧮 🔍 | **Three implementations**: cosmos-level Decoherence detection in observe (v1.x); real density-matrix decoherence `decohere()` in `python/quantumagent/quantum.py` (v3.2); code-level `code-decoherence` in `/cosmos scan` for untested files (v4.0) |
+| **Decoherence** | 🔧 🧮 🔍 | **Three implementations**: cosmos-level Decoherence detection in observe; real density-matrix decoherence `decohere()` in `python/quantumagent/quantum.py`; code-level `code-decoherence` in `/cosmos scan` for untested files |
 | **Reference Frame** *(SR)* | 🪞 | Behavioral analogy — Resonance = frame-invariant (across strategies), Uncertainty = frame-dependent |
 | **Geodesics + Spacetime Curvature** *(GR)* | 🔧 | `.quantum/project/spin.json` immutable_constraints — concrete constraint injection that "curves" every cosmos's solution space |
-| **Equivalence Principle** *(GR)* | 🪞 | Behavioral — `/cosmos observe` provides the wider view; cross-scale signal in v4.0 connects code-tunnel + cosmos modification + crystallize candidate |
+| **Equivalence Principle** *(GR)* | 🪞 | Behavioral — `/cosmos observe` provides the wider view; cross-scale signal connects code-tunnel + cosmos modification + crystallize candidate |
 
 ### Honest counting
 
@@ -1800,7 +1800,7 @@ The claim "every concept has direct operational meaning" is meaningless unless v
 - **🔍 Detected (auto-surfaced by tooling)**: 3 — Tunneling, Decoherence (code), with cross-references
 - **🪞 Guideline (rule documented but not enforced)**: 6 — Quantum Annealing, No-Cloning, Quantum Coherence, Reference Frame, Equivalence Principle, plus cosmos-level Decoherence prevention
 
-Some concepts span multiple levels (e.g., Decoherence is implemented at three different levels — cosmos behavioral, math, code detection — accumulating reality as the system matured from v1 to v4).
+Some concepts span multiple levels.
 
 The two pure Path B math implementations (Interference, Density-matrix Decoherence) are the strongest claims — they reproduce *quantitatively predicted* quantum-mechanical effects (CHSH S ≈ 2.83, perfect destructive cancellation 1000/0). The 🔧 enforced category covers most of the system — these aren't decorative; they have real if-statements, real files, real detection logic. The 🪞 guideline category honestly admits where the system is behavioral-only.
 
@@ -1816,14 +1816,14 @@ skills/                                          # Layer 1 — CLI (Claude Code 
   observe/SKILL.md         — /cosmos observe
   crystallize/SKILL.md     — /cosmos crystallize
   stop/SKILL.md            — /cosmos stop
-  singularity/SKILL.md     — /cosmos singularity        (v1.2)
-  spin/SKILL.md            — /cosmos spin               (v1.3)
-  run/SKILL.md             — /cosmos run                (v2.0)
-  scan/SKILL.md            — /cosmos scan               (v4.0, micro scale)
-experiments/                                     # Layer 2 — YAML DSL  (v2.0)
+  singularity/SKILL.md     — /cosmos singularity
+  spin/SKILL.md            — /cosmos spin
+  run/SKILL.md             — /cosmos run
+  scan/SKILL.md            — /cosmos scan
+experiments/                                     # Layer 2 — YAML DSL
   _template.qa.yaml        — annotated schema template
   *.example.qa.yaml        — runnable examples
-python/                                          # Layer 3 — Python primitives (v3.0)
+python/                                          # Layer 3 — Python primitives
   pyproject.toml           — pip-installable package
   quantumagent/            — psi, entangle, observe, measure, constraint
   examples/                — runnable .py demonstrations
@@ -1834,9 +1834,9 @@ python/                                          # Layer 3 — Python primitives
 cosmos/                    — runtime git worktrees (git-ignored)
 .quantum/                  — runtime quantum memory (git-ignored)
   <name>/insights.jsonl    — per-cosmos insights (cosmos scale)
-  project/spin.json        — project identity     (macro scale, v1.2)
-  singularities/events.jsonl — macro events       (macro scale, v1.2)
-  code/findings.jsonl      — code-level findings  (micro scale, v4.0)
+  project/spin.json        — project identity     (macro scale)
+  singularities/events.jsonl — macro events       (macro scale)
+  code/findings.jsonl      — code-level findings  (micro scale)
 ```
 
 ---

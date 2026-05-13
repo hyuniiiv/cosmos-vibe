@@ -1,4 +1,4 @@
-# `experiments/` — declarative quantum experiments (v2.0+)
+# `experiments/` — declarative quantum experiments
 
 This directory holds **declarative QuantumAgent experiments** — YAML files that
 describe a quantum exploration completely, end-to-end. Run any of them with:

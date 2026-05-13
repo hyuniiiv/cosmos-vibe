@@ -136,14 +136,14 @@ QuantumAgent makes the distinction first-class:
 
 This matters when LLM agents are expensive: you want to look at the state, *think about* what to do, and then decide — without paying the cost of every intermediate "check" forcing a fresh decision.
 
-### Two modes — classical and quantum *(quantum: Path B, v3.1+)*
+### Two modes — classical and quantum **
 
 The library auto-detects which mode you want from the constructor arguments to `psi()`:
 
 | Mode | Constructor | Math |
 |------|------------|------|
 | **Classical** *(default)* | `psi(states, weights=[...])` or `psi(states)` | Real probability weights, normalized so Σ = 1 |
-| **Quantum** *(v3.1+)* | `psi(states, amplitudes=[...])` | Complex amplitudes, normalized so Σ\|c\|² = 1 |
+| **Quantum** | `psi(states, amplitudes=[...])` | Complex amplitudes, normalized so Σ\|c\|² = 1 |
 
 In quantum mode:
 - **True Born rule**: `P(i) = |amplitude_i|²`
@@ -171,16 +171,16 @@ outcomes = [measure(bell_state("phi+"), seed=i) for i in range(1000)]
 
 Run `examples/04_quantum_interference.py` and `examples/05_bell_state.py` to see this in action.
 
-### Quantum mode capabilities (v3.2 — Path B complete)
+### Quantum mode capabilities
 
 All four Path B phases shipped:
 
 | Phase | Capability | Primitives |
 |-------|-----------|------------|
-| **Phase 1** *(v3.1)* | Complex amplitudes + interference | `psi(amplitudes=…)`, `superpose`, `bell_state` |
-| **Phase 2** *(v3.2)* | CHSH Bell test, multi-basis measurement | `measure_in_basis`, `chsh_test` |
-| **Phase 3** *(v3.2)* | Quantum gates + circuit composition | `gate`, `apply_gate`, `Gate.__matmul__` |
-| **Phase 4** *(v3.2)* | Density matrices + decoherence | `density`, `decohere`, `partial_trace`, `DensityMatrix` |
+| **Phase 1** | Complex amplitudes + interference | `psi(amplitudes=…)`, `superpose`, `bell_state` |
+| **Phase 2** | CHSH Bell test, multi-basis measurement | `measure_in_basis`, `chsh_test` |
+| **Phase 3** | Quantum gates + circuit composition | `gate`, `apply_gate`, `Gate.__matmul__` |
+| **Phase 4** | Density matrices + decoherence | `density`, `decohere`, `partial_trace`, `DensityMatrix` |
 
 The library now implements the full canonical quantum-mechanics machinery — verified empirically in `examples/06_chsh_test.py` through `08_decoherence.py`:
 
@@ -192,7 +192,7 @@ The library now implements the full canonical quantum-mechanics machinery — ve
 
 `constraint(...) @ psi` raises `NotImplementedError` for quantum-mode wavefunctions because the API maps to weight adjustment (not Hermitian operators on amplitudes). To constrain a quantum state, use gates — they're the proper Hermitian-operator equivalent.
 
-Classical mode remains the default and is unchanged from v3.0. Quantum mode is opt-in via `amplitudes=`.
+Classical mode remains the default and is unchanged. Quantum mode is opt-in via `amplitudes=`.
 
 ---
 
@@ -200,21 +200,21 @@ Classical mode remains the default and is unchanged from v3.0. Quantum mode is o
 
 Nine runnable examples in `examples/`:
 
-**Classical mode (v3.0):**
+**Classical mode:**
 - **`01_basic_psi.py`** — declare, observe, measure with seed
 - **`02_entanglement.py`** — auth × storage compatibility, entanglement propagation
 - **`03_constraint_curvature.py`** — composing filter / boost / suppress constraints
 
-**Quantum mode — Phase 1 (v3.1):**
+**Quantum mode — Phase 1:**
 - **`04_quantum_interference.py`** — destructive interference: two 50/50 sources produce 100/0 outcome (impossible classically)
 - **`05_bell_state.py`** — maximally-entangled 2-qubit Bell states with perfect correlation
 
-**Quantum mode — Phases 2-4 (v3.2):**
+**Quantum mode — Phases 2-4:**
 - **`06_chsh_test.py`** — CHSH Bell-inequality test: |Φ+⟩ achieves S ≈ 2.83, violating the classical |S| ≤ 2 bound (genuine quantum entanglement)
 - **`07_quantum_gates.py`** — build a Bell state from gates: |00⟩ → H₀ → CNOT → |Φ+⟩, plus parametric Ry rotations and inverse circuits
 - **`08_decoherence.py`** — pure→mixed via exponential decay of off-diagonals, plus partial trace = I/2 (entanglement signature)
 
-**Layer interop (v3.3):**
+**Layer interop:**
 - **`09_cosmos_interop.py`** — read a cosmos run's `.quantum/` output into a Python `CosmosRun` and compose with quantum primitives
 
 Run them:
@@ -232,7 +232,7 @@ Each example prints its execution so you can read what happened.
 ## Relationship to the CLI/DSL layers
 
 ```
-Layer 1 (v1.x) — CLI                 Layer 2 (v2.0) — YAML DSL          Layer 3 (v3.0) — Python
+Layer 1 — CLI                 Layer 2 — YAML DSL          Layer 3 — Python
 ────────────────────────             ─────────────────────────          ────────────────────────
 /cosmos spawn --goal "..."           experiment: rate-limiting          cache = psi(...)
 /cosmos observe                      spawn:                             entangle(cache, store, ...)
@@ -262,50 +262,34 @@ A future release will add an `agent` backend that uses Layer 3 to *orchestrate* 
 
 ---
 
-## Roadmap
+## Status
 
-Implemented (v3.0):
+**Shipped — classical mode (Path A):**
 - ✓ Probability-distribution-based ψ
 - ✓ Entanglement with conditional propagation
 - ✓ Constraint operators (boost / suppress / where)
 - ✓ Born-rule-flavored measure + non-destructive observe
 - ✓ Pure-Python, zero runtime dependencies
 
-Implemented (v3.1, Path B Phase 1):
-- ✓ Complex amplitudes via `psi(states, amplitudes=…)`
-- ✓ True Born rule `P(i) = |c|²`
+**Shipped — quantum mode (Path B, complete):**
+- ✓ Complex amplitudes via `psi(states, amplitudes=…)` + true Born rule `P(i) = |c|²`
 - ✓ `superpose(a, b)` — amplitudes add → real interference (constructive/destructive)
 - ✓ `bell_state(kind)` — four maximally-entangled 2-qubit states
-
-Implemented (v3.2, Path B Phases 2-4 — **complete**):
 - ✓ CHSH Bell-inequality test (`chsh_test`) — verified S ≈ 2.83 for Bell states
-- ✓ Multi-basis measurement (`measure_in_basis`) — rotate then measure in Z
-- ✓ Standard gate library: I, X, Y, Z, H, S, T, CNOT/CX, CZ, SWAP, Rx(θ), Ry(θ), Rz(θ)
-- ✓ Gate composition via `gate @ gate` and `apply_gate(psi, gate, qubits=…)` for arbitrary n-qubit systems
+- ✓ Multi-basis measurement (`measure_in_basis`)
+- ✓ Standard gate library: I, X, Y, Z, H, S, T, CNOT/CX, CZ, SWAP, Rx(θ), Ry(θ), Rz(θ); `gate @ gate` composition; `apply_gate(psi, gate, qubits=…)` for n-qubit systems
 - ✓ Density matrices (`density`, `DensityMatrix`) — pure ↔ mixed states
 - ✓ Exponential decoherence model (`decohere`) — off-diagonals decay
 - ✓ Partial trace (`partial_trace`) — entanglement signature via reduced purity
 
-Implemented (v3.3, vision-gap fills):
-- ✓ **`from_cosmos(repo_path)`** — Layer 1 ↔ Layer 3 bridge. Reads `.quantum/`
-  cosmos output into a `CosmosRun` (Wavefunction + insights + heuristic
-  resonance/uncertainty + macro context).
-- ✓ Heuristic resonance/uncertainty via token overlap (cheap signal — for
-  semantic quality use `/cosmos observe`)
+**Shipped — interop and scales:**
+- ✓ **`from_cosmos(repo_path)`** — Layer 1 ↔ Layer 3 bridge. Reads `.quantum/` cosmos output into a `CosmosRun` (Wavefunction + insights + heuristic resonance/uncertainty + macro context)
+- ✓ Heuristic resonance/uncertainty via token overlap (cheap signal — for semantic quality use `/cosmos observe`)
+- ✓ **Micro-scale (code) layer** — `/cosmos scan` with `.quantum/code/findings.jsonl`; auto `[TUNNEL]` detection for type-system bypasses (`as unknown as`, `@ts-ignore`, etc.); code-level decoherence (untested code = lost coherence). Exposed in Python via `CosmosRun.code_findings` / `code_summary()`
 
-**Path B is complete.** v3.3 fills the largest remaining vision gaps
-(model diversity in CLI/DSL, .quantum/ interop). The micro-scale layer
-remains the one untaken vision branch — see below.
+## Roadmap
 
-Roadmap:
-- **v4.0 (planned) — Micro-scale (code) layer** — `.quantum/code/<symbol>/`
-  with static-analysis integration. Function-level quantum state tracking,
-  automatic `[TUNNEL]` detection for type-system bypasses (`as unknown as`,
-  `@ts-ignore`, etc.), code-level decoherence (untested code = lost
-  coherence). This is the third scale of the original vision; major work,
-  separate track from the Python lib.
-- **Agent backend** — `ψ.spawn(use_agent=True)` to invoke real LLMs from
-  Python. Requires optional `anthropic` SDK dependency. Future v3.x release.
+- **Agent backend** — `ψ.spawn(use_agent=True)` to invoke real LLMs from Python. Requires optional `anthropic` SDK dependency.
 - **Visualization** — render wavefunctions / entanglement graphs.
 
 ---
