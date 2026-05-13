@@ -1,5 +1,7 @@
 # 🌌 QuantumAgent
 
+**English** | [한국어](README.ko.md)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > Before you commit to one approach, explore three in parallel.
@@ -244,6 +246,19 @@ Other real cosmos run outputs (spawn command + raw `.quantum/*.jsonl` + observe 
 
 ---
 
+## Prerequisites — 5-second check
+
+Before installing, confirm:
+
+- **Claude Code** (or a compatible agent listed in INTEGRATIONS.md) — somewhere `/plugin` works
+- **git ≥ 2.20** — each cosmos is isolated via `git worktree`. `git worktree --help` works = OK
+- **POSIX shell** (bash/zsh) — required by bundle scripts and some skills. On Windows, use WSL or Git Bash
+- **GitHub access** — the plugin is cloned at install. No SSH key? See [Troubleshooting](#troubleshooting) below
+
+Looks good? Proceed:
+
+---
+
 ## Install
 
 QuantumAgent ships as a self-marketplace Claude Code plugin. Inside Claude Code:
@@ -302,6 +317,42 @@ Then retry `/plugin install quantum-agent@quantum-agent`.
 Alternatives:
 - `gh auth login` → `gh auth setup-git` (uses HTTPS + credential helper)
 - Add an SSH key: `ssh-keygen -t ed25519 -C "you@example.com"` and register the public key in GitHub → Settings → SSH Keys
+
+**`/cosmos` commands not showing up?** — run `/reload-plugins` again or restart Claude Code.
+
+**`.quantum/` is auto-created** — on first `/cosmos:spawn` at the repo root and added to `.gitignore`. Clean up with `/cosmos:stop` (removes worktrees + branches) or delete the directory.
+
+---
+
+## Hello, world — your first run in 60 seconds
+
+Before the multi-cosmos examples, get a feel with a single cosmos. From inside any git repo:
+
+```
+/cosmos spawn --goal "summarize this repo's README in one line" \
+  --strategies "extract-headings"
+```
+
+One cosmos starts in an isolated worktree, produces a summary, and records findings to `.quantum/extract-headings/insights.jsonl`.
+
+```
+/cosmos observe
+```
+
+→ non-destructively inspect what was recorded (safe while running).
+
+```
+/cosmos crystallize extract-headings
+```
+
+→ merge the result back into main. When done:
+
+```
+/cosmos stop
+```
+
+→ tear down worktrees and branches. That's the full lifecycle — **spawn → observe → crystallize → stop**.
+A single cosmos is a fast, safe warm-up. The real value appears when you **spawn multiple cosmos in parallel**, as shown next.
 
 ---
 
