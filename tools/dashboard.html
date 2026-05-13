@@ -34,8 +34,8 @@
 
     .main-grid {
       display: grid;
-      grid-template-columns: 210px 1fr 260px;
-      grid-template-rows: 1fr 180px;
+      grid-template-columns: 210px 1fr 260px 1fr;
+      grid-template-rows: 1fr;
       gap: 1px; background: var(--border); flex: 1; overflow: hidden;
     }
     .panel { background: var(--bg); overflow-y: auto; padding: 10px 12px; }
@@ -45,11 +45,10 @@
       margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
     }
     .mermaid-wrap {
-      grid-column: 1 / -1; background: var(--bg2);
-      overflow-x: auto; display: flex; align-items: center;
-      padding: 10px 16px; gap: 16px;
+      background: var(--bg);
+      overflow: auto; display: flex; flex-direction: column;
+      padding: 10px 12px;
     }
-    .mermaid-wrap .panel-title { margin-bottom: 0; border: none; padding: 0; flex-shrink: 0; }
 
     /* Cosmos cards */
     .cosmos-card {
@@ -149,7 +148,7 @@
 
   <div class="mermaid-wrap">
     <div class="panel-title">Graph</div>
-    <div id="mermaid-target"></div>
+    <div id="mermaid-target" style="flex:1;display:flex;align-items:center;justify-content:center;"></div>
   </div>
 </div>
 
